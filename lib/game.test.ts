@@ -5,10 +5,14 @@ import {
   MIN_PLAYERS,
   checkLineup,
   civilianCount,
+  clueOrder,
   dealRound,
+  eliminate,
   fillInBlankNames,
   findDuplicateName,
+  isCivilianWord,
   maxFor,
+  outcomeOf,
   suggestedFor,
   type Lineup,
   type Role,
@@ -120,4 +124,65 @@ test("duplicate names are caught regardless of case or padding", () => {
   assert.equal(findDuplicateName(["Sam", "Alex"]), null);
   // Blanks are not duplicates of each other; they get filled in later.
   assert.equal(findDuplicateName(["", ""]), null);
+});
+
+const roundOf = (roles: Role[]): ReturnType<typeof dealRound> => ({
+  players: roles.map((role, index) => ({
+    id: `p${index}`,
+    name: `P${index + 1}`,
+    role,
+    word: role === "mrwhite" ? null : role === "undercover" ? PAIR.undercover : PAIR.civilian,
+    seenWord: false,
+    alive: true,
+    score: 0,
+  })),
+  startPlayerId: "p0",
+  pair: PAIR,
+});
+
+test("the round runs on while both sides still have a chance", () => {
+  // 4 civilians against 2 infiltrators.
+  const round = roundOf([
+    "civilian", "civilian", "civilian", "civilian", "undercover", "mrwhite",
+  ]);
+  assert.equal(outcomeOf(round), null);
+});
+
+test("civilians win once the last infiltrator is out", () => {
+  let round = roundOf(["civilian", "civilian", "civilian", "undercover"]);
+  round = eliminate(round, "p3");
+  assert.equal(outcomeOf(round), "civilians");
+});
+
+test("infiltrators win on equal numbers, not on a majority", () => {
+  // 3 civilians against 2 infiltrators; voting out a civilian makes it 2-2.
+  let round = roundOf([
+    "civilian", "civilian", "civilian", "undercover", "mrwhite",
+  ]);
+  assert.equal(outcomeOf(round), null);
+  round = eliminate(round, "p0");
+  assert.equal(outcomeOf(round), "infiltrators");
+});
+
+test("the clue order starts at the opener and skips whoever is out", () => {
+  let round = roundOf(["civilian", "undercover", "civilian", "civilian"]);
+  round = { ...round, startPlayerId: "p2" };
+
+  assert.deepEqual(
+    clueOrder(round).map((p) => p.id),
+    ["p2", "p3", "p0", "p1"],
+  );
+
+  round = eliminate(round, "p3");
+  assert.deepEqual(
+    clueOrder(round).map((p) => p.id),
+    ["p2", "p0", "p1"],
+  );
+});
+
+test("Mr. White's guess ignores case and padding", () => {
+  const round = roundOf(["civilian", "mrwhite", "civilian"]);
+  assert.equal(isCivilianWord(round, "  PiZZa "), true);
+  assert.equal(isCivilianWord(round, "pasta"), false);
+  assert.equal(isCivilianWord(round, ""), false);
 });

@@ -34,6 +34,13 @@ const en = {
     useRecommended:
       "Back to the suggested line-up for {players} players ({undercovers} undercover, {mrWhites} Mr. White)",
     next: "Next: enter names",
+
+    roleNames: {
+      civilian: "Civilian",
+      undercover: "Undercover",
+      mrwhite: "Mr. White",
+    },
+
     errors: {
       playerRange: "This game works with {min} to {max} players.",
       noInfiltrators:
@@ -61,11 +68,6 @@ const en = {
       hold: "Hold to read",
       close: "Done",
       start: "Start round 1",
-      roleNames: {
-        civilian: "Civilian",
-        undercover: "Undercover",
-        mrwhite: "Mr. White",
-      },
       yourWord: "Your word",
       noWord: "You get no word. Listen closely and bluff along.",
       reDeal: "Deal again",
@@ -74,7 +76,45 @@ const en = {
     firstClue: {
       title: "First clue",
       startsWith: "{name} starts",
-      note: "The clue round, voting and the rest of the game come next.",
+      continue: "Continue",
+    },
+
+    clues: {
+      title: "Clues",
+      instruction:
+        "In this order, everyone says one word about their own word. Never the word itself, and no clue that has already been given.",
+      toVoting: "Go to the vote",
+    },
+
+    voting: {
+      title: "Who is out?",
+      instruction: "Talk it over, then tap whoever the group votes out.",
+      pickFirst: "Tap a player first",
+      confirm: "Vote out {name}",
+    },
+
+    elimination: {
+      title: "Revealed",
+      was: "{name} was",
+      continue: "Continue",
+      mrWhiteGuesses: "Mr. White gets one guess",
+    },
+
+    mrWhiteGuess: {
+      title: "Mr. White guesses",
+      instruction:
+        "{name}, what was the civilians' word? One guess. Get it right and the infiltrators win after all.",
+      placeholder: "The civilians' word",
+      submit: "Guess",
+    },
+
+    result: {
+      title: "Result",
+      civiliansWin: "The civilians win",
+      infiltratorsWin: "The infiltrators win",
+      byGuess: "{name} guessed the word.",
+      wordsWere: "Civilians had {civilian}, undercovers had {undercover}.",
+      lineupHeading: "Everyone's role",
       newGame: "New game",
     },
   },

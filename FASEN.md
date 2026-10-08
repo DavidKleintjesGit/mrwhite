@@ -53,6 +53,9 @@ alles op één pagina mag. We willen voelen of de ritmiek klopt voordat we er ti
 tot winnaar — in alle drie de uitkomsten: burgers winnen, infiltranten winnen op aantal, en
 Mr. White die weggestemd wordt en het woord goed raadt.
 
+**Stand:** alle schermen zijn gebouwd en de spelregels zijn afgedekt met tests (`npm test`).
+Nog niet afgevinkt: één potje echt van begin tot eind uitspelen.
+
 ---
 
 ## Fase 2 — Meerdere rondes

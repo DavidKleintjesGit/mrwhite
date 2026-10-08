@@ -1,12 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import ClueRound from "@/components/ClueRound";
+import Elimination from "@/components/Elimination";
 import FirstClue from "@/components/FirstClue";
 import LineupPicker from "@/components/LineupPicker";
+import MrWhiteGuess from "@/components/MrWhiteGuess";
 import NameEntry from "@/components/NameEntry";
+import Result from "@/components/Result";
 import Screen from "@/components/Screen";
+import Voting from "@/components/Voting";
 import WordReveal from "@/components/WordReveal";
-import { dealRound, suggestedFor, type Lineup, type Round } from "@/lib/game";
+import {
+  dealRound,
+  eliminate,
+  isCivilianWord,
+  outcomeOf,
+  suggestedFor,
+  type Lineup,
+  type Outcome,
+  type Player,
+  type Round,
+} from "@/lib/game";
 import type { Dictionary, Locale } from "@/lib/i18n";
 import { randomWordPair } from "@/lib/words";
 
@@ -14,15 +29,26 @@ import { randomWordPair } from "@/lib/words";
 const NAMES_STORAGE_KEY = "mrwhite.names";
 
 /**
- * A round only exists once it has been dealt, so it belongs to the stage
- * rather than sitting in a nullable field. No screen can then be reached
+ * A round only exists once it has been dealt, and the stages after a vote only
+ * exist with the player that was voted out, so both travel with the stage
+ * rather than sitting in nullable fields. No screen can then be reached
  * without the data it needs.
  */
 type Stage =
   | { name: "lineup" }
   | { name: "names" }
   | { name: "reveal"; round: Round }
-  | { name: "firstClue"; round: Round };
+  | { name: "firstClue"; round: Round }
+  | { name: "clues"; round: Round }
+  | { name: "voting"; round: Round }
+  | { name: "elimination"; round: Round; player: Player }
+  | { name: "mrWhiteGuess"; round: Round; player: Player }
+  | {
+      name: "result";
+      round: Round;
+      outcome: Outcome;
+      guessedBy: Player | null;
+    };
 
 type Props = {
   dict: Dictionary;
@@ -91,14 +117,54 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
     });
   }
 
+  function voteOut(round: Round, playerId: string) {
+    const player = round.players.find((candidate) => candidate.id === playerId);
+    if (!player) return;
+    setStage({
+      name: "elimination",
+      round: eliminate(round, playerId),
+      player,
+    });
+  }
+
+  /** Either the game is over, or another clue round starts. */
+  function settle(round: Round, guessedBy: Player | null) {
+    const outcome = outcomeOf(round);
+    setStage(
+      outcome
+        ? { name: "result", round, outcome, guessedBy }
+        : { name: "clues", round },
+    );
+  }
+
+  function afterElimination(round: Round, player: Player) {
+    // A voted-out Mr. White still gets his one guess at the civilians' word.
+    if (player.role === "mrwhite") {
+      setStage({ name: "mrWhiteGuess", round, player });
+      return;
+    }
+    settle(round, null);
+  }
+
+  function submitGuess(round: Round, player: Player, guess: string) {
+    if (isCivilianWord(round, guess)) {
+      setStage({
+        name: "result",
+        round,
+        outcome: "infiltrators",
+        guessedBy: player,
+      });
+      return;
+    }
+    settle(round, null);
+  }
+
+  const back = dict.common.back;
+
   switch (stage.name) {
     case "lineup":
       return (
-        <Screen
-          title={dict.play.title}
-          backLabel={dict.common.back}
-          backHref={homeHref}
-        >
+        <Screen title={dict.play.title} backLabel={back} backHref={homeHref}>
           <LineupPicker
             dict={dict.play}
             lineup={lineup}
@@ -112,7 +178,7 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
       return (
         <Screen
           title={dict.play.names.title}
-          backLabel={dict.common.back}
+          backLabel={back}
           onBack={() => setStage({ name: "lineup" })}
           wide
         >
@@ -130,7 +196,7 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
       return (
         <Screen
           title={dict.play.reveal.title}
-          backLabel={dict.common.back}
+          backLabel={back}
           onBack={() => setStage({ name: "names" })}
           wide
         >
@@ -144,14 +210,71 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
         </Screen>
       );
 
-    // No way back: once the round starts the words are out of reach, which is
-    // the point. See CONCEPT.md.
+    // From here on there is no way back: the words are out of reach and a vote
+    // cannot be undone. See CONCEPT.md.
     case "firstClue":
       return (
         <Screen title={dict.play.firstClue.title}>
           <FirstClue
             dict={dict.play}
             round={stage.round}
+            onContinue={() => setStage({ name: "clues", round: stage.round })}
+          />
+        </Screen>
+      );
+
+    case "clues":
+      return (
+        <Screen title={dict.play.clues.title} wide>
+          <ClueRound
+            dict={dict.play}
+            round={stage.round}
+            onDone={() => setStage({ name: "voting", round: stage.round })}
+          />
+        </Screen>
+      );
+
+    case "voting":
+      return (
+        <Screen title={dict.play.voting.title} wide>
+          <Voting
+            dict={dict.play}
+            round={stage.round}
+            onEliminate={(playerId) => voteOut(stage.round, playerId)}
+          />
+        </Screen>
+      );
+
+    case "elimination":
+      return (
+        <Screen title={dict.play.elimination.title}>
+          <Elimination
+            dict={dict.play}
+            player={stage.player}
+            onContinue={() => afterElimination(stage.round, stage.player)}
+          />
+        </Screen>
+      );
+
+    case "mrWhiteGuess":
+      return (
+        <Screen title={dict.play.mrWhiteGuess.title}>
+          <MrWhiteGuess
+            dict={dict.play}
+            player={stage.player}
+            onGuess={(guess) => submitGuess(stage.round, stage.player, guess)}
+          />
+        </Screen>
+      );
+
+    case "result":
+      return (
+        <Screen title={dict.play.result.title} wide>
+          <Result
+            dict={dict.play}
+            round={stage.round}
+            outcome={stage.outcome}
+            guessedBy={stage.guessedBy}
             onNewGame={() => setStage({ name: "lineup" })}
           />
         </Screen>

@@ -6,10 +6,10 @@ import { format, type Dictionary } from "@/lib/i18n";
 type Props = {
   dict: Dictionary["play"];
   round: Round;
-  onNewGame: () => void;
+  onContinue: () => void;
 };
 
-export default function FirstClue({ dict, round, onNewGame }: Props) {
+export default function FirstClue({ dict, round, onContinue }: Props) {
   const t = dict.firstClue;
   const starter = round.players.find(
     (player) => player.id === round.startPlayerId,
@@ -25,16 +25,13 @@ export default function FirstClue({ dict, round, onNewGame }: Props) {
         </p>
       </div>
 
-      <div className="flex flex-col gap-3">
-        <p className="text-center text-sm text-muted">{t.note}</p>
-        <button
-          type="button"
-          onClick={onNewGame}
-          className="rounded-2xl border border-border px-6 py-5 font-medium transition-colors hover:bg-surface-hover"
-        >
-          {t.newGame}
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={onContinue}
+        className="w-full rounded-2xl bg-accent px-6 py-5 text-lg font-semibold text-accent-foreground transition-colors hover:bg-accent-hover"
+      >
+        {t.continue}
+      </button>
     </>
   );
 }

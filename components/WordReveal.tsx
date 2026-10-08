@@ -126,7 +126,7 @@ function WordSheet({
           {holding ? (
             <>
               <span className="text-sm uppercase tracking-wide text-muted">
-                {t.roleNames[player.role]}
+                {dict.roleNames[player.role]}
               </span>
               {player.word ? (
                 <>

@@ -180,3 +180,60 @@ export function dealRound(
 
   return { players, startPlayerId: starter.id, pair };
 }
+
+// --- Playing the round -----------------------------------------------------
+
+export type Outcome = "civilians" | "infiltrators";
+
+export function livingPlayers(round: Round): Player[] {
+  return round.players.filter((player) => player.alive);
+}
+
+/**
+ * Who speaks when: seating order, rotated so the opener goes first, with
+ * eliminated players skipped. The seating order is the order names were
+ * entered, which is how the group is sat around the table anyway.
+ */
+export function clueOrder(round: Round): Player[] {
+  const start = round.players.findIndex(
+    (player) => player.id === round.startPlayerId,
+  );
+  const from = start === -1 ? 0 : start;
+  return [...round.players.slice(from), ...round.players.slice(0, from)].filter(
+    (player) => player.alive,
+  );
+}
+
+export function eliminate(round: Round, playerId: string): Round {
+  return {
+    ...round,
+    players: round.players.map((player) =>
+      player.id === playerId ? { ...player, alive: false } : player,
+    ),
+  };
+}
+
+/**
+ * Null while the round is still running.
+ *
+ * Infiltrators win on equal numbers, not on a majority: at that point the
+ * civilians can no longer vote one out without risking themselves.
+ */
+export function outcomeOf(round: Round): Outcome | null {
+  const living = livingPlayers(round);
+  const infiltrators = living.filter(
+    (player) => player.role !== "civilian",
+  ).length;
+  const civilians = living.length - infiltrators;
+
+  if (infiltrators === 0) return "civilians";
+  if (infiltrators >= civilians) return "infiltrators";
+  return null;
+}
+
+/** Mr. White's one guess. Spacing and capitals should not decide a game. */
+export function isCivilianWord(round: Round, guess: string): boolean {
+  return (
+    guess.trim().toLowerCase() === round.pair.civilian.trim().toLowerCase()
+  );
+}

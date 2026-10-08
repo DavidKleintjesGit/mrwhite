@@ -32,6 +32,13 @@ const nl: Dictionary = {
     useRecommended:
       "Terug naar het advies voor {players} spelers ({undercovers} undercover, {mrWhites} Mr. White)",
     next: "Volgende: namen invoeren",
+
+    roleNames: {
+      civilian: "Burger",
+      undercover: "Undercover",
+      mrwhite: "Mr. White",
+    },
+
     errors: {
       playerRange: "Dit spel werkt met {min} tot {max} spelers.",
       noInfiltrators:
@@ -59,11 +66,6 @@ const nl: Dictionary = {
       hold: "Ingedrukt houden",
       close: "Klaar",
       start: "Start ronde 1",
-      roleNames: {
-        civilian: "Burger",
-        undercover: "Undercover",
-        mrwhite: "Mr. White",
-      },
       yourWord: "Jouw woord",
       noWord: "Jij krijgt geen woord. Luister goed en bluf mee.",
       reDeal: "Opnieuw verdelen",
@@ -72,7 +74,46 @@ const nl: Dictionary = {
     firstClue: {
       title: "Eerste hint",
       startsWith: "{name} begint",
-      note: "De hintronde, het stemmen en de rest van het spel volgen hierna.",
+      continue: "Verder",
+    },
+
+    clues: {
+      title: "Hints",
+      instruction:
+        "In deze volgorde zegt iedereen één woord over zijn eigen woord. Nooit het woord zelf, en geen hint die al gegeven is.",
+      toVoting: "Naar het stemmen",
+    },
+
+    voting: {
+      title: "Wie ligt eruit?",
+      instruction: "Overleg, en tik dan aan wie de groep eruit stemt.",
+      pickFirst: "Kies eerst een speler",
+      confirm: "{name} eruit stemmen",
+    },
+
+    elimination: {
+      title: "Onthuld",
+      was: "{name} was",
+      continue: "Verder",
+      mrWhiteGuesses: "Mr. White krijgt één gok",
+    },
+
+    mrWhiteGuess: {
+      title: "Mr. White raadt",
+      instruction:
+        "{name}, wat was het woord van de burgers? Eén gok. Raad je goed, dan winnen de infiltranten alsnog.",
+      placeholder: "Het woord van de burgers",
+      submit: "Raden",
+    },
+
+    result: {
+      title: "Uitslag",
+      civiliansWin: "De burgers winnen",
+      infiltratorsWin: "De infiltranten winnen",
+      byGuess: "{name} raadde het woord.",
+      wordsWere:
+        "De burgers hadden {civilian}, de undercovers {undercover}.",
+      lineupHeading: "Ieders rol",
       newGame: "Nieuw spel",
     },
   },
