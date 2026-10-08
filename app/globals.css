@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-/* Donker als uitgangspunt: dit spel wordt op feestjes en in kroegen gespeeld.
-   Zie CONCEPT.md — hoog contrast, grote trefvlakken. */
+/* Dark by default: this gets played at parties and in bars.
+   High contrast, large hit areas. */
 :root {
   --background: #0b0b10;
   --surface: #16161f;
@@ -31,6 +31,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
-  /* Voorkomt dat je per ongeluk de pagina selecteert bij lang indrukken. */
+  /* Stops a long press from selecting the page instead of revealing a word. */
   -webkit-tap-highlight-color: transparent;
 }

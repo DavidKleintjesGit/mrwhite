@@ -21,8 +21,8 @@ Civilians win once every infiltrator is gone. Infiltrators win as soon as they
 equal the civilians in number. The twist: if Mr. White is voted out, he gets one
 guess at the civilians' word — guess right and the infiltrators win anyway.
 
-Whoever gives the first clue is always a civilian. Mr. White has nothing to go on
-before anyone has spoken, so opening the round would leave him no chance.
+The app picks who gives the first clue and does not explain how — saying so
+would tell the table which role that player cannot have.
 
 ## Languages
 

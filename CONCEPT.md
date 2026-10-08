@@ -95,8 +95,13 @@ bij pass-and-play en lossen we niet op met pincodes; dat maakt het alleen omslac
 - Je mag je eigen woord niet letterlijk noemen, ook geen vervoeging ervan
 - Geen hint herhalen die al gegeven is
 - Weggestemde spelers praten niet meer mee
-- **De eerste spreker is altijd een burger** — anders heeft Mr. White geen enkele informatie en is
-  het spel voor hem onspeelbaar. Dit is het detail dat de meeste klonen fout doen.
+- **De eerste spreker is nooit een Mr. White** — die heeft bij een eerste hint geen enkele
+  informatie en is dan kansloos. Undercovers mogen wél openen: zou de opener altijd een burger
+  zijn, dan is die speler elke ronde gratis vrijgepleit van twee rollen, en dat rekent de tafel
+  binnen een paar potjes uit.
+
+  **Dit wordt nergens in de app benoemd.** Uitleggen hoe de startspeler gekozen wordt, verklapt
+  welke rol die speler niet heeft. De regel zit in de code, niet in de interface.
 
 ## 4. Wat we beter doen dan de bestaande apps
 
@@ -107,7 +112,7 @@ Onderzocht: [mrwhiteonline.com](https://mrwhiteonline.com), [meneerwit.com](http
 | Probleem bij de concurrentie | Onze aanpak |
 |---|---|
 | Woordparen zijn klakkeloos vertaald uit het Engels, vaak onlogisch | Handgeschreven Nederlandse paren, met Nederlandse thema's (Sinterklaas, Koningsdag, snackbar) |
-| Mr. White mag soms als eerste praten, en is dan kansloos | Startspeler is gegarandeerd een burger |
+| Mr. White mag soms als eerste praten, en is dan kansloos | Startspeler is nooit een Mr. White, zonder dat de app dat verklapt |
 | Je bent drie rondes achter elkaar Mr. White | Rolhistorie onthouden, niet twee keer achter elkaar dezelfde rol |
 | Reclame tussen elke ronde, breekt het feestje | Geen advertenties in de spelloop |
 | Kleine knopjes, licht thema, onbruikbaar op een donker feestje | Grote trefvlakken, dark mode standaard, hoog contrast |
@@ -120,7 +125,7 @@ Onderzocht: [mrwhiteonline.com](https://mrwhiteonline.com), [meneerwit.com](http
 3. **Ronde-instellingen** — aantal undercovers, Mr. White aan/uit, thema, moeilijkheid
 4. **Woorden inzien** — tegels met alle namen, iedereen bekijkt zijn eigen woord zo vaak als nodig,
    tot iemand op "Start ronde 1" tikt
-5. **Startspeler** — "Joost begint" (gegarandeerd een burger)
+5. **Startspeler** — "Joost begint", zonder uitleg waarom juist hij
 6. **Hintronde** — spreekvolgorde met wie aan de beurt is, één tik naar de volgende
 7. **Stemmen** — tegels per speler
 8. **Onthulling** — wie lag eruit, en wat was hij

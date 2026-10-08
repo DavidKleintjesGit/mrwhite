@@ -61,9 +61,6 @@ export default async function RulesPage({
           </ul>
         </Section>
 
-        <Section heading={rules.note.heading}>
-          <p>{rules.note.body}</p>
-        </Section>
       </div>
     </Screen>
   );

@@ -32,13 +32,50 @@ const nl: Dictionary = {
     useRecommended:
       "Terug naar het advies voor {players} spelers ({undercovers} undercover, {mrWhites} Mr. White)",
     next: "Volgende: namen invoeren",
-    nextNote: "Namen invoeren en woorden uitdelen volgen hierna.",
     errors: {
       playerRange: "Dit spel werkt met {min} tot {max} spelers.",
       noInfiltrators:
         "Kies minstens één undercover of Mr. White, anders heeft niemand iets te zoeken.",
       civiliansMinority:
         "De burgers moeten met meer zijn dan de infiltranten, anders is het spel bij de start al voorbij.",
+    },
+
+    names: {
+      title: "Wie doen er mee?",
+      hint: "Laat een veld leeg en we vullen er zelf een naam in.",
+      playerNumber: "Speler {number}",
+      duplicate: "{name} staat er twee keer in. Geef ze verschillende namen.",
+      back: "Terug naar de verdeling",
+      confirm: "Woorden uitdelen",
+    },
+
+    reveal: {
+      title: "Ieders woord",
+      instruction:
+        "Geef de telefoon door. Zoek je eigen naam, houd 'm ingedrukt om je woord te lezen, en laat los.",
+      stillOpen:
+        "Kijk zo vaak als je wil. Zodra de ronde start zijn de woorden weg.",
+      progress: "{seen} van de {total} hebben gekeken",
+      hold: "Ingedrukt houden",
+      holdOn: "Blijf vasthouden",
+      close: "Klaar",
+      notEveryone: "Nog niet iedereen heeft gekeken.",
+      start: "Start ronde 1",
+      roleNames: {
+        civilian: "Burger",
+        undercover: "Undercover",
+        mrwhite: "Mr. White",
+      },
+      yourWord: "Jouw woord",
+      noWord: "Jij krijgt geen woord. Luister goed en bluf mee.",
+      restart: "Opnieuw verdelen",
+    },
+
+    firstClue: {
+      title: "Eerste hint",
+      startsWith: "{name} begint",
+      note: "De hintronde, het stemmen en de rest van het spel volgen hierna.",
+      newGame: "Nieuw spel",
     },
   },
 
@@ -91,10 +128,6 @@ const nl: Dictionary = {
           body: "krijgt één gok naar het woord van de burgers als hij weggestemd wordt. Raadt hij goed, dan winnen de infiltranten alsnog.",
         },
       ],
-    },
-    note: {
-      heading: "Goed om te weten",
-      body: "De speler die begint is altijd een burger. Mr. White heeft bij een eerste hint namelijk nog geen enkele informatie, en zou dan geen kans maken.",
     },
   },
 

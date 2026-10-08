@@ -34,13 +34,50 @@ const en = {
     useRecommended:
       "Back to the suggested line-up for {players} players ({undercovers} undercover, {mrWhites} Mr. White)",
     next: "Next: enter names",
-    nextNote: "Entering names and handing out words come next.",
     errors: {
       playerRange: "This game works with {min} to {max} players.",
       noInfiltrators:
         "Pick at least one undercover or Mr. White, or there is nothing to work out.",
       civiliansMinority:
         "Civilians have to outnumber the infiltrators, otherwise the game is over before it starts.",
+    },
+
+    names: {
+      title: "Who is playing?",
+      hint: "Leave a field empty and we will fill in a name for you.",
+      playerNumber: "Player {number}",
+      duplicate: "{name} is in there twice. Give them different names.",
+      back: "Back to the line-up",
+      confirm: "Hand out the words",
+    },
+
+    reveal: {
+      title: "Everyone's word",
+      instruction:
+        "Pass the phone around. Find your own name, hold it to read your word, and let go.",
+      stillOpen:
+        "Look as often as you like. Once the round starts, the words are gone.",
+      progress: "{seen} of {total} have looked",
+      hold: "Hold to read",
+      holdOn: "Keep holding",
+      close: "Done",
+      notEveryone: "Not everyone has looked yet.",
+      start: "Start round 1",
+      roleNames: {
+        civilian: "Civilian",
+        undercover: "Undercover",
+        mrwhite: "Mr. White",
+      },
+      yourWord: "Your word",
+      noWord: "You get no word. Listen closely and bluff along.",
+      restart: "Deal again",
+    },
+
+    firstClue: {
+      title: "First clue",
+      startsWith: "{name} starts",
+      note: "The clue round, voting and the rest of the game come next.",
+      newGame: "New game",
     },
   },
 
@@ -93,10 +130,6 @@ const en = {
           body: "gets one guess at the civilians' word if he is voted out. Guess right and the infiltrators win after all.",
         },
       ],
-    },
-    note: {
-      heading: "Worth knowing",
-      body: "Whoever starts is always a civilian. On a first clue Mr. White has nothing to go on at all, and would stand no chance.",
     },
   },
 

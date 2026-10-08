@@ -16,10 +16,12 @@ import {
 
 type Props = {
   dict: Dictionary["play"];
+  initialSetup: RoleSetup;
+  onConfirm: (setup: RoleSetup) => void;
 };
 
-export default function GameSetup({ dict }: Props) {
-  const [setup, setSetup] = useState<RoleSetup>(() => recommendedFor(6));
+export default function GameSetup({ dict, initialSetup, onConfirm }: Props) {
+  const [setup, setSetup] = useState<RoleSetup>(initialSetup);
 
   const civilians = civilianCount(setup);
   const infiltrators = infiltratorCount(setup);
@@ -109,16 +111,14 @@ export default function GameSetup({ dict }: Props) {
         )}
       </section>
 
-      <div className="mt-auto flex flex-col gap-2">
-        <button
-          type="button"
-          disabled
-          className="w-full rounded-2xl bg-accent px-6 py-5 text-lg font-semibold text-accent-foreground disabled:opacity-40"
-        >
-          {dict.next}
-        </button>
-        <p className="text-center text-sm text-muted">{dict.nextNote}</p>
-      </div>
+      <button
+        type="button"
+        onClick={() => onConfirm(setup)}
+        disabled={problem !== null}
+        className="mt-auto w-full rounded-2xl bg-accent px-6 py-5 text-lg font-semibold text-accent-foreground transition-colors enabled:hover:bg-accent-hover disabled:opacity-40"
+      >
+        {dict.next}
+      </button>
     </>
   );
 }
