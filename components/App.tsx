@@ -31,7 +31,6 @@ import {
   openingOrder,
   outcomeOf,
   type Player,
-  type Winner,
   type WordPair,
 } from "@/lib/game";
 import { format, type Dictionary, type Locale } from "@/lib/i18n";
@@ -43,55 +42,13 @@ import {
   type Settings,
   type Stored,
 } from "@/lib/settings";
+import type { Stage } from "@/lib/stage";
 import { LANGS } from "@/lib/words";
 
 type Props = {
   dict: Dictionary;
   lang: Locale;
 };
-
-/**
- * Each stage carries exactly what its screen needs, so no screen can be
- * reached without its data and there are no nullable fields to guard.
- */
-type Stage =
-  | { name: "home" }
-  | { name: "rules" }
-  | { name: "settings" }
-  | { name: "setup" }
-  | { name: "names" }
-  | { name: "deal"; players: Player[]; pair: WordPair }
-  | { name: "card"; players: Player[]; pair: WordPair; index: number }
-  | {
-      name: "hint";
-      players: Player[];
-      pair: WordPair;
-      order: number[];
-      turn: number;
-      round: number;
-    }
-  | {
-      name: "vote";
-      players: Player[];
-      pair: WordPair;
-      order: number[];
-      round: number;
-    }
-  | {
-      name: "unmask";
-      players: Player[];
-      pair: WordPair;
-      index: number;
-      round: number;
-    }
-  | {
-      name: "guess";
-      players: Player[];
-      pair: WordPair;
-      index: number;
-      round: number;
-    }
-  | { name: "end"; players: Player[]; pair: WordPair; winner: Winner };
 
 type Dialog = "none" | "categories" | "language" | "confirm";
 
@@ -108,7 +65,7 @@ export default function App({ dict, lang }: Props) {
   const stored = edited ?? saved;
   const { settings } = stored;
 
-  const [stage, setStage] = useState<Stage>({ name: "home" });
+  const { stage } = stored;
   const [dialog, setDialog] = useState<Dialog>("none");
   const [selected, setSelected] = useState<number | null>(null);
 
@@ -116,6 +73,11 @@ export default function App({ dict, lang }: Props) {
     const next = { ...stored, ...change };
     setEdited(next);
     writeStored(next);
+  }
+
+  /** Every screen change is written, so a reload lands where you left off. */
+  function setStage(next: Stage) {
+    save({ stage: next, stageAt: Date.now() });
   }
 
   function updateSettings(change: Partial<Settings>) {

@@ -77,9 +77,11 @@ export default function HintScreen({
         </div>
       </div>
 
-      {/* Keyed on the turn so each speaker pops in afresh. */}
+      {/* A one-item list keyed on the turn, so each speaker pops in afresh.
+          A bare key on a static child leaves the previous card in the DOM. */}
+      {[turn].map((current) => (
       <div
-        key={turn}
+        key={current}
         style={{
           position: "relative",
           background: "var(--card)",
@@ -120,7 +122,7 @@ export default function HintScreen({
         <div style={{ fontSize: 16, maxWidth: 280, lineHeight: 1.4 }}>
           {t.instruction}
         </div>
-        {turn === 0 && (
+        {current === 0 && (
           <div
             style={{
               position: "absolute",
@@ -139,6 +141,7 @@ export default function HintScreen({
           </div>
         )}
       </div>
+      ))}
 
       {timer > 0 && <ClueTimer key={turn} seconds={timer} dark={dark} />}
 

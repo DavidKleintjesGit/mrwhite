@@ -5,7 +5,7 @@ import {
   type BucketId,
   type LangId,
   type Pair,
-} from "./words";
+} from "./words.ts";
 
 /**
  * Every rule of the game lives here, so there is one place to check when a

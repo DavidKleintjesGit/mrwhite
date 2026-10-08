@@ -1,8 +1,15 @@
-import type { CustomPair, Difficulty } from "./game";
-import { CATEGORY_IDS, type LangId } from "./words";
+import type { CustomPair, Difficulty } from "./game.ts";
+import { isResumable, type Stage } from "./stage.ts";
+import { CATEGORY_IDS, type LangId } from "./words.ts";
 
 /** Same key as the design uses, so a saved game carries over. */
 const STORAGE_KEY = "mrwhite-noir-v1";
+
+/**
+ * A round older than this is not the one you walked away from, so the group
+ * and the settings are kept but the game is dropped.
+ */
+const MAX_GAME_AGE_MS = 6 * 60 * 60 * 1000;
 
 export type Theme = "donker" | "licht";
 
@@ -26,6 +33,10 @@ export type Stored = {
   nPlayers: number;
   nUnder: number;
   nWhite: number;
+  /** The screen the group was on, so a reload does not lose the round. */
+  stage: Stage;
+  /** When the stage was last written, used to drop a stale game. */
+  stageAt: number;
 };
 
 export function defaultSettings(lang: LangId): Settings {
@@ -50,6 +61,8 @@ export function defaultStored(lang: LangId): Stored {
     nPlayers: 6,
     nUnder: 1,
     nWhite: 1,
+    stage: { name: "home" },
+    stageAt: 0,
   };
 }
 
@@ -77,12 +90,19 @@ export function parseStored(raw: string | null, lang: LangId): Stored {
     return fallback;
   }
 
+  // A game is only picked up again if it is recent and still looks like one.
+  const fresh = Date.now() - (saved.stageAt ?? 0) < MAX_GAME_AGE_MS;
+  const stage =
+    fresh && isResumable(saved.stage) ? saved.stage : fallback.stage;
+
   return {
     settings: { ...fallback.settings, ...(saved.settings ?? {}) },
     names: Array.isArray(saved.names) ? saved.names : [],
     nPlayers: saved.nPlayers ?? fallback.nPlayers,
     nUnder: saved.nUnder ?? fallback.nUnder,
     nWhite: saved.nWhite ?? fallback.nWhite,
+    stage,
+    stageAt: saved.stageAt ?? 0,
   };
 }
 
