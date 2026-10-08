@@ -229,13 +229,15 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
               <div
                 style={{
                   fontFamily: ARCHIVO,
-                  fontSize: "clamp(40px, 12vw, 64px)",
+                  fontSize: "clamp(30px, 11vw, 64px)",
                   lineHeight: 1,
                   textTransform: "uppercase",
                   wordBreak: "break-word",
                   background: "var(--bg)",
                   color: "var(--fg)",
                   padding: "10px 18px",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
                   transform: "rotate(-2deg)",
                 }}
               >

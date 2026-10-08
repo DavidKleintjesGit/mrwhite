@@ -36,7 +36,7 @@ export default function HomeScreen({
 
   return (
     <Screen
-      label={t.settings}
+      label="Home"
       duration={0.5}
       style={{
         display: "grid",
@@ -53,6 +53,11 @@ export default function HomeScreen({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          // The design keeps this on one line, which runs off the right edge
+          // of a phone. Wrapping costs nothing on a wide screen, where it
+          // still fits on that one line.
+          flexWrap: "wrap",
+          gap: 12,
           fontSize: 13,
           letterSpacing: ".18em",
           textTransform: "uppercase",
@@ -60,7 +65,15 @@ export default function HomeScreen({
         }}
       >
         <span>{t.caseNumber}</span>
-        <span style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            justifyContent: "flex-end",
+            gap: 16,
+          }}
+        >
           <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <span
               style={{

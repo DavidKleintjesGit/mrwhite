@@ -48,11 +48,13 @@ export default function EndScreen({
       label={t.stamp}
       style={{ display: "flex", flexDirection: "column", gap: 22 }}
     >
+      {/* A stamp cannot wrap, so it shrinks instead. The bottom margin keeps
+          its rotated corner off the banner below. */}
       <Stamp
-        fontSize={30}
+        fontSize="clamp(18px, 6.5vw, 30px)"
         rotate={-6}
         delay={0.1}
-        style={{ alignSelf: "center" }}
+        style={{ alignSelf: "center", maxWidth: "100%", marginBottom: 8 }}
       >
         {t.stamp}
       </Stamp>
@@ -70,12 +72,16 @@ export default function EndScreen({
           style={{
             margin: 0,
             fontFamily: ARCHIVO,
-            fontSize: "clamp(38px, 11vw, 56px)",
+            // "Infiltranten winnen" is a long line; without room to shrink it
+            // runs off both edges of a phone.
+            fontSize: "clamp(26px, 9vw, 56px)",
             textTransform: "uppercase",
             lineHeight: 0.95,
             background: banner.colour,
             color: "#0d0d0d",
             padding: "10px 18px",
+            maxWidth: "100%",
+            boxSizing: "border-box",
             transform: "rotate(-2deg)",
             boxShadow: "8px 8px 0 var(--fg)",
             animation: "popIn .5s .5s both",

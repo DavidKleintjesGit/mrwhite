@@ -72,7 +72,7 @@ export default function UnmaskScreen({
         style={{
           margin: 0,
           fontFamily: ARCHIVO,
-          fontSize: "clamp(44px, 13vw, 66px)",
+          fontSize: "clamp(32px, 13vw, 66px)",
           textTransform: "uppercase",
           lineHeight: 1,
           wordBreak: "break-word",
@@ -94,7 +94,10 @@ export default function UnmaskScreen({
           <div
             style={{
               fontFamily: ARCHIVO,
-              fontSize: "clamp(38px, 12vw, 58px)",
+              // "Mr. White" is half again as wide as "Burger", and the block
+              // ends up rotated, so it needs room to shrink on a phone or it
+              // bleeds off both edges.
+              fontSize: "clamp(26px, 9.5vw, 58px)",
               textTransform: "uppercase",
               lineHeight: 1,
               color: "#0d0d0d",
@@ -102,6 +105,8 @@ export default function UnmaskScreen({
               border: "4px solid #0d0d0d",
               boxShadow: "8px 8px 0 var(--fg)",
               padding: "14px 22px",
+              maxWidth: "100%",
+              boxSizing: "border-box",
               animation: "stampIn .55s both",
             }}
           >

@@ -108,10 +108,11 @@ export default function HintScreen({
         <div
           style={{
             fontFamily: ARCHIVO,
-            fontSize: "clamp(42px, 13vw, 64px)",
+            fontSize: "clamp(32px, 13vw, 64px)",
             lineHeight: 1,
             textTransform: "uppercase",
             wordBreak: "break-word",
+            maxWidth: "100%",
           }}
         >
           {speaker.name}
