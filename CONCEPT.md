@@ -31,7 +31,8 @@ bewuste keuze, geen tijdelijke beperking: het spel leeft van mensen die bij elka
 
 ### Verloop van een ronde
 
-1. **Uitdelen** — telefoon gaat rond, iedereen houdt de knop ingedrukt om zijn rol + woord te zien
+1. **Uitdelen** — de telefoon gaat rond; iedereen zoekt zijn eigen naam op en bekijkt zijn woord.
+   Dit scherm blijft open en herhaaldelijk te gebruiken tot de ronde start (zie hieronder)
 2. **Hints** — om de beurt zegt iedereen één woord of korte zin over zijn woord
 3. **Overleg** — vrij praten, wie klinkt vaag?
 4. **Stemmen** — iedereen wijst iemand aan, meeste stemmen ligt eruit
@@ -72,6 +73,23 @@ undercover zijn is zwaarder dan burger zijn.
 
 Vuistregel: ongeveer een derde is infiltrant. Alles is handmatig te overrulen in de instellingen.
 
+### Je woord inzien: open tot de ronde begint
+
+Geen eenmalige onthulling waarbij de telefoon één rondje gaat en je daarna je kans gehad hebt.
+In plaats daarvan één scherm met alle spelersnamen als tegels:
+
+- Tik op je eigen naam → houd ingedrukt → je rol en woord verschijnen → laat los en het is weer weg
+- Dat kan zo vaak als je wil. Te snel doorgeklikt, niet goed gelezen, of even twijfel: gewoon
+  nog een keer kijken
+- Bekeken namen krijgen een vinkje, zodat de groep ziet wie nog moet
+- Pas als iemand op **Start ronde 1** tikt wordt dit scherm gesloten en is inzien voorbij
+
+Vanaf dat moment moet je het uit je hoofd doen — dat is het spel. Maar niemand verliest een ronde
+omdat de telefoon te snel werd doorgegeven.
+
+Dit scherm werkt op vertrouwen: je kunt technisch ook op iemand anders zijn naam tikken. Dat hoort
+bij pass-and-play en lossen we niet op met pincodes; dat maakt het alleen omslachtig.
+
 ### Huisregels die de app afdwingt
 
 - Je mag je eigen woord niet letterlijk noemen, ook geen vervoeging ervan
@@ -100,8 +118,9 @@ Onderzocht: [mrwhiteonline.com](https://mrwhiteonline.com), [meneerwit.com](http
 1. **Home** — Spelen · Regels · Instellingen
 2. **Spelers** — namen invoeren, worden onthouden voor de volgende keer
 3. **Ronde-instellingen** — aantal undercovers, Mr. White aan/uit, thema, moeilijkheid
-4. **Rol onthullen** — "Geef de telefoon aan Sanne" → ingedrukt houden → woord → doorgeven
-5. **Startspeler** — "Joost begint"
+4. **Woorden inzien** — tegels met alle namen, iedereen bekijkt zijn eigen woord zo vaak als nodig,
+   tot iemand op "Start ronde 1" tikt
+5. **Startspeler** — "Joost begint" (gegarandeerd een burger)
 6. **Hintronde** — spreekvolgorde met wie aan de beurt is, één tik naar de volgende
 7. **Stemmen** — tegels per speler
 8. **Onthulling** — wie lag eruit, en wat was hij
@@ -109,12 +128,16 @@ Onderzocht: [mrwhiteonline.com](https://mrwhiteonline.com), [meneerwit.com](http
 10. **Einde ronde** — winnaar, punten, scorebord
 11. **Volgende ronde** of stoppen
 
-### Hints bijhouden: optioneel, standaard uit
+### Bewust niet in de eerste versies
 
-Overwogen en teruggeschaald. Hints laten intypen betekent dat één persoon zit te typen terwijl de
-rest praat — dat remt het tempo en legt al het werk bij de telefoonhouder. Standaard toont de app
-dus alleen de spreekvolgorde, zonder invoer. Wie het wél wil, zet het aan in de instellingen: dan
-verschijnt per speler een veld voor één woord en staan de hints op het stemscherm.
+Overwogen en geschrapt om het simpel te houden. Staan hier zodat we ze niet opnieuw bedenken:
+
+- **Hints laten intypen** — dan zit één persoon te typen terwijl de rest praat. Dat remt het tempo
+  en legt al het werk bij de telefoonhouder
+- **Timer per speler** — voegt druk toe die de meeste groepen niet willen
+- **Pincode per speler** bij het inzien van je woord — lost een probleem op dat in de praktijk
+  niet bestaat, en maakt de start omslachtig
+- **Online rooms, chat, vriendenlijsten, accounts** — valt buiten pass-and-play
 
 ## 6. Woordenbank
 
@@ -191,7 +214,7 @@ type Player = {
   word: string | null   // null voor Mr. White
   alive: boolean
   score: number
-  hints: string[]       // alleen gevuld als hints bijhouden aan staat
+  seenWord: boolean     // vinkje op het inzien-scherm
 }
 
 type Phase = 'setup' | 'reveal' | 'hints' | 'voting' | 'elimination' | 'mrwhite-guess' | 'result'
@@ -202,17 +225,10 @@ herladen pagina de ronde niet weggooit.
 
 ## 8. Fasering
 
-| Fase | Inhoud |
-|---|---|
-| **0** | Concept vastleggen — *dit document* |
-| **1 · MVP** | Spelers invoeren, rollen verdelen, woord onthullen, stemmen, win-check, gok van Mr. White. Lelijk mag. Doel: één keer helemaal uitspelen |
-| **2 · Speelbaar** | Scorebord over meerdere rondes, thema's, rolrotatie, timer, foutbestendigheid |
-| **3 · Af** | Vormgeving, animaties, geluid, dark mode, 500 woordparen |
-| **4 · PWA** | Offline, installeerbaar, eigen domein |
-| **5 · App** | Capacitor, iOS + Android, storevermelding |
-| **6 · Verkoop** | Backend, accounts, Stripe op web, in-app purchase op native, betaalde pakketten |
+Uitgewerkt in een eigen document: **[FASEN.md](FASEN.md)** — zeven fasen van kale spelloop tot
+storevermelding, elk met een harde "klaar als"-voorwaarde.
 
-Fase 1 tot en met 5 heeft geen backend nodig. Pas bij fase 6 komt er een server bij.
+Fase 1 tot en met 6 heeft geen backend nodig. Pas bij fase 7 komt er een server bij.
 
 ## 9. Nog te beslissen
 
