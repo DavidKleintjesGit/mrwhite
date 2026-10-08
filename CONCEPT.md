@@ -113,7 +113,7 @@ Onderzocht: [mrwhiteonline.com](https://mrwhiteonline.com), [meneerwit.com](http
 |---|---|
 | Woordparen zijn klakkeloos vertaald uit het Engels, vaak onlogisch | Handgeschreven Nederlandse paren, met Nederlandse thema's (Sinterklaas, Koningsdag, snackbar) |
 | Mr. White mag soms als eerste praten, en is dan kansloos | Startspeler is nooit een Mr. White, zonder dat de app dat verklapt |
-| Je bent drie rondes achter elkaar Mr. White | Rolhistorie onthouden, niet twee keer achter elkaar dezelfde rol |
+| Je bent drie rondes achter elkaar Mr. White | Nooit twee rondes achter elkaar infiltrant. Niet "nooit dezelfde rol": met vier burgers op zes spelers moeten er altijd burgers terugkomen |
 | Reclame tussen elke ronde, breekt het feestje | Geen advertenties in de spelloop |
 | Kleine knopjes, licht thema, onbruikbaar op een donker feestje | Grote trefvlakken, dark mode standaard, hoog contrast |
 | Werkt niet zonder internet | Volledig offline, ook de categorieën |

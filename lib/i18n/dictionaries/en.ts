@@ -51,7 +51,7 @@ const en = {
 
     names: {
       title: "Who is playing?",
-      hint: "Leave a field empty and we will fill in a name for you.",
+      hint: "Leave a field empty and we will name that player for you.",
       playerNumber: "Player {number}",
       duplicate: "{name} is in there twice. Give them different names.",
       back: "Back to the line-up",
@@ -60,14 +60,13 @@ const en = {
 
     reveal: {
       title: "Everyone's word",
-      instruction:
-        "Pass the phone around. Find your own name, hold it to read your word, and let go.",
+      instruction: "Pass the phone around. Find your name and hold it down.",
       stillOpen:
         "Look as often as you like. Once the round starts, the words are gone.",
       progress: "{seen} of {total} have looked",
       hold: "Hold to read",
       close: "Done",
-      start: "Start round 1",
+      start: "Start the round",
       yourWord: "Your word",
       noWord: "You get no word. Listen closely and bluff along.",
       reDeal: "Deal again",
@@ -82,13 +81,13 @@ const en = {
     clues: {
       title: "Clues",
       instruction:
-        "In this order, everyone says one word about their own word. Never the word itself, and no clue that has already been given.",
+        "In this order, one clue each about your own word. Never the word itself, and never a clue that has already been given.",
       toVoting: "Go to the vote",
     },
 
     voting: {
       title: "Who is out?",
-      instruction: "Talk it over, then tap whoever the group votes out.",
+      instruction: "Talk it over first. Then tap whoever the group votes out.",
       pickFirst: "Tap a player first",
       confirm: "Vote out {name}",
     },
@@ -98,23 +97,26 @@ const en = {
       was: "{name} was",
       continue: "Continue",
       mrWhiteGuesses: "Mr. White gets one guess",
+      undo: "Wrong player — take it back",
     },
 
     mrWhiteGuess: {
       title: "Mr. White guesses",
       instruction:
-        "{name}, what was the civilians' word? One guess. Get it right and the infiltrators win after all.",
+        "{name}, one guess at the civilians' word. Get it right and the infiltrators win after all.",
       placeholder: "The civilians' word",
       submit: "Guess",
     },
 
     result: {
       title: "Result",
+      roundLabel: "Round {number}",
       civiliansWin: "The civilians win",
       infiltratorsWin: "The infiltrators win",
       byGuess: "{name} guessed the word.",
       wordsWere: "Civilians had {civilian}, undercovers had {undercover}.",
-      lineupHeading: "Everyone's role",
+      standings: "Standings",
+      nextRound: "Another round",
       newGame: "New game",
     },
   },

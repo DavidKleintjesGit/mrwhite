@@ -37,9 +37,9 @@ alles op één pagina mag. We willen voelen of de ritmiek klopt voordat we er ti
 - Next.js-project opzetten: App Router, TypeScript, Tailwind, `output: 'export'` meteen goed
 - Spelers invoeren: 3 tot 10 namen
 - Rolverdeling volgens de tabel in het concept
-- Startspeler bepalen, **nooit een Mr. White** — altijd een burger
+- Startspeler bepalen, **nooit een Mr. White** (undercovers mogen wel openen)
 - Woorden-inzien-scherm: tegels met namen, ingedrukt houden om je woord te zien, zo vaak als je
-  wil, vinkje bij wie gekeken heeft, open tot "Start ronde 1"
+  wil, vinkje bij wie gekeken heeft, open tot de ronde start
 - Hintronde: spreekvolgorde tonen, één tik naar de volgende speler
 - Stemmen: tik op een speler, die ligt eruit
 - Onthulling: wat was de weggestemde speler
@@ -67,13 +67,15 @@ Eén potje spelen is niet hetzelfde als een avond spelen. Hier wordt het pas bru
 - Puntentelling volgens het concept, over meerdere rondes
 - Scorebord tussen de rondes
 - "Volgende ronde" met dezelfde spelers, nieuwe rollen en een nieuw woordpaar
-- Rolrotatie: niemand twee rondes achter elkaar dezelfde rol
+- Rolrotatie: niemand twee rondes achter elkaar infiltrant
 - Opslag in `localStorage`: spelersnamen onthouden, en een lopend spel overleeft het per ongeluk
   herladen of wegklikken van de pagina
 - Spel afbreken en opnieuw beginnen
 
 **Klaar als:** vijf rondes achter elkaar gespeeld zijn zonder namen opnieuw in te voeren, het
 scorebord klopt, en de pagina halverwege verversen de ronde niet weggooit.
+
+**Stand:** gebouwd en getest. Nog niet afgevinkt: vijf rondes echt achter elkaar spelen.
 
 ---
 

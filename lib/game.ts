@@ -26,7 +26,6 @@ export type Player = {
   /** Ticked off on the reveal screen so the group sees who still has to look. */
   seenWord: boolean;
   alive: boolean;
-  score: number;
 };
 
 export type Round = {
@@ -143,6 +142,50 @@ function wordFor(role: Role, pair: WordPair): string | null {
   return role === "undercover" ? pair.undercover : pair.civilian;
 }
 
+/** Who had which role last round, so the next deal can spread the load. */
+export type PreviousRoles = Record<string, Role>;
+
+/**
+ * Deals the roles across the seats.
+ *
+ * The rule is that nobody is an infiltrator two rounds running. Three rounds
+ * as Mr. White in a row is the complaint people have about every other app,
+ * and it is the only repeat worth preventing: with four civilians among six
+ * players, some civilians are bound to be civilians again, so promising "never
+ * the same role twice" would be a promise the arithmetic cannot keep.
+ *
+ * Infiltrators are always a minority (`checkLineup` sees to that), so there
+ * are always enough players who sat out last round to fill every infiltrator
+ * seat. No retrying, no guessing.
+ */
+function dealRoles(lineup: Lineup, previous: PreviousRoles): Role[] {
+  const infiltratorRoles = shuffle([
+    ...Array<Role>(lineup.undercovers).fill("undercover"),
+    ...Array<Role>(lineup.mrWhites).fill("mrwhite"),
+  ]);
+
+  const seats = shuffle(
+    Array.from({ length: lineup.players }, (_, index) => index),
+  );
+  const wasInfiltrator = (seat: number) => {
+    const role = previous[`p${seat}`];
+    return role === "undercover" || role === "mrwhite";
+  };
+
+  // Players who were civilians last round go first in line for the job.
+  const order = [
+    ...seats.filter((seat) => !wasInfiltrator(seat)),
+    ...seats.filter(wasInfiltrator),
+  ];
+
+  const roles = Array<Role>(lineup.players).fill("civilian");
+  order.slice(0, infiltratorRoles.length).forEach((seat, index) => {
+    roles[seat] = infiltratorRoles[index];
+  });
+
+  return roles;
+}
+
 /**
  * Hands out roles and words, and picks who gives the first clue.
  *
@@ -157,12 +200,9 @@ export function dealRound(
   lineup: Lineup,
   names: readonly string[],
   pair: WordPair,
+  previousRoles: PreviousRoles = {},
 ): Round {
-  const roles = shuffle([
-    ...Array<Role>(lineup.undercovers).fill("undercover"),
-    ...Array<Role>(lineup.mrWhites).fill("mrwhite"),
-    ...Array<Role>(civilianCount(lineup)).fill("civilian"),
-  ]);
+  const roles = dealRoles(lineup, previousRoles);
 
   const players: Player[] = names.map((name, index) => ({
     id: `p${index}`,
@@ -171,7 +211,6 @@ export function dealRound(
     word: wordFor(roles[index], pair),
     seenWord: false,
     alive: true,
-    score: 0,
   }));
 
   // `checkLineup` keeps civilians in the majority, so this is never empty.
@@ -204,13 +243,26 @@ export function clueOrder(round: Round): Player[] {
   );
 }
 
-export function eliminate(round: Round, playerId: string): Round {
+export function setPlayerAlive(
+  round: Round,
+  playerId: string,
+  alive: boolean,
+): Round {
   return {
     ...round,
     players: round.players.map((player) =>
-      player.id === playerId ? { ...player, alive: false } : player,
+      player.id === playerId ? { ...player, alive } : player,
     ),
   };
+}
+
+export function eliminate(round: Round, playerId: string): Round {
+  return setPlayerAlive(round, playerId, false);
+}
+
+/** Undo a vote, for the misclick that always happens at a busy table. */
+export function reinstate(round: Round, playerId: string): Round {
+  return setPlayerAlive(round, playerId, true);
 }
 
 /**
@@ -235,5 +287,64 @@ export function outcomeOf(round: Round): Outcome | null {
 export function isCivilianWord(round: Round, guess: string): boolean {
   return (
     guess.trim().toLowerCase() === round.pair.civilian.trim().toLowerCase()
+  );
+}
+
+// --- Scoring ---------------------------------------------------------------
+
+/**
+ * Harder roles are worth more. Being undercover means talking your way around
+ * a word you know is wrong, all round; being a civilian mostly means telling
+ * the truth. See CONCEPT.md.
+ */
+export const POINTS = {
+  civilian: 2,
+  undercover: 10,
+  mrwhite: 6,
+  /** On top of the win, for guessing the civilians' word after being voted out. */
+  mrWhiteGuess: 4,
+} as const;
+
+/** Points per player id. */
+export type Scores = Record<string, number>;
+
+/**
+ * What this round was worth. Being voted out does not cost you the points:
+ * the side wins, not the survivors.
+ */
+export function roundPoints(
+  round: Round,
+  outcome: Outcome,
+  guessedBy: Player | null,
+): Scores {
+  const points: Scores = {};
+
+  for (const player of round.players) {
+    const won =
+      outcome === "civilians"
+        ? player.role === "civilian"
+        : player.role !== "civilian";
+    if (won) points[player.id] = POINTS[player.role];
+  }
+
+  if (guessedBy) {
+    points[guessedBy.id] = (points[guessedBy.id] ?? 0) + POINTS.mrWhiteGuess;
+  }
+
+  return points;
+}
+
+export function addScores(base: Scores, extra: Scores): Scores {
+  const total: Scores = { ...base };
+  for (const [id, points] of Object.entries(extra)) {
+    total[id] = (total[id] ?? 0) + points;
+  }
+  return total;
+}
+
+/** Who had which role, to keep the next deal from repeating it. */
+export function rolesOf(round: Round): PreviousRoles {
+  return Object.fromEntries(
+    round.players.map((player) => [player.id, player.role]),
   );
 }

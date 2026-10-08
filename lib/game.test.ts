@@ -3,6 +3,8 @@ import { test } from "node:test";
 import {
   MAX_PLAYERS,
   MIN_PLAYERS,
+  POINTS,
+  addScores,
   checkLineup,
   civilianCount,
   clueOrder,
@@ -11,8 +13,12 @@ import {
   fillInBlankNames,
   findDuplicateName,
   isCivilianWord,
+  livingPlayers,
   maxFor,
   outcomeOf,
+  reinstate,
+  rolesOf,
+  roundPoints,
   suggestedFor,
   type Lineup,
   type Role,
@@ -134,7 +140,6 @@ const roundOf = (roles: Role[]): ReturnType<typeof dealRound> => ({
     word: role === "mrwhite" ? null : role === "undercover" ? PAIR.undercover : PAIR.civilian,
     seenWord: false,
     alive: true,
-    score: 0,
   })),
   startPlayerId: "p0",
   pair: PAIR,
@@ -185,4 +190,74 @@ test("Mr. White's guess ignores case and padding", () => {
   assert.equal(isCivilianWord(round, "  PiZZa "), true);
   assert.equal(isCivilianWord(round, "pasta"), false);
   assert.equal(isCivilianWord(round, ""), false);
+});
+
+test("the winning side scores, including whoever was voted out", () => {
+  let round = roundOf(["civilian", "civilian", "civilian", "undercover"]);
+  round = eliminate(round, "p0"); // a civilian is out but still on the winning side
+  round = eliminate(round, "p3");
+
+  assert.deepEqual(roundPoints(round, "civilians", null), {
+    p0: POINTS.civilian,
+    p1: POINTS.civilian,
+    p2: POINTS.civilian,
+  });
+});
+
+test("undercovers are worth more than Mr. White, who is worth more than a civilian", () => {
+  const round = roundOf(["civilian", "undercover", "mrwhite"]);
+  assert.deepEqual(roundPoints(round, "infiltrators", null), {
+    p1: POINTS.undercover,
+    p2: POINTS.mrwhite,
+  });
+});
+
+test("a correct guess by Mr. White pays the win plus the bonus", () => {
+  const round = roundOf(["civilian", "civilian", "mrwhite"]);
+  const mrWhite = round.players[2];
+  const points = roundPoints(round, "infiltrators", mrWhite);
+  assert.equal(points.p2, POINTS.mrwhite + POINTS.mrWhiteGuess);
+});
+
+test("scores add up across rounds", () => {
+  assert.deepEqual(addScores({ p0: 2 }, { p0: 10, p1: 6 }), { p0: 12, p1: 6 });
+});
+
+test("nobody is an infiltrator two rounds running", () => {
+  for (const lineup of PLAYABLE) {
+    const names = namesFor(lineup.players);
+    let previous = rolesOf(dealRound(lineup, names, PAIR));
+
+    for (let round = 0; round < 200; round++) {
+      const next = dealRound(lineup, names, PAIR, previous);
+      for (const player of next.players) {
+        const before = previous[player.id];
+        const wasInfiltrator = before === "undercover" || before === "mrwhite";
+        const isInfiltrator = player.role !== "civilian";
+        assert.ok(
+          !(wasInfiltrator && isInfiltrator),
+          `${player.id} was ${before} and is ${player.role} again`,
+        );
+      }
+      previous = rolesOf(next);
+    }
+  }
+});
+
+test("rotating roles still deals the right counts", () => {
+  const lineup = { players: 6, undercovers: 1, mrWhites: 1 };
+  const previous = rolesOf(dealRound(lineup, namesFor(6), PAIR));
+  const next = dealRound(lineup, namesFor(6), PAIR, previous);
+
+  assert.equal(next.players.filter((p) => p.role === "undercover").length, 1);
+  assert.equal(next.players.filter((p) => p.role === "mrwhite").length, 1);
+  assert.equal(next.players.filter((p) => p.role === "civilian").length, 4);
+});
+
+test("a vote can be taken back", () => {
+  let round = roundOf(["civilian", "civilian", "civilian", "undercover"]);
+  round = eliminate(round, "p1");
+  assert.equal(livingPlayers(round).length, 3);
+  round = reinstate(round, "p1");
+  assert.equal(livingPlayers(round).length, 4);
 });

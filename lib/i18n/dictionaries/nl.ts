@@ -49,7 +49,7 @@ const nl: Dictionary = {
 
     names: {
       title: "Wie doen er mee?",
-      hint: "Laat een veld leeg en we vullen er zelf een naam in.",
+      hint: "Veld leeg laten mag, dan vullen wij er een naam in.",
       playerNumber: "Speler {number}",
       duplicate: "{name} staat er twee keer in. Geef ze verschillende namen.",
       back: "Terug naar de verdeling",
@@ -58,14 +58,13 @@ const nl: Dictionary = {
 
     reveal: {
       title: "Ieders woord",
-      instruction:
-        "Geef de telefoon door. Zoek je eigen naam, houd 'm ingedrukt om je woord te lezen, en laat los.",
+      instruction: "Geef de telefoon rond. Zoek je naam en houd 'm ingedrukt.",
       stillOpen:
         "Kijk zo vaak als je wil. Zodra de ronde start zijn de woorden weg.",
       progress: "{seen} van de {total} hebben gekeken",
       hold: "Ingedrukt houden",
       close: "Klaar",
-      start: "Start ronde 1",
+      start: "Start de ronde",
       yourWord: "Jouw woord",
       noWord: "Jij krijgt geen woord. Luister goed en bluf mee.",
       reDeal: "Opnieuw verdelen",
@@ -80,13 +79,13 @@ const nl: Dictionary = {
     clues: {
       title: "Hints",
       instruction:
-        "In deze volgorde zegt iedereen één woord over zijn eigen woord. Nooit het woord zelf, en geen hint die al gegeven is.",
+        "In deze volgorde één hint per speler, over je eigen woord. Nooit het woord zelf, en nooit een hint die al gevallen is.",
       toVoting: "Naar het stemmen",
     },
 
     voting: {
       title: "Wie ligt eruit?",
-      instruction: "Overleg, en tik dan aan wie de groep eruit stemt.",
+      instruction: "Overleg eerst. Tik daarna aan wie de groep eruit stemt.",
       pickFirst: "Kies eerst een speler",
       confirm: "{name} eruit stemmen",
     },
@@ -96,24 +95,26 @@ const nl: Dictionary = {
       was: "{name} was",
       continue: "Verder",
       mrWhiteGuesses: "Mr. White krijgt één gok",
+      undo: "Verkeerde speler — terugdraaien",
     },
 
     mrWhiteGuess: {
       title: "Mr. White raadt",
       instruction:
-        "{name}, wat was het woord van de burgers? Eén gok. Raad je goed, dan winnen de infiltranten alsnog.",
+        "{name}, één gok naar het woord van de burgers. Raad je goed, dan winnen de infiltranten alsnog.",
       placeholder: "Het woord van de burgers",
       submit: "Raden",
     },
 
     result: {
       title: "Uitslag",
+      roundLabel: "Ronde {number}",
       civiliansWin: "De burgers winnen",
       infiltratorsWin: "De infiltranten winnen",
       byGuess: "{name} raadde het woord.",
-      wordsWere:
-        "De burgers hadden {civilian}, de undercovers {undercover}.",
-      lineupHeading: "Ieders rol",
+      wordsWere: "De burgers hadden {civilian}, de undercovers {undercover}.",
+      standings: "Stand",
+      nextRound: "Nog een ronde",
       newGame: "Nieuw spel",
     },
   },

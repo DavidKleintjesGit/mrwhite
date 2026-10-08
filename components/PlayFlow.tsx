@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import ClueRound from "@/components/ClueRound";
 import Elimination from "@/components/Elimination";
 import FirstClue from "@/components/FirstClue";
@@ -12,43 +12,29 @@ import Screen from "@/components/Screen";
 import Voting from "@/components/Voting";
 import WordReveal from "@/components/WordReveal";
 import {
+  addScores,
   dealRound,
   eliminate,
   isCivilianWord,
   outcomeOf,
-  suggestedFor,
+  reinstate,
+  rolesOf,
+  roundPoints,
   type Lineup,
-  type Outcome,
   type Player,
   type Round,
 } from "@/lib/game";
 import type { Dictionary, Locale } from "@/lib/i18n";
+import {
+  freshSession,
+  parseSession,
+  readStoredSession,
+  resetGame,
+  writeSession,
+  type Session,
+  type Stage,
+} from "@/lib/session";
 import { randomWordPair } from "@/lib/words";
-
-/** Only the names are kept between games; a half-played round is not. */
-const NAMES_STORAGE_KEY = "mrwhite.names";
-
-/**
- * A round only exists once it has been dealt, and the stages after a vote only
- * exist with the player that was voted out, so both travel with the stage
- * rather than sitting in nullable fields. No screen can then be reached
- * without the data it needs.
- */
-type Stage =
-  | { name: "lineup" }
-  | { name: "names" }
-  | { name: "reveal"; round: Round }
-  | { name: "firstClue"; round: Round }
-  | { name: "clues"; round: Round }
-  | { name: "voting"; round: Round }
-  | { name: "elimination"; round: Round; player: Player }
-  | { name: "mrWhiteGuess"; round: Round; player: Player }
-  | {
-      name: "result";
-      round: Round;
-      outcome: Outcome;
-      guessedBy: Player | null;
-    };
 
 type Props = {
   dict: Dictionary;
@@ -56,110 +42,102 @@ type Props = {
   homeHref: string;
 };
 
-function readStoredNames(): string[] {
-  try {
-    const raw = localStorage.getItem(NAMES_STORAGE_KEY);
-    if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter((name): name is string => typeof name === "string");
-  } catch {
-    // Unreadable or blocked storage just means starting with empty fields.
-    return [];
-  }
-}
-
-function storeNames(names: readonly string[]) {
-  try {
-    localStorage.setItem(NAMES_STORAGE_KEY, JSON.stringify(names));
-  } catch {
-    // Not remembering the names is a nuisance, not a failure.
-  }
-}
+/** The stored game never changes behind our back while this page is open. */
+const subscribe = () => () => {};
 
 export default function PlayFlow({ dict, lang, homeHref }: Props) {
-  const [stage, setStage] = useState<Stage>({ name: "lineup" });
-  const [lineup, setLineup] = useState<Lineup>(() => suggestedFor(6));
-  const [names, setNames] = useState<string[]>([]);
+  // Read through useSyncExternalStore so the prerendered HTML and the first
+  // client render agree, and the saved game arrives without an effect.
+  const stored = useSyncExternalStore(subscribe, readStoredSession, () => null);
+  const restored = useMemo(() => parseSession(stored), [stored]);
 
-  function goToNames() {
-    // Read here rather than on mount: the page is prerendered, so touching
-    // localStorage during render would not match the server-rendered HTML.
-    if (names.length === 0) setNames(readStoredNames());
-    setStage({ name: "names" });
+  // Null until the first move; from then on this is the live game.
+  const [edited, setEdited] = useState<Session | null>(null);
+  const session = edited ?? restored ?? freshSession();
+
+  function commit(next: Session) {
+    setEdited(next);
+    writeSession(next);
   }
 
-  function deal(forNames: readonly string[]) {
-    setStage({
-      name: "reveal",
-      round: dealRound(lineup, forNames, randomWordPair(lang)),
+  function goTo(stage: Stage) {
+    commit({ ...session, stage });
+  }
+
+  function deal(forNames: readonly string[], session: Session) {
+    commit({
+      ...session,
+      roundNumber: session.roundNumber + 1,
+      stage: {
+        name: "reveal",
+        round: dealRound(
+          session.lineup,
+          forNames,
+          randomWordPair(lang),
+          session.previousRoles,
+        ),
+      },
     });
   }
 
-  function confirmNames(confirmed: string[]) {
-    setNames(confirmed);
-    storeNames(confirmed);
-    deal(confirmed);
+  function confirmNames(names: string[]) {
+    deal(names, { ...session, names });
   }
 
   function markSeen(playerId: string) {
-    setStage((current) => {
-      if (current.name !== "reveal") return current;
-      return {
-        ...current,
-        round: {
-          ...current.round,
-          players: current.round.players.map((player) =>
-            player.id === playerId ? { ...player, seenWord: true } : player,
-          ),
-        },
-      };
+    if (session.stage.name !== "reveal") return;
+    const round = session.stage.round;
+    goTo({
+      name: "reveal",
+      round: {
+        ...round,
+        players: round.players.map((player) =>
+          player.id === playerId ? { ...player, seenWord: true } : player,
+        ),
+      },
     });
   }
 
   function voteOut(round: Round, playerId: string) {
     const player = round.players.find((candidate) => candidate.id === playerId);
     if (!player) return;
-    setStage({
-      name: "elimination",
-      round: eliminate(round, playerId),
-      player,
-    });
+    goTo({ name: "elimination", round: eliminate(round, playerId), player });
   }
 
   /** Either the game is over, or another clue round starts. */
   function settle(round: Round, guessedBy: Player | null) {
     const outcome = outcomeOf(round);
-    setStage(
-      outcome
-        ? { name: "result", round, outcome, guessedBy }
-        : { name: "clues", round },
-    );
+    if (!outcome) {
+      goTo({ name: "clues", round });
+      return;
+    }
+
+    commit({
+      ...session,
+      scores: addScores(
+        session.scores,
+        roundPoints(round, outcome, guessedBy),
+      ),
+      previousRoles: rolesOf(round),
+      stage: { name: "result", round, outcome, guessedBy },
+    });
   }
 
   function afterElimination(round: Round, player: Player) {
     // A voted-out Mr. White still gets his one guess at the civilians' word.
     if (player.role === "mrwhite") {
-      setStage({ name: "mrWhiteGuess", round, player });
+      goTo({ name: "mrWhiteGuess", round, player });
       return;
     }
     settle(round, null);
   }
 
   function submitGuess(round: Round, player: Player, guess: string) {
-    if (isCivilianWord(round, guess)) {
-      setStage({
-        name: "result",
-        round,
-        outcome: "infiltrators",
-        guessedBy: player,
-      });
-      return;
-    }
-    settle(round, null);
+    settle(round, isCivilianWord(round, guess) ? player : null);
   }
 
   const back = dict.common.back;
+  const { stage } = session;
 
   switch (stage.name) {
     case "lineup":
@@ -167,9 +145,9 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
         <Screen title={dict.play.title} backLabel={back} backHref={homeHref}>
           <LineupPicker
             dict={dict.play}
-            lineup={lineup}
-            onChange={setLineup}
-            onConfirm={goToNames}
+            lineup={session.lineup}
+            onChange={(lineup: Lineup) => commit({ ...session, lineup })}
+            onConfirm={() => goTo({ name: "names" })}
           />
         </Screen>
       );
@@ -179,14 +157,14 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
         <Screen
           title={dict.play.names.title}
           backLabel={back}
-          onBack={() => setStage({ name: "lineup" })}
+          onBack={() => goTo({ name: "lineup" })}
           wide
         >
           <NameEntry
             dict={dict.play}
-            count={lineup.players}
-            initialNames={names}
-            onBack={() => setStage({ name: "lineup" })}
+            count={session.lineup.players}
+            initialNames={session.names}
+            onBack={() => goTo({ name: "lineup" })}
             onConfirm={confirmNames}
           />
         </Screen>
@@ -197,28 +175,28 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
         <Screen
           title={dict.play.reveal.title}
           backLabel={back}
-          onBack={() => setStage({ name: "names" })}
+          onBack={() => goTo({ name: "names" })}
           wide
         >
           <WordReveal
             dict={dict.play}
             round={stage.round}
             onSeen={markSeen}
-            onReDeal={() => deal(names)}
-            onStart={() => setStage({ name: "firstClue", round: stage.round })}
+            onReDeal={() => deal(session.names, session)}
+            onStart={() => goTo({ name: "firstClue", round: stage.round })}
           />
         </Screen>
       );
 
-    // From here on there is no way back: the words are out of reach and a vote
-    // cannot be undone. See CONCEPT.md.
+    // From here on there is no way back out of the round: the words are out of
+    // reach and the game is under way. See CONCEPT.md.
     case "firstClue":
       return (
         <Screen title={dict.play.firstClue.title}>
           <FirstClue
             dict={dict.play}
             round={stage.round}
-            onContinue={() => setStage({ name: "clues", round: stage.round })}
+            onContinue={() => goTo({ name: "clues", round: stage.round })}
           />
         </Screen>
       );
@@ -229,7 +207,7 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
           <ClueRound
             dict={dict.play}
             round={stage.round}
-            onDone={() => setStage({ name: "voting", round: stage.round })}
+            onDone={() => goTo({ name: "voting", round: stage.round })}
           />
         </Screen>
       );
@@ -251,6 +229,12 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
           <Elimination
             dict={dict.play}
             player={stage.player}
+            onUndo={() =>
+              goTo({
+                name: "voting",
+                round: reinstate(stage.round, stage.player.id),
+              })
+            }
             onContinue={() => afterElimination(stage.round, stage.player)}
           />
         </Screen>
@@ -275,7 +259,10 @@ export default function PlayFlow({ dict, lang, homeHref }: Props) {
             round={stage.round}
             outcome={stage.outcome}
             guessedBy={stage.guessedBy}
-            onNewGame={() => setStage({ name: "lineup" })}
+            scores={session.scores}
+            roundNumber={session.roundNumber}
+            onNextRound={() => deal(session.names, session)}
+            onNewGame={() => commit(resetGame(session))}
           />
         </Screen>
       );
