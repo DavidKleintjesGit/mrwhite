@@ -1,59 +1,154 @@
-import Link from "next/link";
-import ScreenHeader from "@/components/ui/ScreenHeader";
-import Sheet from "@/components/ui/Sheet";
+"use client";
+
+import Press from "@/components/ui/Press";
+import Screen, { Header } from "@/components/ui/Screen";
 import type { Dictionary } from "@/lib/i18n";
+
+const ARCHIVO = "var(--font-archivo-black), sans-serif";
+
+/** Paper, cyan and red: the three roles in the order the design lists them. */
+const CARD_BACKGROUNDS = ["var(--card)", "#3DD6FF", "#FF3D3D"];
 
 type Props = {
   dict: Dictionary;
-  lang: string;
+  onBack: () => void;
+  onPlay: () => void;
 };
 
-/** One accent per numbered step, cycling paper, blood, evidence. */
-const BADGE_COLOURS = ["#f2efe6", "#e8322b", "#f5d90a", "#f2efe6", "#e8322b"];
-
-export default function RulesScreen({ dict, lang }: Props) {
+export default function RulesScreen({ dict, onBack, onPlay }: Props) {
   const t = dict.rules;
 
   return (
-    <div className="flex flex-1 flex-col gap-[18px]">
-      <ScreenHeader
+    <Screen
+      label={t.title}
+      style={{ display: "flex", flexDirection: "column", gap: 20 }}
+    >
+      <Header
         kicker={t.kicker}
         title={t.title}
-        backHref={`/${lang}`}
         backLabel={dict.common.back}
+        onBack={onBack}
       />
 
-      <div className="flex flex-col gap-[14px]">
-        {t.items.map((item, index) => (
-          <Sheet
-            key={item.title}
-            depth={5}
-            className="flex gap-[14px] p-[14px]"
-            style={{ animation: "slideUp .35s ease-out both" }}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(0,1fr))",
+          gap: 10,
+        }}
+      >
+        {t.cards.map((card, index) => (
+          <div
+            key={card.name}
+            style={{
+              background: CARD_BACKGROUNDS[index],
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: "12px 10px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 6,
+            }}
           >
-            <div
-              className="font-display flex h-10 w-10 flex-none items-center justify-center border-[3px] border-ink text-[18px]"
-              style={{ background: BADGE_COLOURS[index % BADGE_COLOURS.length] }}
+            <span
+              style={{
+                fontFamily: ARCHIVO,
+                fontSize: 15,
+                textTransform: "uppercase",
+              }}
             >
-              {index + 1}
-            </div>
-            <div>
-              <div className="font-display text-[16px]">{item.title}</div>
-              <div className="text-[15px] leading-[1.4] text-pretty">
-                {item.body}
-              </div>
-            </div>
-          </Sheet>
+              {card.name}
+            </span>
+            <span style={{ fontSize: 13, lineHeight: 1.3 }}>{card.body}</span>
+          </div>
         ))}
       </div>
 
-      <Link
-        href={`/${lang}/play`}
-        className="pressable font-display mt-auto flex h-16 items-center justify-center border-[3px] border-ink bg-blood text-[19px] text-ink"
-        style={{ boxShadow: "6px 6px 0 var(--pop)" }}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+          gap: "18px 32px",
+        }}
+      >
+        {t.items.map((text, index) => (
+          <div
+            key={text}
+            style={{
+              display: "flex",
+              gap: 14,
+              alignItems: "flex-start",
+              borderBottom: "2px dashed var(--line)",
+              paddingBottom: 12,
+            }}
+          >
+            <span
+              style={{
+                flex: "none",
+                width: 38,
+                height: 38,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "#FFD23F",
+                color: "#0d0d0d",
+                fontFamily: ARCHIVO,
+                fontSize: 18,
+                transform: "rotate(-4deg)",
+              }}
+            >
+              {index + 1}
+            </span>
+            <p
+              style={{
+                margin: "6px 0 0",
+                fontSize: 16,
+                lineHeight: 1.45,
+                textWrap: "pretty",
+              }}
+            >
+              {text}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div
+        style={{
+          fontFamily: "var(--font-permanent-marker), cursive",
+          fontSize: 19,
+          color: "var(--hl)",
+          transform: "rotate(-1.5deg)",
+          lineHeight: 1.35,
+        }}
+      >
+        {t.note}
+      </div>
+
+      <Press
+        onClick={onPlay}
+        style={{
+          alignSelf: "flex-end",
+          width: "100%",
+          maxWidth: 380,
+          marginTop: "auto",
+          fontFamily: ARCHIVO,
+          fontSize: 20,
+          textTransform: "uppercase",
+          background: "#FFD23F",
+          color: "#0d0d0d",
+          border: "3px solid #0d0d0d",
+          padding: 17,
+          boxShadow: "6px 6px 0 var(--fg)",
+          cursor: "pointer",
+        }}
+        press={{
+          transform: "translate(5px,5px)",
+          boxShadow: "1px 1px 0 var(--fg)",
+        }}
       >
         {t.cta}
-      </Link>
-    </div>
+      </Press>
+    </Screen>
   );
 }

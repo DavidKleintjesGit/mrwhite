@@ -1,404 +1,407 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import OptionGroup from "@/components/ui/OptionGroup";
-import ScreenHeader from "@/components/ui/ScreenHeader";
-import Toggle from "@/components/ui/Toggle";
-import { useSettings } from "@/components/game/useSettings";
-import { format, type Dictionary, type Locale } from "@/lib/i18n";
-import {
-  DIFFICULTY_CHOICES,
-  TIMER_CHOICES,
-  type Settings,
-} from "@/lib/settings";
-import { applyTheme, readTheme, type Theme } from "@/lib/theme";
-import { CATEGORIES, countPairs, type CategoryId } from "@/lib/words";
+import { Field, FieldLabel, Segmented, ToggleRow } from "@/components/ui/Controls";
+import Press from "@/components/ui/Press";
+import Screen, { Header } from "@/components/ui/Screen";
+import type { Difficulty } from "@/lib/game";
+import { format, type Dictionary } from "@/lib/i18n";
+import type { Settings, Theme } from "@/lib/settings";
+import { CATEGORY_IDS } from "@/lib/words";
+
+const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
-  lang: Locale;
+  settings: Settings;
+  update: (change: Partial<Settings>) => void;
+  langCode: string;
+  langName: string;
+  onBack: () => void;
+  onOpenCategories: () => void;
+  onOpenLanguage: () => void;
 };
 
-type Tab = 0 | 1 | 2;
-
-const SECTION = "flex flex-col gap-[10px] border-b-2 border-dashed border-[#c9c4b6] py-[18px]";
-const HEADING = "font-display text-[16px]";
-const SUB = "-mt-[6px] text-[14px] text-[#4a4842]";
-
-export default function SettingsScreen({ dict, lang }: Props) {
-  const t = dict.settings;
-  const [settings, update] = useSettings(lang);
-  const [tab, setTab] = useState<Tab>(0);
-  const [theme, setTheme] = useState<Theme>(() =>
-    typeof document === "undefined" ? "dark" : readTheme(),
-  );
-  const [draft, setDraft] = useState({ a: "", b: "" });
-
-  const pairs = countPairs(
-    settings.categories,
-    settings.difficulty,
-    settings.custom,
-  );
-
-  function toggleCategory(id: CategoryId) {
-    const on = settings.categories.includes(id);
-    update({
-      categories: on
-        ? settings.categories.filter((category) => category !== id)
-        : [...settings.categories, id],
-    });
-  }
-
-  function addCustom() {
-    if (!draft.a.trim() || !draft.b.trim()) return;
-    update({
-      custom: [...settings.custom, { a: draft.a.trim(), b: draft.b.trim() }],
-    });
-    setDraft({ a: "", b: "" });
-  }
-
-  function pickTheme(next: Theme) {
-    applyTheme(next);
-    setTheme(next);
-  }
-
-  return (
-    <div className="flex flex-1 flex-col gap-[22px]">
-      <ScreenHeader
-        kicker={t.kicker}
-        title={t.title}
-        backHref={`/${lang}`}
-        backLabel={dict.common.back}
-      />
-
-      <div
-        className="flex flex-col"
-        style={{ animation: "slideUp .35s .05s ease-out both" }}
-      >
-        {/* File tabs: the active one is taller and sits above the folder. */}
-        <div className="grid grid-cols-3 items-end gap-[6px] px-[6px]">
-          {t.tabs.map((label, index) => {
-            const active = tab === index;
-            return (
-              <button
-                key={label}
-                type="button"
-                onClick={() => setTab(index as Tab)}
-                className="font-display relative flex cursor-pointer flex-col items-center justify-center gap-px border-[3px] border-b-0 border-ink text-[13px] text-ink"
-                style={{
-                  height: active ? 56 : 46,
-                  background: active ? "var(--card)" : "#bdb7a6",
-                  borderRadius: "8px 8px 0 0",
-                  marginBottom: -3,
-                  zIndex: active ? 2 : 0,
-                  letterSpacing: ".06em",
-                  transition: "height .15s",
-                }}
-              >
-                <span
-                  className="font-type text-[11px] text-[#5d5a53]"
-                  style={{ letterSpacing: ".1em" }}
-                >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                {label}
-              </button>
-            );
-          })}
-        </div>
-
-        <div
-          className="sheet relative z-[1] px-[18px] pt-1 pb-2"
-          style={{ boxShadow: "6px 6px 0 var(--pop)" }}
-        >
-          {tab === 0 && (
-            <GameTab dict={dict} settings={settings} update={update} />
-          )}
-
-          {tab === 1 && (
-            <>
-              <div className={SECTION}>
-                <div className="flex items-baseline justify-between gap-3">
-                  <div className={HEADING}>{t.categoriesTitle}</div>
-                  <div className="font-marker text-[18px] text-marker">
-                    {format(t.pairCount, { number: pairs })}
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-[6px]">
-                  {CATEGORIES.map((category) => {
-                    const on = settings.categories.includes(category.id);
-                    return (
-                      <button
-                        key={category.id}
-                        type="button"
-                        aria-pressed={on}
-                        onClick={() => toggleCategory(category.id)}
-                        className="flex h-11 cursor-pointer items-center gap-[10px] border-2 border-ink px-[10px] text-left text-ink"
-                        style={{ background: on ? "#fff8c2" : "#fff" }}
-                      >
-                        <div className="font-marker flex h-[22px] w-[22px] flex-none items-center justify-center border-2 border-ink bg-white text-[17px] leading-none text-marker">
-                          {on ? "✕" : ""}
-                        </div>
-                        <div className="font-mono flex-1 text-[16px] font-bold">
-                          {t.categoryNames[category.id]}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className={SECTION}>
-                <div className={HEADING}>{t.wordLanguageTitle}</div>
-                <OptionGroup
-                  label={t.wordLanguageTitle}
-                  columns={2}
-                  value={settings.wordLanguage}
-                  onPick={(wordLanguage) => update({ wordLanguage })}
-                  options={[
-                    { value: "nl", label: t.wordLanguageNames.nl },
-                    { value: "en", label: t.wordLanguageNames.en },
-                  ]}
-                />
-              </div>
-
-              <div className="flex flex-col gap-[10px] py-[18px] pb-[10px]">
-                <div className={HEADING}>{t.customTitle}</div>
-                <div className={SUB}>{t.customSub}</div>
-                <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_44px] gap-2">
-                  <input
-                    value={draft.a}
-                    onChange={(event) =>
-                      setDraft({ ...draft, a: event.target.value })
-                    }
-                    placeholder={t.customA}
-                    aria-label={t.customA}
-                    className="font-mono h-11 min-w-0 border-2 border-ink bg-white px-[10px] text-[16px] font-bold text-ink outline-none"
-                  />
-                  <input
-                    value={draft.b}
-                    onChange={(event) =>
-                      setDraft({ ...draft, b: event.target.value })
-                    }
-                    placeholder={t.customB}
-                    aria-label={t.customB}
-                    className="font-mono h-11 min-w-0 border-2 border-ink px-[10px] text-[16px] font-bold text-ink outline-none"
-                    style={{ background: "#fff8c2" }}
-                  />
-                  <button
-                    type="button"
-                    onClick={addCustom}
-                    aria-label={t.customAdd}
-                    className="font-display h-11 cursor-pointer border-2 border-ink bg-blood p-0 text-[20px]"
-                  >
-                    +
-                  </button>
-                </div>
-
-                {settings.custom.length === 0 ? (
-                  <div className="font-marker py-1 text-[16px] text-dim">
-                    {t.customEmpty}
-                  </div>
-                ) : (
-                  settings.custom.map((entry, index) => (
-                    <div
-                      key={`${entry.a}-${entry.b}-${index}`}
-                      className="flex items-center gap-2 border-b border-[#e0dbcd] py-[6px]"
-                    >
-                      <div className="font-marker flex-1 text-[18px]">
-                        {entry.a} <span className="text-marker">≠</span>{" "}
-                        {entry.b}
-                      </div>
-                      <button
-                        type="button"
-                        aria-label={format(t.customRemove, entry)}
-                        onClick={() =>
-                          update({
-                            custom: settings.custom.filter(
-                              (_, i) => i !== index,
-                            ),
-                          })
-                        }
-                        className="font-display h-[30px] w-[30px] cursor-pointer border-0 bg-ink p-0 text-paper"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </>
-          )}
-
-          {tab === 2 && (
-            <div className="flex flex-col gap-3 py-[18px] pb-3">
-              <div className={HEADING}>{t.themeTitle}</div>
-              <div className="grid grid-cols-2 gap-[14px]">
-                <ThemePreview
-                  label={t.themeDarkLabel}
-                  sub={t.themeDarkSub}
-                  chosen={t.chosen}
-                  active={theme === "dark"}
-                  background="#0b0b0b"
-                  dot="rgba(255,255,255,.25)"
-                  bar="#f2efe6"
-                  onPick={() => pickTheme("dark")}
-                />
-                <ThemePreview
-                  label={t.themeLightLabel}
-                  sub={t.themeLightSub}
-                  chosen={t.chosen}
-                  active={theme === "light"}
-                  background="#ece8dc"
-                  dot="rgba(0,0,0,.2)"
-                  bar="#0e0e0e"
-                  onPick={() => pickTheme("light")}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <Link
-        href={`/${lang}`}
-        className="pressable font-display mt-auto flex h-16 flex-none items-center justify-center border-[3px] border-ink bg-blood text-[19px] text-ink"
-        style={{ boxShadow: "6px 6px 0 var(--pop)" }}
-      >
-        {t.save}
-      </Link>
-    </div>
-  );
-}
-
-function GameTab({
+export default function SettingsScreen({
   dict,
   settings,
   update,
-}: {
-  dict: Dictionary;
-  settings: Settings;
-  update: (change: Partial<Settings>) => void;
-}) {
+  langCode,
+  langName,
+  onBack,
+  onOpenCategories,
+  onOpenLanguage,
+}: Props) {
   const t = dict.settings;
+  const [draft, setDraft] = useState({ a: "", b: "" });
+
+  const buckets = [...CATEGORY_IDS, ...(settings.custom.length ? ["eigen"] : [])];
+  const on = buckets.filter((id) => settings.cats[id]);
+  const summaryTitle =
+    on.length === buckets.length
+      ? format(t.allCategories, { total: buckets.length })
+      : format(t.someCategories, { on: on.length, total: buckets.length });
+  const summaryList = on.length
+    ? on.map((id) => dict.categories[id as keyof typeof dict.categories]).join(", ")
+    : t.noneChosen;
+
+  const help = {
+    makkelijk: t.diffHelpEasy,
+    mix: t.diffHelpMix,
+    moeilijk: t.diffHelpHard,
+  }[settings.diff];
+
+  function addCustom() {
+    const a = draft.a.trim();
+    const b = draft.b.trim();
+    if (!a || !b) return;
+    setDraft({ a: "", b: "" });
+    update({
+      custom: settings.custom.concat([{ a, b }]),
+      cats: { ...settings.cats, eigen: true },
+    });
+  }
 
   return (
-    <>
-      <div className={SECTION}>
-        <div className="flex items-baseline justify-between gap-3">
-          <div className={HEADING}>{t.timerTitle}</div>
-          <div className="font-marker text-[20px] text-marker">
-            {settings.timer
-              ? format(t.timerSecondsLabel, { number: settings.timer })
-              : t.timerOffLabel}
-          </div>
-        </div>
-        <div className={SUB}>{t.timerSub}</div>
-        <OptionGroup
-          label={t.timerTitle}
-          columns={4}
-          value={settings.timer}
-          onPick={(timer) => update({ timer })}
-          options={TIMER_CHOICES.map((seconds) => ({
-            value: seconds,
-            label: seconds === 0 ? t.timerOff : String(seconds),
-          }))}
-        />
-      </div>
-
-      <div className={SECTION}>
-        <div className={HEADING}>{t.difficultyTitle}</div>
-        <div className={SUB}>{t.difficultySub}</div>
-        <OptionGroup
-          label={t.difficultyTitle}
-          columns={3}
-          value={settings.difficulty}
-          onPick={(difficulty) => update({ difficulty })}
-          options={DIFFICULTY_CHOICES.map((level) => ({
-            value: level,
-            label: t.difficultyNames[level],
-          }))}
-        />
-      </div>
-
-      <Toggle
-        label={t.mrWhiteGuessLabel}
-        description={t.mrWhiteGuessDesc}
-        on={settings.mrWhiteGuess}
-        onFlip={() => update({ mrWhiteGuess: !settings.mrWhiteGuess })}
-      />
-      <Toggle
-        label={t.mrWhiteNeverFirstLabel}
-        description={t.mrWhiteNeverFirstDesc}
-        on={settings.mrWhiteNeverFirst}
-        onFlip={() =>
-          update({ mrWhiteNeverFirst: !settings.mrWhiteNeverFirst })
-        }
-      />
-    </>
-  );
-}
-
-function ThemePreview({
-  label,
-  sub,
-  chosen,
-  active,
-  background,
-  dot,
-  bar,
-  onPick,
-}: {
-  label: string;
-  sub: string;
-  chosen: string;
-  active: boolean;
-  background: string;
-  dot: string;
-  bar: string;
-  onPick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onPick}
-      className="relative flex cursor-pointer flex-col gap-[10px] border-[3px] border-ink bg-white p-[10px] text-left text-ink"
+    <Screen
+      label={t.title}
       style={{
-        boxShadow: active ? "6px 6px 0 #e8322b" : "4px 4px 0 var(--soft)",
-        transition: "box-shadow .15s",
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
+        alignContent: "start",
+        gap: "28px 36px",
       }}
     >
-      <div
-        className="flex h-16 w-full flex-col items-center justify-center gap-[6px] border-2 border-ink"
-        style={{
-          backgroundColor: background,
-          backgroundImage: `radial-gradient(${dot} 1px,transparent 1.3px)`,
-          backgroundSize: "5px 5px",
-        }}
-      >
-        <div className="h-2 w-14" style={{ background: bar }} />
-        <div className="h-[14px] w-11 border-2 border-ink bg-blood" />
-      </div>
-      <div>
-        <div className="font-display text-[16px]">{label}</div>
-        <div className="font-mono text-[13px] text-[#4a4842]">{sub}</div>
-      </div>
-      {active && (
-        <div
-          className="font-display absolute border-2 border-ink bg-evidence px-2 py-[2px] text-[11px]"
+      <Header
+        kicker={t.kicker}
+        title={t.title}
+        backLabel={dict.common.back}
+        onBack={onBack}
+      />
+
+      <Field>
+        <FieldLabel>{t.categories}</FieldLabel>
+        <Press
+          onClick={onOpenCategories}
           style={{
-            top: -10,
-            right: -8,
-            letterSpacing: ".1em",
-            transform: "rotate(8deg)",
-            animation: "popIn .3s ease-out both",
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            textAlign: "left",
+            background: "var(--card)",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            padding: 14,
+            boxShadow: "5px 5px 0 #FFD23F",
+            cursor: "pointer",
+            fontFamily: "inherit",
+            transition: "transform .12s",
+          }}
+          hover={{ transform: "rotate(-.6deg)" }}
+          press={{
+            transform: "translate(4px,4px)",
+            boxShadow: "1px 1px 0 #FFD23F",
           }}
         >
-          {chosen}
+          <span
+            style={{
+              flex: 1,
+              minWidth: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: ARCHIVO,
+                fontSize: 16,
+                textTransform: "uppercase",
+              }}
+            >
+              {summaryTitle}
+            </span>
+            <span
+              style={{
+                fontSize: 14,
+                lineHeight: 1.35,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {summaryList}
+            </span>
+          </span>
+          <span
+            style={{
+              flex: "none",
+              fontFamily: ARCHIVO,
+              fontSize: 13,
+              textTransform: "uppercase",
+              background: "#0d0d0d",
+              color: "#FFD23F",
+              padding: "8px 12px",
+            }}
+          >
+            {t.pick}
+          </span>
+        </Press>
+      </Field>
+
+      <Field>
+        <FieldLabel>{t.display}</FieldLabel>
+        <Segmented<Theme>
+          label={t.display}
+          value={settings.theme}
+          onPick={(theme) => update({ theme })}
+          options={[
+            { value: "donker", label: t.themeDark },
+            { value: "licht", label: t.themeLight },
+          ]}
+        />
+      </Field>
+
+      <Field>
+        <FieldLabel>{t.difficulty}</FieldLabel>
+        <Segmented<Difficulty>
+          label={t.difficulty}
+          value={settings.diff}
+          onPick={(diff) => update({ diff })}
+          options={[
+            { value: "makkelijk", label: t.diffEasy },
+            { value: "mix", label: t.diffMix },
+            { value: "moeilijk", label: t.diffHard },
+          ]}
+        />
+        <div style={{ fontSize: 14, color: "var(--muted)" }}>{help}</div>
+      </Field>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0,1fr) minmax(0,1.6fr)",
+          gap: 14,
+        }}
+      >
+        <Field>
+          <FieldLabel>{t.language}</FieldLabel>
+          <Press
+            onClick={onOpenLanguage}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              textAlign: "left",
+              fontFamily: "inherit",
+              background: "var(--bg)",
+              color: "var(--fg)",
+              border: "3px solid var(--fg)",
+              padding: "9px 10px",
+              cursor: "pointer",
+              boxShadow: "4px 4px 0 #3DD6FF",
+            }}
+            press={{
+              transform: "translate(3px,3px)",
+              boxShadow: "1px 1px 0 #3DD6FF",
+            }}
+          >
+            <span
+              style={{
+                flex: "none",
+                fontFamily: ARCHIVO,
+                fontSize: 13,
+                background: "#3DD6FF",
+                color: "#0d0d0d",
+                padding: "3px 6px",
+              }}
+            >
+              {langCode}
+            </span>
+            <span
+              style={{
+                flex: 1,
+                minWidth: 0,
+                fontWeight: 700,
+                fontSize: 14,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {langName}
+            </span>
+            <span style={{ flex: "none", fontWeight: 700 }}>→</span>
+          </Press>
+        </Field>
+
+        <Field>
+          <FieldLabel>{t.timer}</FieldLabel>
+          <Segmented<number>
+            label={t.timer}
+            value={settings.timer}
+            onPick={(timer) => update({ timer })}
+            padding="12px 2px"
+            options={[
+              { value: 0, label: t.timerOff },
+              { value: 15, label: "15s" },
+              { value: 30, label: "30s" },
+              { value: 60, label: "60s" },
+            ]}
+          />
+        </Field>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <ToggleRow
+          label={t.mrGuessLabel}
+          description={t.mrGuessDesc}
+          on={settings.mrGuess}
+          onFlip={() => update({ mrGuess: !settings.mrGuess })}
+        />
+        <ToggleRow
+          label={t.mrNotFirstLabel}
+          description={t.mrNotFirstDesc}
+          on={settings.mrNotFirst}
+          onFlip={() => update({ mrNotFirst: !settings.mrNotFirst })}
+        />
+      </div>
+
+      <Field>
+        <FieldLabel>{t.customWords}</FieldLabel>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr) auto",
+            gap: 8,
+          }}
+        >
+          <input
+            value={draft.a}
+            placeholder={t.customA}
+            aria-label={t.customA}
+            onChange={(event) => setDraft({ ...draft, a: event.target.value })}
+            style={{
+              minWidth: 0,
+              fontFamily: "inherit",
+              fontSize: 16,
+              padding: 12,
+              background: "var(--bg)",
+              color: "var(--fg)",
+              border: "3px solid var(--fg)",
+              outline: "none",
+            }}
+          />
+          <input
+            value={draft.b}
+            placeholder={t.customB}
+            aria-label={t.customB}
+            onChange={(event) => setDraft({ ...draft, b: event.target.value })}
+            style={{
+              minWidth: 0,
+              fontFamily: "inherit",
+              fontSize: 16,
+              padding: 12,
+              background: "var(--bg)",
+              color: "var(--fg)",
+              border: "3px solid var(--fg)",
+              outline: "none",
+            }}
+          />
+          <Press
+            onClick={addCustom}
+            title={t.customAdd}
+            style={{
+              width: 50,
+              fontFamily: ARCHIVO,
+              fontSize: 24,
+              background: "#FFD23F",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              boxShadow: "4px 4px 0 var(--fg)",
+              cursor: "pointer",
+            }}
+            press={{
+              transform: "translate(3px,3px)",
+              boxShadow: "1px 1px 0 var(--fg)",
+            }}
+          >
+            +
+          </Press>
         </div>
-      )}
-    </button>
+
+        {settings.custom.length ? (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {settings.custom.map((entry, index) => (
+              <span
+                key={`${entry.a}-${entry.b}-${index}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  border: "2px dashed var(--fg)",
+                  padding: "6px 6px 6px 12px",
+                  fontSize: 15,
+                }}
+              >
+                {entry.a} <span style={{ color: "var(--muted)" }}>/</span>{" "}
+                {entry.b}
+                <button
+                  type="button"
+                  aria-label={format(t.customRemove, entry)}
+                  onClick={() =>
+                    update({
+                      custom: settings.custom.filter((_, i) => i !== index),
+                    })
+                  }
+                  style={{
+                    width: 28,
+                    height: 28,
+                    background: "#FF3D3D",
+                    color: "#0d0d0d",
+                    border: "2px solid #0d0d0d",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        ) : (
+          <div style={{ fontSize: 14, color: "var(--muted)" }}>
+            {t.customEmpty}
+          </div>
+        )}
+      </Field>
+
+      <Press
+        onClick={onBack}
+        style={{
+          gridColumn: "1 / -1",
+          justifySelf: "end",
+          width: "100%",
+          maxWidth: 380,
+          marginTop: "auto",
+          fontFamily: ARCHIVO,
+          fontSize: 20,
+          textTransform: "uppercase",
+          background: "#FFD23F",
+          color: "#0d0d0d",
+          border: "3px solid #0d0d0d",
+          padding: 17,
+          boxShadow: "6px 6px 0 var(--fg)",
+          cursor: "pointer",
+        }}
+        press={{
+          transform: "translate(5px,5px)",
+          boxShadow: "1px 1px 0 var(--fg)",
+        }}
+      >
+        {t.save}
+      </Press>
+    </Screen>
   );
 }

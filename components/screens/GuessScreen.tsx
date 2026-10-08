@@ -1,105 +1,167 @@
 "use client";
 
 import { useState } from "react";
-import BrutalButton from "@/components/ui/BrutalButton";
-import type { Game } from "@/lib/game";
-import { isCivilianWord } from "@/lib/game";
+import Press from "@/components/ui/Press";
+import Screen from "@/components/ui/Screen";
+import { isCivilianWord, normaliseGuess, type WordPair } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
+
+const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
-  game: Game;
-  onResolved: (correct: boolean) => void;
+  name: string;
+  pair: WordPair;
+  onWin: () => void;
+  onMiss: () => void;
 };
 
-export default function GuessScreen({ dict, game, onResolved }: Props) {
+export default function GuessScreen({
+  dict,
+  name,
+  pair,
+  onWin,
+  onMiss,
+}: Props) {
   const t = dict.guess;
   const [guess, setGuess] = useState("");
-  const [result, setResult] = useState<"right" | "wrong" | null>(null);
+  const [wrong, setWrong] = useState(false);
 
   function submit() {
-    if (!guess.trim()) return;
-    setResult(isCivilianWord(game, guess) ? "right" : "wrong");
+    if (!normaliseGuess(guess)) return;
+    if (isCivilianWord(pair, guess)) onWin();
+    else setWrong(true);
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-5">
-      <div style={{ animation: "slideUp .35s ease-out both" }}>
-        <div
-          className="font-type text-[13px] text-blood"
-          style={{ letterSpacing: ".18em" }}
-        >
-          {t.kicker}
-        </div>
-        <div className="font-display text-[32px] leading-none">{t.title}</div>
+    <Screen
+      label={t.lastChance}
+      narrow
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 20,
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "var(--font-permanent-marker), cursive",
+          fontSize: 22,
+          color: "#FF3D3D",
+          transform: "rotate(-3deg)",
+        }}
+      >
+        {t.lastChance}
       </div>
 
-      <p className="m-0 text-[16px] text-muted text-pretty">{t.instruction}</p>
+      <h2
+        style={{
+          margin: 0,
+          fontFamily: ARCHIVO,
+          fontSize: "clamp(34px, 10vw, 48px)",
+          textTransform: "uppercase",
+          lineHeight: 1,
+        }}
+      >
+        {format(t.title, { name })}
+      </h2>
 
-      {result === null && (
-        <>
+      <p style={{ margin: 0, fontSize: 16, lineHeight: 1.45 }}>{t.sub}</p>
+
+      {wrong ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 18,
+            alignItems: "flex-start",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 40,
+              textTransform: "uppercase",
+              background: "var(--card)",
+              color: "#0d0d0d",
+              padding: "8px 18px",
+              border: "4px solid #0d0d0d",
+              boxShadow: "6px 6px 0 #FF3D3D",
+              animation: "stampIn .5s both",
+            }}
+          >
+            {t.miss}
+          </div>
+          <p style={{ margin: 0, fontSize: 17 }}>
+            {format(t.missSub, { guess })}
+          </p>
+          <Press
+            onClick={onMiss}
+            style={{
+              width: "100%",
+              fontFamily: ARCHIVO,
+              fontSize: 19,
+              textTransform: "uppercase",
+              background: "#FFD23F",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: 17,
+              boxShadow: "6px 6px 0 var(--fg)",
+              cursor: "pointer",
+            }}
+            press={{
+              transform: "translate(5px,5px)",
+              boxShadow: "1px 1px 0 var(--fg)",
+            }}
+          >
+            {t.next}
+          </Press>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <input
-            type="text"
             value={guess}
-            onChange={(event) => setGuess(event.target.value)}
-            onKeyDown={(event) => event.key === "Enter" && submit()}
             placeholder={t.placeholder}
             aria-label={t.placeholder}
-            maxLength={40}
             autoComplete="off"
             autoFocus
-            className="font-mono h-16 border-[3px] border-ink bg-[var(--card)] px-4 text-[22px] font-bold text-ink outline-none"
-            style={{ boxShadow: "6px 6px 0 #e8322b" }}
+            onChange={(event) => setGuess(event.target.value)}
+            onKeyDown={(event) => event.key === "Enter" && submit()}
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 24,
+              textTransform: "uppercase",
+              padding: 16,
+              background: "var(--card)",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              boxShadow: "6px 6px 0 #FF3D3D",
+              outline: "none",
+            }}
           />
-          <BrutalButton
+          <Press
             onClick={submit}
-            disabled={!guess.trim()}
-            className="h-16 text-[19px]"
-            style={{ opacity: guess.trim() ? 1 : 0.45 }}
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 19,
+              textTransform: "uppercase",
+              background: "#FF3D3D",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: 17,
+              boxShadow: "6px 6px 0 var(--fg)",
+              cursor: "pointer",
+            }}
+            press={{
+              transform: "translate(5px,5px)",
+              boxShadow: "1px 1px 0 var(--fg)",
+            }}
           >
             {t.submit}
-          </BrutalButton>
-        </>
-      )}
-
-      {result === "right" && (
-        <div
-          className="border-[3px] border-ink bg-blood p-[26px] text-center text-ink"
-          style={{
-            boxShadow: "8px 8px 0 var(--pop)",
-            animation: "popIn .5s ease-out both",
-          }}
-        >
-          <div className="font-display text-[40px]">{t.right}</div>
-          <div className="text-[17px] font-bold">
-            {format(t.rightSub, { word: game.wordA })}
-          </div>
+          </Press>
         </div>
       )}
-
-      {result === "wrong" && (
-        <div
-          className="sheet p-[26px] text-center"
-          style={{
-            boxShadow: "8px 8px 0 var(--soft)",
-            animation: "shake .5s ease-out both",
-          }}
-        >
-          <div className="font-display text-[40px]">{t.wrong}</div>
-          <div className="text-[17px] font-bold">
-            {format(t.wrongSub, { guess })}
-          </div>
-        </div>
-      )}
-
-      {result !== null && (
-        <BrutalButton
-          onClick={() => onResolved(result === "right")}
-          className="mt-auto h-16 text-[19px]"
-        >
-          {t.continue}
-        </BrutalButton>
-      )}
-    </div>
+    </Screen>
   );
 }

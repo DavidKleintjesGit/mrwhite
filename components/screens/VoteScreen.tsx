@@ -1,102 +1,223 @@
 "use client";
 
-import ScanLines from "@/components/ui/ScanLines";
-import type { Game, Role } from "@/lib/game";
+import Press from "@/components/ui/Press";
+import Screen, { FooterPair } from "@/components/ui/Screen";
+import Stamp from "@/components/ui/Stamp";
+import type { Player } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
-import { noteKey } from "@/components/screens/HintScreen";
+
+const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
-  game: Game;
-  notes: Record<string, string>;
-  onPick: (index: number) => void;
+  players: Player[];
+  round: number;
+  selected: number | null;
+  onSelect: (index: number | null) => void;
+  onAnotherRound: () => void;
+  onUnmask: () => void;
 };
 
-const ROLE_COLOUR: Record<Role, string> = {
-  civilian: "#f2efe6",
-  undercover: "#f5d90a",
-  mrwhite: "#e8322b",
-};
-
-const pad = (n: number) => String(n).padStart(2, "0");
-
-/** Every clue noted for this player, oldest round first. */
-function notesFor(
-  notes: Record<string, string>,
-  playerIndex: number,
-  rounds: number,
-): string {
-  return Array.from({ length: rounds }, (_, round) =>
-    (notes[noteKey(round + 1, playerIndex)] ?? "").trim(),
-  )
-    .filter(Boolean)
-    .map((note) => `“${note}”`)
-    .join(" ");
-}
-
-export default function VoteScreen({ dict, game, notes, onPick }: Props) {
+export default function VoteScreen({
+  dict,
+  players,
+  round,
+  selected,
+  onSelect,
+  onAnotherRound,
+  onUnmask,
+}: Props) {
   const t = dict.vote;
+  const alive = players.flatMap((player, index) =>
+    player.alive ? [{ player, index }] : [],
+  );
 
   return (
-    <div className="flex flex-1 flex-col gap-[18px]">
-      <div style={{ animation: "slideUp .35s ease-out both" }}>
+    <Screen
+      label={t.title}
+      style={{ display: "flex", flexDirection: "column", gap: 18 }}
+    >
+      <div>
         <div
-          className="font-type text-[13px] text-tag"
-          style={{ letterSpacing: ".18em" }}
+          style={{
+            fontSize: 12,
+            letterSpacing: ".2em",
+            textTransform: "uppercase",
+            color: "var(--muted)",
+          }}
         >
-          {format(t.kicker, { number: game.round })}
+          {format(t.kicker, { n: round })}
         </div>
-        <div className="font-display text-[32px] leading-none">{t.title}</div>
+        <h2
+          style={{
+            margin: 0,
+            fontFamily: ARCHIVO,
+            fontSize: 30,
+            textTransform: "uppercase",
+            lineHeight: 1,
+          }}
+        >
+          {t.title}
+        </h2>
       </div>
 
-      <p className="m-0 text-[15px] text-muted text-pretty">{t.instruction}</p>
+      <p style={{ margin: 0, fontSize: 16, lineHeight: 1.4 }}>
+        {t.instruction}
+      </p>
 
-      <div className="grid grid-cols-2 gap-4">
-        {game.players.map((player, index) => (
-          <button
-            key={index}
-            type="button"
-            disabled={!player.alive}
-            onClick={() => onPick(index)}
-            className="sheet relative flex min-h-[120px] flex-col justify-between gap-1 overflow-hidden px-[14px] py-3 text-left"
-            style={{
-              boxShadow: "5px 5px 0 var(--soft)",
-              opacity: player.alive ? 1 : 0.55,
-              cursor: player.alive ? "pointer" : "default",
-              transition: "transform .12s",
-            }}
-          >
-            <ScanLines spacing={20} opacity={0.1} />
-            <div
-              className="font-type relative text-[12px] text-[#5d5a53]"
-              style={{ letterSpacing: ".15em" }}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
+          gap: 14,
+        }}
+      >
+        {alive.map(({ player, index }) => {
+          const on = selected === index;
+          return (
+            <Press
+              key={index}
+              onClick={() => onSelect(on ? null : index)}
+              style={{
+                position: "relative",
+                fontFamily: "inherit",
+                background: "var(--card)",
+                color: "#0d0d0d",
+                border: `4px solid ${on ? "#FF3D3D" : "#0d0d0d"}`,
+                padding: 0,
+                cursor: "pointer",
+                boxShadow: `5px 5px 0 ${on ? "#FF3D3D" : "var(--line)"}`,
+                transform: on ? "rotate(-2deg) scale(1.04)" : "none",
+                transition:
+                  "transform .2s cubic-bezier(.3,1.6,.5,1), box-shadow .2s",
+                animation: "popIn .35s both",
+                overflow: "hidden",
+              }}
             >
-              {format(t.suspect, { num: pad(index + 1) })}
-            </div>
-            <div className="font-display relative truncate text-[21px] leading-[1.05]">
-              {player.name}
-            </div>
-            <div className="font-marker relative min-h-[17px] truncate text-[14px] leading-[1.2] text-marker">
-              {notesFor(notes, index, game.round)}
-            </div>
-
-            {!player.alive && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div
-                  className="font-display border-[3px] border-ink px-[10px] py-1 text-[13px] text-ink"
+              <div
+                style={{
+                  height: 104,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#d9d5ca",
+                  backgroundImage:
+                    "repeating-linear-gradient(0deg, transparent 0 19px, rgba(13,13,13,.25) 19px 20px)",
+                }}
+              >
+                <span
                   style={{
-                    background: ROLE_COLOUR[player.role],
-                    letterSpacing: ".1em",
-                    transform: "rotate(-12deg)",
+                    width: 64,
+                    height: 64,
+                    borderRadius: "50%",
+                    background: "var(--bg)",
+                    color: "var(--fg)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: ARCHIVO,
+                    fontSize: 30,
                   }}
                 >
-                  {dict.roleNames[player.role]}
-                </div>
+                  {player.name.charAt(0).toUpperCase()}
+                </span>
               </div>
-            )}
-          </button>
-        ))}
+              <div
+                style={{
+                  padding: "10px 8px",
+                  fontFamily: ARCHIVO,
+                  fontSize: 16,
+                  textTransform: "uppercase",
+                  wordBreak: "break-word",
+                  borderTop: "3px solid #0d0d0d",
+                }}
+              >
+                {player.name}
+              </div>
+              {on && (
+                <Stamp
+                  fontSize={17}
+                  rotate={-11}
+                  background="rgba(243,240,232,.75)"
+                  style={{
+                    position: "absolute",
+                    top: 34,
+                    left: 0,
+                    right: 0,
+                    margin: "0 auto",
+                    width: "max-content",
+                  }}
+                >
+                  {t.stamp}
+                </Stamp>
+              )}
+            </Press>
+          );
+        })}
       </div>
-    </div>
+
+      <FooterPair>
+        <Press
+          onClick={onAnotherRound}
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 15,
+            textTransform: "uppercase",
+            background: "var(--bg)",
+            color: "var(--fg)",
+            border: "3px solid var(--fg)",
+            padding: "16px 8px",
+            boxShadow: "5px 5px 0 var(--line)",
+            cursor: "pointer",
+          }}
+          press={{
+            transform: "translate(4px,4px)",
+            boxShadow: "1px 1px 0 var(--line)",
+          }}
+        >
+          {t.anotherRound}
+        </Press>
+
+        {selected != null ? (
+          <Press
+            onClick={onUnmask}
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 16,
+              textTransform: "uppercase",
+              background: "#FF3D3D",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: "16px 8px",
+              boxShadow: "6px 6px 0 var(--fg)",
+              cursor: "pointer",
+              animation: "popIn .3s both",
+            }}
+            press={{
+              transform: "translate(5px,5px)",
+              boxShadow: "1px 1px 0 var(--fg)",
+            }}
+          >
+            {format(t.unmask, { name: players[selected].name })}
+          </Press>
+        ) : (
+          <button
+            type="button"
+            disabled
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 15,
+              textTransform: "uppercase",
+              background: "var(--off)",
+              color: "var(--offfg)",
+              border: "3px dashed var(--offfg)",
+              padding: "16px 8px",
+            }}
+          >
+            {t.pickFirst}
+          </button>
+        )}
+      </FooterPair>
+    </Screen>
   );
 }

@@ -34,15 +34,16 @@ one, so a missing key fails the build instead of rendering blank.
 
 ## Look
 
-A police-procedural case file: evidence tape, stamped roles, typewriter and
-marker lettering, film grain, in a dark night-shift theme and a light day-shift
-one. Four display faces (Archivo Black, Courier Prime, Permanent Marker,
-Special Elite) are loaded through `next/font`, so nothing is fetched at runtime.
+A noir case file: evidence stamps that slam down, a torch that drifts across
+the page, a magnifier you hold over your own file to read the word under it,
+in a dark night shift and a light day shift. Three faces — Archivo Black,
+Courier Prime and Permanent Marker — load through `next/font`, so nothing is
+fetched at runtime.
 
 ## Stack
 
 - **Next.js 16** (App Router) with **React 19** and **TypeScript**
-- **Tailwind CSS 4**
+- Plain CSS and inline styles — no utility framework
 - `output: 'export'` — the build produces a plain static site in `out/`
 
 There is no backend and no database. All game logic runs client-side, which is

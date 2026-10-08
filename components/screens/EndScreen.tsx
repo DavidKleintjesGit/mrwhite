@@ -1,143 +1,241 @@
 "use client";
 
-import Link from "next/link";
-import BrutalButton from "@/components/ui/BrutalButton";
-import type { Game, Outcome, Role } from "@/lib/game";
-import { format, type Dictionary } from "@/lib/i18n";
+import Press from "@/components/ui/Press";
+import Screen, { FooterPair } from "@/components/ui/Screen";
+import Stamp from "@/components/ui/Stamp";
+import type { Player, Role, Winner, WordPair } from "@/lib/game";
+import type { Dictionary } from "@/lib/i18n";
+
+const ARCHIVO = "var(--font-archivo-black), sans-serif";
+
+const ROLE_COLOUR: Record<Role, string> = {
+  burger: "#F3F0E8",
+  undercover: "#3DD6FF",
+  white: "#FF3D3D",
+};
 
 type Props = {
   dict: Dictionary;
-  game: Game;
-  outcome: Outcome;
-  lang: string;
-  onNewCase: () => void;
-};
-
-const ROLE_COLOUR: Record<Role, string> = {
-  civilian: "#f2efe6",
-  undercover: "#f5d90a",
-  mrwhite: "#e8322b",
+  players: Player[];
+  pair: WordPair;
+  winner: Winner;
+  onMenu: () => void;
+  onAgain: () => void;
 };
 
 export default function EndScreen({
   dict,
-  game,
-  outcome,
-  lang,
-  onNewCase,
+  players,
+  pair,
+  winner,
+  onMenu,
+  onAgain,
 }: Props) {
   const t = dict.end;
 
   const banner = {
-    civilians: { title: t.civiliansTitle, sub: t.civiliansSub, bg: "#f2efe6" },
-    infiltrators: {
-      title: t.infiltratorsTitle,
-      sub: t.infiltratorsSub,
-      bg: "#f5d90a",
+    burgers: { title: t.burgersTitle, line: t.burgersLine, colour: "#FFD23F" },
+    infiltranten: {
+      title: t.infiltrantenTitle,
+      line: t.infiltrantenLine,
+      colour: "#3DD6FF",
     },
-    mrwhite: { title: t.mrWhiteTitle, sub: t.mrWhiteSub, bg: "#e8322b" },
-  }[outcome];
+    white: { title: t.whiteTitle, line: t.whiteLine, colour: "#FF3D3D" },
+  }[winner];
 
   return (
-    <div className="flex flex-1 flex-col gap-5">
-      <div className="relative pt-[10px] text-center">
-        <div
-          className="font-type text-[14px] text-dim"
-          style={{ letterSpacing: ".3em" }}
-        >
-          {format(t.after, { number: game.round })}
-        </div>
-        <div
-          className="font-display mt-3 inline-block border-[5px] border-blood px-4 py-1 text-[40px] text-blood"
-          style={{
-            letterSpacing: ".06em",
-            animation: "stamp .6s .1s cubic-bezier(.3,1.4,.5,1) both",
-          }}
-        >
-          {t.closed}
-        </div>
-      </div>
+    <Screen
+      label={t.stamp}
+      style={{ display: "flex", flexDirection: "column", gap: 22 }}
+    >
+      <Stamp
+        fontSize={30}
+        rotate={-6}
+        delay={0.1}
+        style={{ alignSelf: "center" }}
+      >
+        {t.stamp}
+      </Stamp>
 
       <div
-        className="border-[3px] border-ink p-5 text-center text-ink"
         style={{
-          background: banner.bg,
-          boxShadow: "8px 8px 0 var(--pop)",
-          animation: "popIn .5s .6s ease-out both",
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          alignItems: "center",
         }}
       >
-        <div className="font-display text-[32px] leading-[1.05]">
+        <h2
+          style={{
+            margin: 0,
+            fontFamily: ARCHIVO,
+            fontSize: "clamp(38px, 11vw, 56px)",
+            textTransform: "uppercase",
+            lineHeight: 0.95,
+            background: banner.colour,
+            color: "#0d0d0d",
+            padding: "10px 18px",
+            transform: "rotate(-2deg)",
+            boxShadow: "8px 8px 0 var(--fg)",
+            animation: "popIn .5s .5s both",
+          }}
+        >
           {banner.title}
-        </div>
-        <div className="mt-[6px] text-[16px] font-bold">{banner.sub}</div>
+        </h2>
+        <p
+          style={{
+            margin: "14px 0 0",
+            fontSize: 17,
+            maxWidth: 330,
+            lineHeight: 1.45,
+          }}
+        >
+          {banner.line}
+        </p>
       </div>
 
       <div
-        className="grid grid-cols-2 gap-[14px]"
-        style={{ animation: "slideUp .4s .8s ease-out both" }}
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}
       >
-        <div className="border-[3px] border-[var(--fg)] p-3 text-center">
+        <div style={{ border: "3px solid var(--fg)", padding: "10px 12px" }}>
           <div
-            className="font-type text-[12px] text-dim"
-            style={{ letterSpacing: ".15em" }}
+            style={{
+              fontSize: 12,
+              letterSpacing: ".15em",
+              textTransform: "uppercase",
+              color: "var(--muted)",
+            }}
           >
             {t.civilianWord}
           </div>
-          <div className="font-display mt-1 text-[22px]">{game.wordA}</div>
-        </div>
-        <div className="border-[3px] border-tag p-3 text-center">
           <div
-            className="font-type text-[12px] text-tag"
-            style={{ letterSpacing: ".15em" }}
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 20,
+              textTransform: "uppercase",
+            }}
+          >
+            {pair[0]}
+          </div>
+        </div>
+        <div style={{ border: "3px solid #3DD6FF", padding: "10px 12px" }}>
+          <div
+            style={{
+              fontSize: 12,
+              letterSpacing: ".15em",
+              textTransform: "uppercase",
+              color: "var(--cy)",
+            }}
           >
             {t.undercoverWord}
           </div>
-          <div className="font-display mt-1 text-[22px]">{game.wordB}</div>
+          <div
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 20,
+              textTransform: "uppercase",
+            }}
+          >
+            {pair[1]}
+          </div>
         </div>
       </div>
 
-      <ul
-        className="flex flex-col gap-2"
-        style={{ animation: "slideUp .4s .95s ease-out both" }}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
+          gap: 10,
+        }}
       >
-        {game.players.map((player, index) => (
-          <li
+        {players.map((player, index) => (
+          <div
             key={index}
-            className="flex items-center gap-3 border-b-2 border-dashed border-[var(--soft)] px-3 py-2"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              background: "var(--card)",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: "10px 12px",
+              animation: "screenIn .35s both",
+            }}
           >
-            <div
-              className="flex-1 text-[17px] font-bold"
-              style={{ opacity: player.alive ? 1 : 0.5 }}
-            >
-              {player.name}
-            </div>
-            <div
-              className="font-display border-2 border-[var(--fg)] px-2 py-[3px] text-[12px]"
+            <span
               style={{
-                background:
-                  player.role === "civilian" ? "#0e0e0e" : ROLE_COLOUR[player.role],
-                color: player.role === "civilian" ? "#f2efe6" : "#0e0e0e",
-                letterSpacing: ".08em",
+                width: 14,
+                height: 28,
+                flex: "none",
+                background: ROLE_COLOUR[player.role],
+                border: "2px solid #0d0d0d",
+              }}
+            />
+            <span
+              style={{
+                flex: 1,
+                fontFamily: ARCHIVO,
+                fontSize: 16,
+                textTransform: "uppercase",
+                textDecoration: player.alive ? "none" : "line-through",
               }}
             >
-              {dict.roleNames[player.role]}
-            </div>
-          </li>
+              {player.name}
+            </span>
+            <span
+              style={{ fontSize: 14, fontWeight: 700, textAlign: "right" }}
+            >
+              {dict.roles[player.role]}
+              {player.alive ? "" : ` · ${t.out}`}
+            </span>
+          </div>
         ))}
-      </ul>
+      </div>
 
-      <div className="mt-auto grid grid-cols-[1fr_1.4fr] gap-[14px] pt-3">
-        <Link
-          href={`/${lang}`}
-          className="pressable font-display flex h-16 items-center justify-center border-[3px] border-[var(--fg)] bg-[var(--bg)] text-[14px] text-fg"
-          style={{ boxShadow: "5px 5px 0 var(--soft)" }}
+      <FooterPair>
+        <Press
+          onClick={onMenu}
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 15,
+            textTransform: "uppercase",
+            background: "var(--bg)",
+            color: "var(--fg)",
+            border: "3px solid var(--fg)",
+            padding: "16px 8px",
+            boxShadow: "5px 5px 0 var(--line)",
+            cursor: "pointer",
+          }}
+          press={{
+            transform: "translate(4px,4px)",
+            boxShadow: "1px 1px 0 var(--line)",
+          }}
         >
           {t.menu}
-        </Link>
-        <BrutalButton onClick={onNewCase} className="h-16 text-[16px]">
+        </Press>
+        <Press
+          onClick={onAgain}
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 17,
+            textTransform: "uppercase",
+            background: "#FFD23F",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            padding: "16px 8px",
+            boxShadow: "6px 6px 0 var(--fg)",
+            cursor: "pointer",
+            animation: "pulse 1.8s ease-in-out infinite",
+          }}
+          press={{
+            transform: "translate(5px,5px)",
+            boxShadow: "1px 1px 0 var(--fg)",
+          }}
+        >
           {t.again}
-        </BrutalButton>
-      </div>
-    </div>
+        </Press>
+      </FooterPair>
+    </Screen>
   );
 }

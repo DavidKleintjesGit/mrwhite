@@ -1,6 +1,9 @@
-import type { Dictionary } from "./en";
-
-const nl: Dictionary = {
+/**
+ * Dutch is the source language here: the design was written in Dutch and every
+ * string below is taken from it verbatim. English is typed against this shape,
+ * so a missing or renamed key fails the build instead of showing up blank.
+ */
+const nl = {
   meta: {
     title: "Mr. White",
     description:
@@ -9,234 +12,239 @@ const nl: Dictionary = {
 
   common: {
     back: "Terug",
+    done: "Klaar",
   },
 
-  roleNames: {
-    civilian: "BURGER",
-    undercover: "UNDERCOVER",
-    mrwhite: "MR. WHITE",
+  roles: {
+    burger: "Burger",
+    undercover: "Undercover",
+    white: "Mr. White",
+  },
+
+  categories: {
+    eten: "Eten",
+    dieren: "Dieren",
+    plekken: "Plekken",
+    huis: "In huis",
+    beroepen: "Beroepen",
+    sport: "Sport & spel",
+    pop: "Popcultuur",
+    eigen: "Eigen woorden",
   },
 
   home: {
-    caseNumber: "ZAAK Nº 0451 · UNDERCOVER",
-    taglineOne: "Iedereen krijgt hetzelfde geheime woord.",
-    taglineTwo: "Behalve de",
-    taglineHighlight: "infiltranten",
-    note: "Vertrouw niemand. Ook je beste vriend niet.",
-    play: "SPELEN ▸",
-    rules: "UITLEG",
-    settings: "INSTELLINGEN",
-    imprint: "© 1994 RECHERCHE SPELLEN B.V.",
-    themeToDark: "☾ DONKER",
-    themeToLight: "☀ LICHT",
-    tapeTop: "NIET BETREDEN",
-    tapeBottom: "POLITIE LINIE",
-  },
-
-  setup: {
-    kicker: "DOSSIER 01 · VERDELING",
-    title: "NIEUW SPEL",
-    players: "SPELERS",
-    playersSub: "Hoeveel verdachten?",
-    undercovers: "UNDERCOVERS",
-    undercoversSub: "Krijgen een woord dat lijkt op dat van de burgers",
-    mrWhites: "MR. WHITES",
-    mrWhitesSub: "Krijgen geen woord en moeten meebluffen",
-    listHeading: "VERDACHTENLIJST",
-    civilians: "BURGERS",
-    undercover: "UNDERCOVER",
-    mrWhite: "MR. WHITE",
-    tip: "Tip: ongeveer 1 infiltrant per 3 à 4 spelers.",
-    next: "VOLGENDE: NAMEN ▸",
-  },
-
-  names: {
-    kicker: "DOSSIER 02 · VERDACHTEN",
-    title: "WIE DOEN ER MEE?",
-    hint: "Laat een veld leeg en we vullen zelf een schuilnaam in.",
-    placeholder: "Verdachte {number}",
-    back: "← VERDELING",
-    deal: "WOORDEN UITDELEN",
-  },
-
-  deal: {
-    kicker: "DOSSIER 03 · GEHEIM",
-    title: "IEDERS WOORD",
-    instructionBefore: "Geef de telefoon door. Tik je eigen dossier,",
-    instructionBold: "houd ingedrukt",
-    instructionAfter: "om je woord te lezen en laat los. Niet spieken.",
-    dossier: "DOSSIER #{num}",
-    seen: "GEZIEN",
-    progress: "{seen} van de {total} hebben gekeken",
-    again: "↻ OPNIEUW",
-    start: "START RONDE 1 ▸",
-  },
-
-  reveal: {
-    kicker: "DOSSIER #{num} · ALLEEN VOOR",
-    youAre: "JIJ BENT",
-    mrWhite: "MR. WHITE",
-    mrWhiteNote: "Geen woord voor jou. Luister goed en bluf je erdoorheen.",
-    yourWord: "JOUW GEHEIME WOORD",
-    wordNote: "Vertel niemand je woord. Wie is er anders dan jij?",
-    confidential: "VERTROUWELIJK",
-    hold: "HOUD INGEDRUKT",
-    personal: "STRIKT PERSOONLIJK · NIET DOORGEVEN",
-    done: "KLAAR ✓",
-  },
-
-  start: {
-    round: "RONDE {number}",
-    rolling: "WIE BEGINT ER…",
-    rolled: "DE EERSTE HINT KOMT VAN",
-    begins: "BEGINT! 🔍",
-    begin: "HINTRONDE STARTEN ▸",
-  },
-
-  hint: {
-    kicker: "RONDE {number} · VERHOOR",
-    title: "HINTRONDE",
-    speaking: "AAN HET WOORD",
-    instruction: "Geef één hint over je woord. Niet te makkelijk!",
-    noteLabel: "AANTEKENING · {name}",
-    notePlaceholder: "Noteer de hint…",
-    timeUp: "TIJD!",
-    toVote: "DIRECT STEMMEN",
-    next: "VOLGENDE ▸",
-    last: "NAAR STEMMING ▸",
-  },
-
-  vote: {
-    kicker: "RONDE {number} · CONFRONTATIE",
-    title: "WIE IS DE VERRADER?",
-    instruction:
-      "Overleg, wijs aan en stem. Tik op de verdachte met de meeste stemmen.",
-    suspect: "VERDACHTE #{num}",
-  },
-
-  elim: {
-    banner: "FOTO GENOMEN · ONTMASKERD",
-    suspect: "VERDACHTE #{num}",
-    verdictCivilian: "Oei. Een onschuldige burger…",
-    verdictUndercover: "Betrapt! Hun woord was “{word}”.",
-    verdictMrWhite: "Gesnapt! Mr. White had geen woord.",
-    continue: "VERDER ▸",
-    mrWhiteGuesses: "MR. WHITE MAG RADEN ▸",
-  },
-
-  guess: {
-    kicker: "LAATSTE KANS",
-    title: "MR. WHITE MAG RADEN",
-    instruction:
-      "Raad het woord van de burgers. Goed geraden? Dan wint Mr. White in z'n eentje.",
-    placeholder: "Het woord is…",
-    submit: "RADEN 🔍",
-    right: "RAAK!",
-    rightSub: "Het woord was “{word}”.",
-    wrong: "MIS!",
-    wrongSub: "“{guess}” is het niet. Het spel gaat door.",
-    continue: "VERDER ▸",
-  },
-
-  end: {
-    after: "NA {number} RONDE(S)",
-    closed: "ZAAK GESLOTEN",
-    civiliansTitle: "DE BURGERS WINNEN",
-    civiliansSub: "Alle infiltranten zijn ontmaskerd.",
-    infiltratorsTitle: "DE INFILTRANTEN WINNEN",
-    infiltratorsSub: "Ze bleven onder de radar.",
-    mrWhiteTitle: "MR. WHITE WINT!",
-    mrWhiteSub: "Zonder woord, toch geraden. Meesterlijk.",
-    civilianWord: "BURGERWOORD",
-    undercoverWord: "UNDERCOVERWOORD",
-    menu: "MENU",
-    again: "NIEUWE ZAAK ▸",
+    caseNumber: "Dossier nr. 0042",
+    rec: "Rec",
+    stamp: "Strikt geheim",
+    titleTop: "Mr.",
+    titleBottom: "White",
+    tagline:
+      "Iedereen krijgt hetzelfde geheime woord. Behalve de infiltranten. Wie is er niet wie hij zegt te zijn?",
+    play: "Spelen",
+    rules: "Uitleg",
+    settings: "Instellingen",
   },
 
   rules: {
-    kicker: "HANDBOEK VOOR RECHERCHEURS",
-    title: "UITLEG",
-    items: [
+    kicker: "Handboek voor agenten",
+    title: "Uitleg",
+    cards: [
+      { name: "Burger", body: "Kent het echte woord." },
       {
-        title: "Iedereen een woord",
-        body: "Burgers krijgen allemaal hetzelfde woord. Undercovers krijgen een woord dat erop lijkt — en weten zelf niet dat ze undercover zijn.",
+        name: "Undercover",
+        body: "Bijna-hetzelfde woord. Weet het zelf niet.",
       },
-      {
-        title: "Mr. White heeft niks",
-        body: "Mr. White krijgt geen woord en moet luisteren, raden en meebluffen.",
-      },
-      {
-        title: "Hintronde",
-        body: "Om de beurt geeft iedereen één hint over zijn woord. Te vaag is verdacht, te duidelijk helpt Mr. White.",
-      },
-      {
-        title: "Stemmen",
-        body: "Overleg en stem wie eruit moet. Diegene wordt ontmaskerd en hun rol onthuld.",
-      },
-      {
-        title: "Wie wint?",
-        body: "Burgers winnen als alle infiltranten eruit zijn. Infiltranten winnen als er nog maar één burger over is. Mr. White kan bij ontmaskering nog winnen door het woord te raden.",
-      },
+      { name: "Mr. White", body: "Geen woord. Bluffen!" },
     ],
-    cta: "BEGREPEN, SPELEN ▸",
+    items: [
+      "Iedereen krijgt in het geheim een woord. De burgers hebben allemaal hetzelfde woord.",
+      "Undercovers krijgen een woord dat erop lijkt, en weten zelf niet dat ze undercover zijn.",
+      "Mr. White krijgt helemaal niets en moet meebluffen.",
+      "Om de beurt geef je één woord als hint. Niet te duidelijk, niet te vaag.",
+      "Daarna stemmen jullie wie eruit gaat. Wordt Mr. White gepakt, dan mag hij één keer raden.",
+    ],
+    note: "Burgers winnen als alle infiltranten eruit liggen. Infiltranten winnen als er nog maar één burger over is.",
+    cta: "Begrepen, spelen",
   },
 
   settings: {
-    kicker: "BUREAU · CONFIGURATIE",
-    title: "INSTELLINGEN",
-    tabs: ["SPEL", "WOORDEN", "WEERGAVE"],
-
-    timerTitle: "HINT-TIMER",
-    timerSub: "Bedenktijd per hint, in seconden.",
-    timerOff: "UIT",
-    timerOffLabel: "Uit",
-    timerSecondsLabel: "{number} sec",
-
-    difficultyTitle: "MOEILIJKHEID",
-    difficultySub: "Hoe dicht liggen de twee woorden bij elkaar?",
-    difficultyNames: {
-      easy: "Makkelijk",
-      normal: "Normaal",
-      hard: "Pittig",
-    },
-
-    mrWhiteGuessLabel: "MR. WHITE MAG RADEN",
-    mrWhiteGuessDesc: "Eén gok op het woord als hij ontmaskerd wordt",
-    mrWhiteNeverFirstLabel: "MR. WHITE BEGINT NOOIT",
-    mrWhiteNeverFirstDesc: "Voorkomt een onmogelijke eerste hint",
-
-    categoriesTitle: "CATEGORIEËN",
-    pairCount: "{number} paren",
-    categoryNames: {
-      eten: "Eten",
-      dieren: "Dieren",
-      plekken: "Plekken",
-      beroepen: "Beroepen",
-      dingen: "Dingen",
-      sport: "Sport",
-    },
-
-    wordLanguageTitle: "TAAL VAN DE WOORDEN",
-    wordLanguageNames: { nl: "NL", en: "EN" },
-
-    customTitle: "EIGEN WOORDEN",
-    customSub:
-      "Een woord voor de burgers en een lijkend woord voor de undercover.",
-    customA: "Burger",
+    kicker: "Het hoofdkwartier",
+    title: "Instellingen",
+    categories: "Woordcategorieën",
+    pick: "Kiezen →",
+    allCategories: "Alle {total} categorieën",
+    someCategories: "{on} van {total} categorieën",
+    noneChosen: "Geen gekozen, we pakken alles",
+    display: "Weergave",
+    themeDark: "Donker",
+    themeLight: "Licht",
+    difficulty: "Moeilijkheid woorden",
+    diffEasy: "Makkelijk",
+    diffMix: "Mix",
+    diffHard: "Moeilijk",
+    diffHelpEasy:
+      "Woorden liggen ver uit elkaar. Undercovers vallen sneller op.",
+    diffHelpMix: "Een mix van makkelijke en lastige woordparen.",
+    diffHelpHard:
+      "Woorden lijken heel erg op elkaar. Veel twijfel gegarandeerd.",
+    language: "Taal",
+    timer: "Hint-timer",
+    timerOff: "Uit",
+    mrGuessLabel: "Mr. White mag raden",
+    mrGuessDesc: "Ontmaskerd? Eén gok op het woord. Goed is winst.",
+    mrNotFirstLabel: "Mr. White begint nooit",
+    mrNotFirstDesc: "De eerste hint komt altijd van iemand met een woord.",
+    customWords: "Eigen woorden",
+    customA: "Burgerwoord",
     customB: "Undercover",
-    customEmpty: "Nog niks genoteerd…",
     customAdd: "Woordpaar toevoegen",
     customRemove: "{a} en {b} verwijderen",
+    customEmpty: 'Verzin een woordpaar. Het komt in de categorie "Eigen".',
+    save: "Opslaan",
+  },
 
-    themeTitle: "THEMA",
-    themeDarkLabel: "Donker",
-    themeDarkSub: "Nachtdienst",
-    themeLightLabel: "Licht",
-    themeLightSub: "Dagdienst",
-    chosen: "GEKOZEN",
+  archive: {
+    tag: "ARCHIEF",
+    title: "Woordcategorieën",
+    search: "Zoek een categorie…",
+    all: "Alles aan",
+    none: "Alles uit",
+    count: "{on} / {total} aan",
+    pairs: "{n} woordparen",
+    noResults: 'Geen categorie gevonden voor "{query}".',
+  },
 
-    save: "OPSLAAN ✓",
+  language: {
+    tag: "INTERNATIONAAL",
+    title: "Taal van de woorden",
+    sub: "In welke taal krijgen de agenten hun geheime woord?",
+    chosen: "Gekozen",
+  },
+
+  setup: {
+    kicker: "Stap 1 van 3",
+    title: "Nieuw spel",
+    players: "Spelers",
+    playersDesc: "3 tot 20 agenten",
+    undercovers: "Undercovers",
+    undercoversDesc: "Een woord dat net anders is",
+    whites: "Mr. Whites",
+    whitesDesc: "Geen woord, alleen bluf",
+    distribution: "Verdeling van de verdachten",
+    civilians: "Burgers",
+    undercover: "Undercover",
+    white: "Mr. White",
+    next: "Volgende: namen →",
+  },
+
+  names: {
+    kicker: "Stap 2 van 3",
+    title: "Wie doen er mee?",
+    hint: "Laat een veld leeg en je krijgt een schuilnaam.",
+    placeholder: "Agent {n}",
+    back: "Verdeling",
+    deal: "Woorden uitdelen",
+  },
+
+  deal: {
+    kicker: "Stap 3 van 3",
+    title: "Ieders dossier",
+    instruction:
+      "Geef de telefoon door. Tik op je eigen dossier, houd ingedrukt om je woord te lezen en laat los. Niet spieken!",
+    number: "Nr. {n}",
+    tapToOpen: "Tik om te openen",
+    seenStamp: "Gezien",
+    seenText: "{seen} van de {total} dossiers gelezen",
+    remaining: "Nog {n} te gaan",
+    reshuffle: "Opnieuw delen",
+    start: "Start ronde 1",
+  },
+
+  confirm: {
+    tag: "LET OP!",
+    title: "Opnieuw delen?",
+    bodyStart:
+      "Iedereen krijgt een nieuw woord en een nieuwe rol. Wie zijn dossier al las, moet opnieuw kijken. ",
+    bodyStrong: "Dit kun je niet ongedaan maken.",
+    cancel: "Annuleren",
+    yes: "Ja, opnieuw delen",
+    waiting: "Lees eerst… {n}",
+  },
+
+  card: {
+    kicker: "Vertrouwelijk dossier van",
+    hold: "Houd ingedrukt",
+    holdSub:
+      "Alleen voor de ogen van {name}. Laat los om het dossier te sluiten.",
+    topSecret: "Top secret",
+    youAre: "Jij bent",
+    whiteTop: "Mr.",
+    whiteBottom: "White",
+    whiteNote: "Je hebt geen woord. Luister goed en bluf mee.",
+    yourWord: "Jouw geheime woord",
+    wordNote: "Onthoud het goed. Verraad het niet te snel.",
+    close: "Klaar, doorgeven",
+  },
+
+  hint: {
+    kicker: "Verhoor",
+    title: "Ronde {n}",
+    speaking: "Aan het woord",
+    instruction: "Geef één woord als hint over je geheime woord.",
+    begins: "BEGINT!",
+    voteNow: "Nu stemmen",
+    next: "Volgende",
+    toVote: "Naar de stemming",
+  },
+
+  vote: {
+    kicker: "Ronde {n} · De line-up",
+    title: "Wie is verdacht?",
+    instruction: "Overleg, wijs aan en stem. Tik op de verdachte die eruit gaat.",
+    stamp: "Verdacht",
+    anotherRound: "Nog een rondje",
+    unmask: "Ontmasker {name}",
+    pickFirst: "Kies een verdachte",
+  },
+
+  unmask: {
+    kicker: "Het dossier van",
+    investigating: "Wordt onderzocht…",
+    lineBurger:
+      "Onschuldig! Jullie hebben een van je eigen mensen weggestuurd.",
+    lineUndercover: "Betrapt! Deze agent had een net-iets-ander woord.",
+    lineWhite: "Gevonden! Mr. White had helemaal geen woord.",
+    next: "Verder",
+    toGuess: "Mr. White mag raden",
+  },
+
+  guess: {
+    lastChance: "Laatste kans…",
+    title: "{name}, wat is het woord?",
+    sub: "Raad je het woord van de burgers? Dan win je meteen. Je krijgt één poging.",
+    placeholder: "Typ je gok…",
+    submit: "Waag de gok",
+    miss: "Mis!",
+    missSub: '"{guess}" is het niet. Mr. White ligt eruit.',
+    next: "Verder",
+  },
+
+  end: {
+    stamp: "Zaak gesloten",
+    burgersTitle: "Burgers winnen",
+    burgersLine: "Alle infiltranten zijn ontmaskerd. Goed speurwerk, agenten.",
+    infiltrantenTitle: "Infiltranten winnen",
+    infiltrantenLine: "De infiltranten bleven uit beeld tot het te laat was.",
+    whiteTitle: "Mr. White wint",
+    whiteLine: "Geraden! Mr. White had het woord al die tijd door.",
+    civilianWord: "Burgerwoord",
+    undercoverWord: "Undercoverwoord",
+    out: "eruit",
+    menu: "Menu",
+    again: "Nog een zaak",
   },
 };
 
 export default nl;
+
+export type Dictionary = typeof nl;

@@ -1,175 +1,278 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
-import BrutalButton from "@/components/ui/BrutalButton";
-import Magnifier from "@/components/ui/Magnifier";
-import PoliceTape from "@/components/ui/PoliceTape";
-import StickyNote from "@/components/ui/StickyNote";
+import Press from "@/components/ui/Press";
+import Screen from "@/components/ui/Screen";
+import Stamp from "@/components/ui/Stamp";
 import type { Dictionary } from "@/lib/i18n";
-import { applyTheme, readTheme, type Theme } from "@/lib/theme";
+
+const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
-  lang: string;
+  langCode: string;
+  langName: string;
+  themeLabel: string;
+  themeDot: string;
+  onLanguage: () => void;
+  onTheme: () => void;
+  onPlay: () => void;
+  onRules: () => void;
+  onSettings: () => void;
 };
 
-export default function HomeScreen({ dict, lang }: Props) {
+export default function HomeScreen({
+  dict,
+  langCode,
+  langName,
+  themeLabel,
+  themeDot,
+  onLanguage,
+  onTheme,
+  onPlay,
+  onRules,
+  onSettings,
+}: Props) {
   const t = dict.home;
-  // Starts from the attribute the blocking script already set, so the label
-  // matches what is on screen without waiting for an effect.
-  const [theme, setTheme] = useState<Theme>(() =>
-    typeof document === "undefined" ? "dark" : readTheme(),
-  );
-
-  function flipTheme() {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    applyTheme(next);
-    setTheme(next);
-  }
 
   return (
-    <div className="relative flex flex-1 flex-col justify-center gap-7">
-      {/* The tape runs wider than the screen so the tilt never shows an end. */}
-      <div className="pointer-events-none relative z-[2] mx-0 -mt-7 -mb-[10px] h-[110px] flex-none">
-        <div
-          className="absolute left-1/2 h-[150px]"
-          style={{ width: "180vw", marginLeft: "-90vw", top: -6 }}
-        >
-          <PoliceTape
-            text={t.tapeTop}
-            rotate={-4}
-            top={10}
-            height={46}
-            fontSize={20}
-            duration={18}
-          />
-          <PoliceTape
-            text={t.tapeBottom}
-            rotate={3}
-            top={78}
-            height={40}
-            fontSize={16}
-            duration={24}
-            reverse
-            opacity={0.95}
-          />
-        </div>
+    <Screen
+      label={t.settings}
+      duration={0.5}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
+        alignContent: "center",
+        alignItems: "center",
+        gap: "40px clamp(40px,6vw,96px)",
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          gridColumn: "1 / -1",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          fontSize: 13,
+          letterSpacing: ".18em",
+          textTransform: "uppercase",
+          color: "var(--muted)",
+        }}
+      >
+        <span>{t.caseNumber}</span>
+        <span style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span
+              style={{
+                width: 9,
+                height: 9,
+                borderRadius: "50%",
+                background: "#FF3D3D",
+                animation: "blink 1.2s steps(1) infinite",
+              }}
+            />
+            {t.rec}
+          </span>
+
+          <Press
+            onClick={onLanguage}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontFamily: ARCHIVO,
+              fontSize: 12,
+              letterSpacing: ".12em",
+              textTransform: "uppercase",
+              background: "var(--bg)",
+              color: "var(--fg)",
+              border: "3px solid var(--fg)",
+              padding: "7px 10px",
+              boxShadow: "3px 3px 0 #3DD6FF",
+              cursor: "pointer",
+            }}
+            press={{
+              transform: "translate(2px,2px)",
+              boxShadow: "1px 1px 0 #3DD6FF",
+            }}
+          >
+            <span
+              style={{ background: "#3DD6FF", color: "#0d0d0d", padding: "1px 5px" }}
+            >
+              {langCode}
+            </span>
+            {langName}
+          </Press>
+
+          <Press
+            onClick={onTheme}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontFamily: ARCHIVO,
+              fontSize: 12,
+              letterSpacing: ".12em",
+              textTransform: "uppercase",
+              background: "var(--bg)",
+              color: "var(--fg)",
+              border: "3px solid var(--fg)",
+              padding: "7px 10px",
+              boxShadow: "3px 3px 0 #FFD23F",
+              cursor: "pointer",
+            }}
+            press={{
+              transform: "translate(2px,2px)",
+              boxShadow: "1px 1px 0 #FFD23F",
+            }}
+          >
+            <span
+              style={{
+                width: 14,
+                height: 14,
+                borderRadius: "50%",
+                border: "2px solid var(--fg)",
+                background: themeDot,
+                boxSizing: "border-box",
+              }}
+            />
+            {themeLabel}
+          </Press>
+        </span>
       </div>
 
       <div
-        className="relative flex flex-col items-center pt-[10px]"
-        style={{ animation: "flicker 5s infinite" }}
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+          textAlign: "left",
+        }}
       >
-        <div
-          className="font-type text-[14px] text-dim"
-          style={{ letterSpacing: ".3em" }}
+        <Stamp
+          fontSize={18}
+          rotate={9}
+          delay={0.5}
+          style={{ position: "absolute", right: 0, top: -14 }}
         >
-          {t.caseNumber}
-        </div>
+          {t.stamp}
+        </Stamp>
 
-        <div className="mt-[10px] flex items-start gap-[10px]">
-          <div
-            className="font-display border-[3px] border-ink bg-blood px-[10px] py-1 text-[30px] text-ink"
-            style={{
-              boxShadow: "4px 4px 0 var(--pop)",
-              transform: "rotate(-6deg)",
-              marginTop: 14,
-            }}
-          >
-            MR.
-          </div>
-          <div
-            className="font-display text-fg"
-            style={{
-              fontSize: 84,
-              lineHeight: 0.95,
-              letterSpacing: "-.02em",
-              textShadow: "6px 6px 0 #e8322b",
-            }}
-          >
-            WHITE
-          </div>
-        </div>
-
-        <Magnifier
-          size={100}
-          className="pointer-events-none absolute left-1/2"
+        <h1
           style={{
-            top: 16,
-            marginLeft: -45,
-            animation: "sweep 6s ease-in-out infinite",
+            margin: 0,
+            fontFamily: ARCHIVO,
+            fontSize: "clamp(64px, 11vw, 150px)",
+            lineHeight: 0.9,
+            letterSpacing: "-.02em",
+            textTransform: "uppercase",
+            animation: "flicker 6s infinite",
           }}
-        />
-
-        <p className="mt-[26px] max-w-[340px] text-center text-[17px] leading-[1.5] text-muted text-pretty">
-          {t.taglineOne}
+        >
+          {t.titleTop}
           <br />
-          {t.taglineTwo}{" "}
-          <span className="bg-evidence px-1 font-bold text-ink">
-            {t.taglineHighlight}
+          <span
+            style={{
+              display: "inline-block",
+              background: "#FFD23F",
+              color: "#0d0d0d",
+              padding: "2px 14px 6px",
+              transform: "rotate(-2deg)",
+              boxShadow: "6px 6px 0 var(--fg)",
+            }}
+          >
+            {t.titleBottom}
           </span>
-          .
+        </h1>
+
+        <p
+          style={{
+            margin: "18px 0 0",
+            maxWidth: 440,
+            fontSize: "clamp(17px,1.5vw,21px)",
+            lineHeight: 1.45,
+            textWrap: "pretty",
+          }}
+        >
+          {t.tagline}
         </p>
       </div>
 
-      <StickyNote
-        rotate={4}
-        tapeRotate={-6}
-        maxWidth={190}
-        delay={0.4}
-        className="-mt-[14px] -mb-[6px] mr-[6px] self-end"
-      >
-        {t.note}
-      </StickyNote>
-
-      <div
-        className="flex flex-col gap-[18px]"
-        style={{ animation: "slideUp .5s .15s ease-out both" }}
-      >
-        <Link
-          href={`/${lang}/play`}
-          className="pressable font-display flex h-[68px] items-center justify-center border-[3px] border-ink bg-blood text-[22px] tracking-[.06em] text-ink"
-          style={{ boxShadow: "6px 6px 0 var(--pop)" }}
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <Press
+          onClick={onPlay}
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 22,
+            textTransform: "uppercase",
+            letterSpacing: ".04em",
+            background: "#FFD23F",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            padding: 18,
+            boxShadow: "6px 6px 0 var(--fg)",
+            cursor: "pointer",
+            animation: "pulse 2.4s ease-in-out infinite",
+            transition: "transform .1s, box-shadow .1s",
+          }}
+          press={{
+            transform: "translate(5px,5px)",
+            boxShadow: "1px 1px 0 var(--fg)",
+          }}
         >
           {t.play}
-        </Link>
+        </Press>
 
-        <div className="grid grid-cols-2 gap-4">
-          <Link
-            href={`/${lang}/rules`}
-            className="pressable font-display flex h-[60px] items-center justify-center border-[3px] border-[var(--fg)] bg-[var(--bg)] text-[16px] tracking-[.06em] text-fg"
-            style={{ boxShadow: "5px 5px 0 #f5d90a" }}
+        <div
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}
+        >
+          <Press
+            onClick={onRules}
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 16,
+              textTransform: "uppercase",
+              background: "var(--bg)",
+              color: "var(--fg)",
+              border: "3px solid var(--fg)",
+              padding: "15px 10px",
+              boxShadow: "5px 5px 0 #3DD6FF",
+              cursor: "pointer",
+              transition: "transform .1s, box-shadow .1s",
+            }}
+            hover={{ transform: "rotate(-1.5deg)" }}
+            press={{
+              transform: "translate(4px,4px)",
+              boxShadow: "1px 1px 0 #3DD6FF",
+            }}
           >
             {t.rules}
-          </Link>
-          <Link
-            href={`/${lang}/settings`}
-            className="pressable font-display flex h-[60px] items-center justify-center border-[3px] border-[var(--fg)] bg-[var(--bg)] text-[16px] tracking-[.06em] text-fg"
-            style={{ boxShadow: "5px 5px 0 #f5d90a" }}
+          </Press>
+          <Press
+            onClick={onSettings}
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 16,
+              textTransform: "uppercase",
+              background: "var(--bg)",
+              color: "var(--fg)",
+              border: "3px solid var(--fg)",
+              padding: "15px 10px",
+              boxShadow: "5px 5px 0 #FF3D3D",
+              cursor: "pointer",
+              transition: "transform .1s, box-shadow .1s",
+            }}
+            hover={{ transform: "rotate(1.5deg)" }}
+            press={{
+              transform: "translate(4px,4px)",
+              boxShadow: "1px 1px 0 #FF3D3D",
+            }}
           >
             {t.settings}
-          </Link>
+          </Press>
         </div>
       </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div
-          className="font-type text-[12px] text-dim"
-          style={{ letterSpacing: ".2em" }}
-        >
-          {t.imprint}
-        </div>
-        <BrutalButton
-          variant="outline"
-          shadow="#e8322b"
-          depth={3}
-          onClick={flipTheme}
-          className="h-9 px-3 text-[12px] tracking-[.1em]"
-        >
-          {theme === "dark" ? t.themeToLight : t.themeToDark}
-        </BrutalButton>
-      </div>
-    </div>
+    </Screen>
   );
 }

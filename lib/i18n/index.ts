@@ -1,8 +1,8 @@
-import en, { type Dictionary } from "./dictionaries/en";
-import nl from "./dictionaries/nl";
+import nl, { type Dictionary } from "./dictionaries/nl";
+import en from "./dictionaries/en";
 import type { Locale } from "./config";
 
-const DICTIONARIES: Record<Locale, Dictionary> = { en, nl };
+const DICTIONARIES: Record<Locale, Dictionary> = { nl, en };
 
 export function getDictionary(locale: Locale): Dictionary {
   return DICTIONARIES[locale];

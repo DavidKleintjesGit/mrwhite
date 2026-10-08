@@ -1,45 +1,64 @@
-import { CATEGORY_IDS, type CategoryId, type CustomPair, type Difficulty } from "./words";
+import type { CustomPair, Difficulty } from "./game";
+import { CATEGORY_IDS, type LangId } from "./words";
 
-const STORAGE_KEY = "mrwhite.settings";
-const VERSION = 1;
+/** Same key as the design uses, so a saved game carries over. */
+const STORAGE_KEY = "mrwhite-noir-v1";
+
+export type Theme = "donker" | "licht";
 
 export type Settings = {
+  /** Which word buckets are switched on, including "eigen" for custom pairs. */
+  cats: Record<string, boolean>;
+  custom: CustomPair[];
   /** Seconds per clue, or 0 for no timer. */
   timer: number;
-  difficulty: Difficulty;
-  categories: CategoryId[];
-  custom: CustomPair[];
+  mrGuess: boolean;
+  mrNotFirst: boolean;
   /** The language of the word pairs, independent of the interface language. */
-  wordLanguage: "nl" | "en";
-  /** Mr. White gets one guess at the word when he is voted out. */
-  mrWhiteGuess: boolean;
-  /** Keeps Mr. White out of the opening slot. */
-  mrWhiteNeverFirst: boolean;
+  lang: LangId;
+  diff: Difficulty;
+  theme: Theme;
 };
 
-export const TIMER_CHOICES = [0, 30, 45, 60] as const;
-export const DIFFICULTY_CHOICES: Difficulty[] = ["easy", "normal", "hard"];
+export type Stored = {
+  settings: Settings;
+  names: string[];
+  nPlayers: number;
+  nUnder: number;
+  nWhite: number;
+};
 
-export function defaultSettings(wordLanguage: "nl" | "en"): Settings {
+export function defaultSettings(lang: LangId): Settings {
+  const cats: Record<string, boolean> = { eigen: true };
+  for (const id of CATEGORY_IDS) cats[id] = true;
   return {
-    timer: 0,
-    difficulty: "normal",
-    categories: [...CATEGORY_IDS],
+    cats,
     custom: [],
-    wordLanguage,
-    mrWhiteGuess: true,
-    mrWhiteNeverFirst: true,
+    timer: 30,
+    mrGuess: true,
+    mrNotFirst: true,
+    lang,
+    diff: "mix",
+    theme: "donker",
   };
 }
 
-type Stored = Settings & { version: number };
+export function defaultStored(lang: LangId): Stored {
+  return {
+    settings: defaultSettings(lang),
+    names: [],
+    nPlayers: 6,
+    nUnder: 1,
+    nWhite: 1,
+  };
+}
 
 /**
  * Returns the raw string rather than a parsed object: it is read through
  * `useSyncExternalStore`, which compares snapshots by identity, and a fresh
  * object every call would loop.
  */
-export function readStoredSettings(): string | null {
+export function readStored(): string | null {
   try {
     return localStorage.getItem(STORAGE_KEY);
   } catch {
@@ -47,39 +66,71 @@ export function readStoredSettings(): string | null {
   }
 }
 
-export function parseSettings(
-  raw: string | null,
-  wordLanguage: "nl" | "en",
-): Settings {
-  const fallback = defaultSettings(wordLanguage);
+export function parseStored(raw: string | null, lang: LangId): Stored {
+  const fallback = defaultStored(lang);
   if (!raw) return fallback;
 
-  let stored: Stored;
+  let saved: Partial<Stored>;
   try {
-    stored = JSON.parse(raw) as Stored;
+    saved = JSON.parse(raw) as Partial<Stored>;
   } catch {
     return fallback;
   }
-  if (stored?.version !== VERSION) return fallback;
 
   return {
-    timer: typeof stored.timer === "number" ? stored.timer : fallback.timer,
-    difficulty: stored.difficulty ?? fallback.difficulty,
-    categories: Array.isArray(stored.categories)
-      ? stored.categories.filter((id) => CATEGORY_IDS.includes(id))
-      : fallback.categories,
-    custom: Array.isArray(stored.custom) ? stored.custom : [],
-    wordLanguage: stored.wordLanguage ?? fallback.wordLanguage,
-    mrWhiteGuess: stored.mrWhiteGuess ?? fallback.mrWhiteGuess,
-    mrWhiteNeverFirst: stored.mrWhiteNeverFirst ?? fallback.mrWhiteNeverFirst,
+    settings: { ...fallback.settings, ...(saved.settings ?? {}) },
+    names: Array.isArray(saved.names) ? saved.names : [],
+    nPlayers: saved.nPlayers ?? fallback.nPlayers,
+    nUnder: saved.nUnder ?? fallback.nUnder,
+    nWhite: saved.nWhite ?? fallback.nWhite,
   };
 }
 
-export function writeSettings(settings: Settings): void {
+export function writeStored(stored: Stored): void {
   try {
-    const stored: Stored = { ...settings, version: VERSION };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
   } catch {
     // Losing the settings is a nuisance, not a failure.
   }
 }
+
+export const THEMES: Record<
+  Theme,
+  {
+    bg: string;
+    fg: string;
+    card: string;
+    muted: string;
+    line: string;
+    off: string;
+    offfg: string;
+    hl: string;
+    cy: string;
+    dot: string;
+  }
+> = {
+  licht: {
+    bg: "#F3F0E8",
+    fg: "#0d0d0d",
+    card: "#ffffff",
+    muted: "#5a574f",
+    line: "#bdb9ae",
+    off: "#e2ded3",
+    offfg: "#6a675f",
+    hl: "#0d0d0d",
+    cy: "#0a7fa3",
+    dot: "rgba(13,13,13,.09)",
+  },
+  donker: {
+    bg: "#0d0d0d",
+    fg: "#F3F0E8",
+    card: "#F3F0E8",
+    muted: "#b9b5aa",
+    line: "#3a3935",
+    off: "#2a2926",
+    offfg: "#8a877f",
+    hl: "#FFD23F",
+    cy: "#3DD6FF",
+    dot: "rgba(243,240,232,.08)",
+  },
+};

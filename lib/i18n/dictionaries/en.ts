@@ -1,12 +1,6 @@
-/**
- * English is the source language. Every other dictionary is typed against this
- * one, so a missing or renamed key fails the build instead of showing up blank.
- *
- * Capitalised strings are set in Archivo Black, which the design uses in caps
- * throughout. They are written in caps here rather than uppercased in CSS, so
- * a translator can lowercase a language that would read badly shouted.
- */
-const en = {
+import type { Dictionary } from "./nl";
+
+const en: Dictionary = {
   meta: {
     title: "Mr. White",
     description:
@@ -15,236 +9,234 @@ const en = {
 
   common: {
     back: "Back",
+    done: "Done",
   },
 
-  roleNames: {
-    civilian: "CIVILIAN",
-    undercover: "UNDERCOVER",
-    mrwhite: "MR. WHITE",
+  roles: {
+    burger: "Civilian",
+    undercover: "Undercover",
+    white: "Mr. White",
+  },
+
+  categories: {
+    eten: "Food",
+    dieren: "Animals",
+    plekken: "Places",
+    huis: "Around the house",
+    beroepen: "Jobs",
+    sport: "Sport & games",
+    pop: "Pop culture",
+    eigen: "Your own words",
   },
 
   home: {
-    caseNumber: "CASE Nº 0451 · UNDERCOVER",
-    taglineOne: "Everyone gets the same secret word.",
-    taglineTwo: "Except the",
-    taglineHighlight: "infiltrators",
-    note: "Trust nobody. Not even your best friend.",
-    play: "PLAY ▸",
-    rules: "HOW TO PLAY",
-    settings: "SETTINGS",
-    imprint: "© 1994 DETECTIVE GAMES LTD.",
-    themeToDark: "☾ DARK",
-    themeToLight: "☀ LIGHT",
-    tapeTop: "DO NOT CROSS",
-    tapeBottom: "POLICE LINE",
-  },
-
-  setup: {
-    kicker: "FILE 01 · LINE-UP",
-    title: "NEW GAME",
-    players: "PLAYERS",
-    playersSub: "How many suspects?",
-    undercovers: "UNDERCOVERS",
-    undercoversSub: "Get a word that resembles the civilians' word",
-    mrWhites: "MR. WHITES",
-    mrWhitesSub: "Get no word at all and have to bluff along",
-    listHeading: "SUSPECT LIST",
-    civilians: "CIVILIANS",
-    undercover: "UNDERCOVER",
-    mrWhite: "MR. WHITE",
-    tip: "Tip: roughly one infiltrator per 3 or 4 players.",
-    next: "NEXT: NAMES ▸",
-  },
-
-  names: {
-    kicker: "FILE 02 · SUSPECTS",
-    title: "WHO IS PLAYING?",
-    hint: "Leave a field empty and we will pick an alias for you.",
-    placeholder: "Suspect {number}",
-    back: "← LINE-UP",
-    deal: "HAND OUT THE WORDS",
-  },
-
-  deal: {
-    kicker: "FILE 03 · CLASSIFIED",
-    title: "EVERYONE'S WORD",
-    instructionBefore: "Pass the phone around. Tap your own file,",
-    instructionBold: "hold it down",
-    instructionAfter: "to read your word, and let go. No peeking.",
-    dossier: "FILE #{num}",
-    seen: "SEEN",
-    progress: "{seen} of {total} have looked",
-    again: "↻ DEAL AGAIN",
-    start: "START ROUND 1 ▸",
-  },
-
-  reveal: {
-    kicker: "FILE #{num} · FOR THE EYES OF",
-    youAre: "YOU ARE",
-    mrWhite: "MR. WHITE",
-    mrWhiteNote: "No word for you. Listen closely and bluff your way through.",
-    yourWord: "YOUR SECRET WORD",
-    wordNote: "Tell nobody your word. Who here has a different one?",
-    confidential: "CONFIDENTIAL",
-    hold: "HOLD DOWN",
-    personal: "STRICTLY PERSONAL · DO NOT PASS ON",
-    done: "DONE ✓",
-  },
-
-  start: {
-    round: "ROUND {number}",
-    rolling: "WHO STARTS…",
-    rolled: "THE FIRST CLUE COMES FROM",
-    begins: "STARTS! 🔍",
-    begin: "START THE CLUES ▸",
-  },
-
-  hint: {
-    kicker: "ROUND {number} · INTERVIEW",
-    title: "CLUE ROUND",
-    speaking: "SPEAKING",
-    instruction: "Give one clue about your word. Do not make it too easy!",
-    noteLabel: "NOTE · {name}",
-    notePlaceholder: "Jot down the clue…",
-    timeUp: "TIME!",
-    toVote: "VOTE NOW",
-    next: "NEXT ▸",
-    last: "TO THE VOTE ▸",
-  },
-
-  vote: {
-    kicker: "ROUND {number} · CONFRONTATION",
-    title: "WHO IS THE TRAITOR?",
-    instruction:
-      "Talk it over, point fingers and vote. Tap the suspect with the most votes.",
-    suspect: "SUSPECT #{num}",
-  },
-
-  elim: {
-    banner: "PHOTO TAKEN · UNMASKED",
-    suspect: "SUSPECT #{num}",
-    verdictCivilian: "Ouch. An innocent civilian…",
-    verdictUndercover: "Caught! Their word was “{word}”.",
-    verdictMrWhite: "Got them! Mr. White had no word at all.",
-    continue: "CONTINUE ▸",
-    mrWhiteGuesses: "MR. WHITE MAY GUESS ▸",
-  },
-
-  guess: {
-    kicker: "LAST CHANCE",
-    title: "MR. WHITE MAY GUESS",
-    instruction:
-      "Guess the civilians' word. Get it right and Mr. White wins on his own.",
-    placeholder: "The word is…",
-    submit: "GUESS 🔍",
-    right: "DIRECT HIT!",
-    rightSub: "The word was “{word}”.",
-    wrong: "MISS!",
-    wrongSub: "“{guess}” is not it. The game goes on.",
-    continue: "CONTINUE ▸",
-  },
-
-  end: {
-    after: "AFTER {number} ROUND(S)",
-    closed: "CASE CLOSED",
-    civiliansTitle: "THE CIVILIANS WIN",
-    civiliansSub: "Every infiltrator has been unmasked.",
-    infiltratorsTitle: "THE INFILTRATORS WIN",
-    infiltratorsSub: "They stayed under the radar.",
-    mrWhiteTitle: "MR. WHITE WINS!",
-    mrWhiteSub: "No word, and he guessed it anyway. Masterful.",
-    civilianWord: "CIVILIAN WORD",
-    undercoverWord: "UNDERCOVER WORD",
-    menu: "MENU",
-    again: "NEW CASE ▸",
+    caseNumber: "Case no. 0042",
+    rec: "Rec",
+    stamp: "Top secret",
+    titleTop: "Mr.",
+    titleBottom: "White",
+    tagline:
+      "Everyone gets the same secret word. Except the infiltrators. Who is not who they say they are?",
+    play: "Play",
+    rules: "How to play",
+    settings: "Settings",
   },
 
   rules: {
-    kicker: "DETECTIVE'S HANDBOOK",
-    title: "HOW TO PLAY",
-    items: [
+    kicker: "Field manual",
+    title: "How to play",
+    cards: [
+      { name: "Civilian", body: "Knows the real word." },
       {
-        title: "Everyone gets a word",
-        body: "Civilians all get the same word. Undercovers get one that resembles it — and do not know they are the undercover.",
+        name: "Undercover",
+        body: "Almost the same word. Does not know it either.",
       },
-      {
-        title: "Mr. White gets nothing",
-        body: "Mr. White gets no word at all and has to listen, guess and bluff along.",
-      },
-      {
-        title: "Clue round",
-        body: "Taking turns, everyone gives one clue about their word. Too vague is suspicious, too clear helps Mr. White.",
-      },
-      {
-        title: "Vote",
-        body: "Talk it over and vote on who goes. That player is unmasked and their role revealed.",
-      },
-      {
-        title: "Who wins?",
-        body: "Civilians win once every infiltrator is out. Infiltrators win once a single civilian is left. Unmasked, Mr. White can still win by guessing the word.",
-      },
+      { name: "Mr. White", body: "No word. Bluff!" },
     ],
-    cta: "GOT IT, LET'S PLAY ▸",
+    items: [
+      "Everyone secretly gets a word. The civilians all share the same one.",
+      "Undercovers get a word that resembles it, and do not know they are the undercover.",
+      "Mr. White gets nothing at all and has to bluff along.",
+      "Taking turns, you give one word as a clue. Not too clear, not too vague.",
+      "Then you vote on who goes. If Mr. White is caught, he gets one guess.",
+    ],
+    note: "Civilians win once every infiltrator is out. Infiltrators win once a single civilian is left.",
+    cta: "Got it, let's play",
   },
 
   settings: {
-    kicker: "BUREAU · CONFIGURATION",
-    title: "SETTINGS",
-    tabs: ["GAME", "WORDS", "DISPLAY"],
-
-    timerTitle: "CLUE TIMER",
-    timerSub: "Thinking time per clue, in seconds.",
-    timerOff: "OFF",
-    timerOffLabel: "Off",
-    timerSecondsLabel: "{number} sec",
-
-    difficultyTitle: "DIFFICULTY",
-    difficultySub: "How close together are the two words?",
-    difficultyNames: {
-      easy: "Easy",
-      normal: "Normal",
-      hard: "Tough",
-    },
-
-    mrWhiteGuessLabel: "MR. WHITE MAY GUESS",
-    mrWhiteGuessDesc: "One guess at the word when he is unmasked",
-    mrWhiteNeverFirstLabel: "MR. WHITE NEVER STARTS",
-    mrWhiteNeverFirstDesc: "Avoids an impossible opening clue",
-
-    categoriesTitle: "CATEGORIES",
-    pairCount: "{number} pairs",
-    categoryNames: {
-      eten: "Food",
-      dieren: "Animals",
-      plekken: "Places",
-      beroepen: "Jobs",
-      dingen: "Things",
-      sport: "Sport",
-    },
-
-    wordLanguageTitle: "LANGUAGE OF THE WORDS",
-    wordLanguageNames: { nl: "NL", en: "EN" },
-
-    customTitle: "YOUR OWN WORDS",
-    customSub:
-      "A word for the civilians and a similar one for the undercover.",
-    customA: "Civilian",
+    kicker: "Headquarters",
+    title: "Settings",
+    categories: "Word categories",
+    pick: "Choose →",
+    allCategories: "All {total} categories",
+    someCategories: "{on} of {total} categories",
+    noneChosen: "None chosen, we will use everything",
+    display: "Display",
+    themeDark: "Dark",
+    themeLight: "Light",
+    difficulty: "Word difficulty",
+    diffEasy: "Easy",
+    diffMix: "Mix",
+    diffHard: "Hard",
+    diffHelpEasy: "Words are far apart. Undercovers stand out sooner.",
+    diffHelpMix: "A mix of easy and tricky word pairs.",
+    diffHelpHard: "Words are very close together. Plenty of doubt guaranteed.",
+    language: "Language",
+    timer: "Clue timer",
+    timerOff: "Off",
+    mrGuessLabel: "Mr. White may guess",
+    mrGuessDesc: "Unmasked? One guess at the word. Right means a win.",
+    mrNotFirstLabel: "Mr. White never starts",
+    mrNotFirstDesc: "The first clue always comes from someone with a word.",
+    customWords: "Your own words",
+    customA: "Civilian word",
     customB: "Undercover",
-    customEmpty: "Nothing noted down yet…",
     customAdd: "Add word pair",
     customRemove: "Remove {a} and {b}",
+    customEmpty: 'Make up a word pair. It lands in the "Own" category.',
+    save: "Save",
+  },
 
-    themeTitle: "THEME",
-    themeDarkLabel: "Dark",
-    themeDarkSub: "Night shift",
-    themeLightLabel: "Light",
-    themeLightSub: "Day shift",
-    chosen: "CHOSEN",
+  archive: {
+    tag: "ARCHIVE",
+    title: "Word categories",
+    search: "Search a category…",
+    all: "All on",
+    none: "All off",
+    count: "{on} / {total} on",
+    pairs: "{n} word pairs",
+    noResults: 'No category found for "{query}".',
+  },
 
-    save: "SAVE ✓",
+  language: {
+    tag: "INTERNATIONAL",
+    title: "Language of the words",
+    sub: "Which language do the agents get their secret word in?",
+    chosen: "Chosen",
+  },
+
+  setup: {
+    kicker: "Step 1 of 3",
+    title: "New game",
+    players: "Players",
+    playersDesc: "3 to 20 agents",
+    undercovers: "Undercovers",
+    undercoversDesc: "A word that is just a bit different",
+    whites: "Mr. Whites",
+    whitesDesc: "No word, pure bluff",
+    distribution: "How the suspects line up",
+    civilians: "Civilians",
+    undercover: "Undercover",
+    white: "Mr. White",
+    next: "Next: names →",
+  },
+
+  names: {
+    kicker: "Step 2 of 3",
+    title: "Who is playing?",
+    hint: "Leave a field empty and you get a cover name.",
+    placeholder: "Agent {n}",
+    back: "Line-up",
+    deal: "Hand out the words",
+  },
+
+  deal: {
+    kicker: "Step 3 of 3",
+    title: "Everyone's file",
+    instruction:
+      "Pass the phone around. Tap your own file, hold it down to read your word, and let go. No peeking!",
+    number: "No. {n}",
+    tapToOpen: "Tap to open",
+    seenStamp: "Seen",
+    seenText: "{seen} of {total} files read",
+    remaining: "{n} to go",
+    reshuffle: "Deal again",
+    start: "Start round 1",
+  },
+
+  confirm: {
+    tag: "CAREFUL!",
+    title: "Deal again?",
+    bodyStart:
+      "Everyone gets a new word and a new role. Whoever already read their file has to look again. ",
+    bodyStrong: "This cannot be undone.",
+    cancel: "Cancel",
+    yes: "Yes, deal again",
+    waiting: "Read it first… {n}",
+  },
+
+  card: {
+    kicker: "Confidential file of",
+    hold: "Hold it down",
+    holdSub: "For the eyes of {name} only. Let go to close the file.",
+    topSecret: "Top secret",
+    youAre: "You are",
+    whiteTop: "Mr.",
+    whiteBottom: "White",
+    whiteNote: "You have no word. Listen closely and bluff along.",
+    yourWord: "Your secret word",
+    wordNote: "Remember it well. Do not give it away too soon.",
+    close: "Done, pass it on",
+  },
+
+  hint: {
+    kicker: "Interview",
+    title: "Round {n}",
+    speaking: "Speaking",
+    instruction: "Give one word as a clue about your secret word.",
+    begins: "STARTS!",
+    voteNow: "Vote now",
+    next: "Next",
+    toVote: "To the vote",
+  },
+
+  vote: {
+    kicker: "Round {n} · The line-up",
+    title: "Who looks guilty?",
+    instruction:
+      "Talk it over, point fingers and vote. Tap the suspect who goes.",
+    stamp: "Suspect",
+    anotherRound: "One more round",
+    unmask: "Unmask {name}",
+    pickFirst: "Pick a suspect",
+  },
+
+  unmask: {
+    kicker: "The file of",
+    investigating: "Under investigation…",
+    lineBurger: "Innocent! You just sent one of your own away.",
+    lineUndercover: "Caught! This agent had a just-slightly-different word.",
+    lineWhite: "Found them! Mr. White had no word at all.",
+    next: "Continue",
+    toGuess: "Mr. White may guess",
+  },
+
+  guess: {
+    lastChance: "Last chance…",
+    title: "{name}, what is the word?",
+    sub: "Guess the civilians' word and you win on the spot. You get one try.",
+    placeholder: "Type your guess…",
+    submit: "Take the shot",
+    miss: "Miss!",
+    missSub: '"{guess}" is not it. Mr. White is out.',
+    next: "Continue",
+  },
+
+  end: {
+    stamp: "Case closed",
+    burgersTitle: "Civilians win",
+    burgersLine: "Every infiltrator has been unmasked. Good work, agents.",
+    infiltrantenTitle: "Infiltrators win",
+    infiltrantenLine: "The infiltrators stayed out of sight until it was late.",
+    whiteTitle: "Mr. White wins",
+    whiteLine: "Guessed it! Mr. White had the word all along.",
+    civilianWord: "Civilian word",
+    undercoverWord: "Undercover word",
+    out: "out",
+    menu: "Menu",
+    again: "Another case",
   },
 };
 
 export default en;
-
-export type Dictionary = typeof en;

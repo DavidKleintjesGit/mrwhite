@@ -13,15 +13,6 @@ const nextConfig: NextConfig = {
   // requests to dev assets by default, which silently breaks hot reload and
   // leaves the page unhydrated — every button stops responding.
   allowedDevOrigins: ["mrwhite.test", "*.mrwhite.test"],
-
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
-    },
-  },
 };
 
 export default nextConfig;

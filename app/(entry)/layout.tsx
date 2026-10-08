@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Courier_Prime } from "next/font/google";
-import ThemeScript from "@/components/shell/ThemeScript";
 import "../globals.css";
 
 const archivoBlack = Archivo_Black({
@@ -35,12 +34,9 @@ export default function EntryLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${archivoBlack.variable} ${courierPrime.variable} h-full antialiased`}
+      className={`${archivoBlack.variable} ${courierPrime.variable}`}
     >
-      <head>
-        <ThemeScript />
-      </head>
-      <body className="min-h-full">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

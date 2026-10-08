@@ -1,159 +1,156 @@
-@import "tailwindcss";
+/*
+ * Taken verbatim from the design. The colour tokens are not defined here: the
+ * app sets them as inline custom properties on its root element so switching
+ * theme is a single re-render, exactly as the design does it.
+ */
 
-/* Design tokens, dark by default. The light theme is applied by setting
-   data-theme="light" on <html>; see ThemeScript. */
-:root {
-  --bg: #0b0b0b;
-  --fg: #f2efe6;
-  --card: #f2efe6;
-  --pop: #f2efe6;
-  --soft: #3a3936;
-  --muted: #b9b5a9;
-  --dim: #8a877f;
-  --tag: #f5d90a;
-  --dot: rgba(255, 255, 255, 0.07);
-  --vig: rgba(0, 0, 0, 0.75);
-}
-
-:root[data-theme="light"] {
-  --bg: #ece8dc;
-  --fg: #0e0e0e;
-  --card: #fffdf6;
-  --pop: #0e0e0e;
-  --soft: #bdb7a6;
-  --muted: #3f3d38;
-  --dim: #6b675e;
-  --tag: #c4231d;
-  --dot: rgba(0, 0, 0, 0.09);
-  --vig: rgba(80, 70, 50, 0.18);
-}
-
-/* Fixed colours: these stay the same in both themes, because the ink and the
-   evidence tape do not change colour when the lights go on. */
-@theme inline {
-  --color-bg: var(--bg);
-  --color-fg: var(--fg);
-  --color-card: var(--card);
-  --color-pop: var(--pop);
-  --color-soft: var(--soft);
-  --color-muted: var(--muted);
-  --color-dim: var(--dim);
-  --color-tag: var(--tag);
-
-  --color-ink: #0e0e0e;
-  --color-paper: #f2efe6;
-  --color-evidence: #f5d90a;
-  --color-blood: #e8322b;
-  --color-marker: #c4231d;
-
-  --font-display: var(--font-archivo-black);
-  --font-mono: var(--font-courier-prime);
-  --font-marker: var(--font-permanent-marker);
-  --font-type: var(--font-special-elite);
+html,
+body {
+  margin: 0;
+  background: #0d0d0d;
 }
 
 * {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-mono), monospace;
   -webkit-tap-highlight-color: transparent;
 }
 
-input::placeholder {
-  color: var(--dim);
+a {
+  color: #ffd23f;
+}
+a:hover {
+  color: #fff;
 }
 
-@keyframes sweep {
-  0% { transform: translate(-150px, 14px) rotate(-12deg); }
-  50% { transform: translate(130px, -10px) rotate(10deg); }
-  100% { transform: translate(-150px, 14px) rotate(-12deg); }
+input::placeholder {
+  color: #8a877f;
 }
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@keyframes popIn {
-  0% { transform: scale(0.5) rotate(-6deg); opacity: 0; }
-  60% { transform: scale(1.1) rotate(2deg); opacity: 1; }
-  100% { transform: scale(1) rotate(0); }
-}
-@keyframes slideUp {
-  from { transform: translateY(26px); opacity: 0; }
-  to { transform: none; opacity: 1; }
-}
-@keyframes stamp {
-  0% { transform: scale(3.2) rotate(-35deg); opacity: 0; }
-  65% { transform: scale(0.88) rotate(-10deg); opacity: 1; }
-  100% { transform: scale(1) rotate(-12deg); opacity: 1; }
-}
-@keyframes wobble {
-  0%, 100% { transform: rotate(-4deg); }
-  50% { transform: rotate(4deg); }
-}
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-@keyframes blink {
-  0%, 55% { opacity: 1; }
-  56%, 100% { opacity: 0.15; }
-}
-@keyframes grain {
-  0% { transform: translate(0, 0); }
-  33% { transform: translate(-4%, 3%); }
-  66% { transform: translate(3%, -4%); }
-  100% { transform: translate(0, 0); }
-}
-@keyframes flicker {
-  0%, 90%, 94%, 100% { opacity: 1; }
-  91% { opacity: 0.35; }
-  93% { opacity: 0.7; }
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-@keyframes flash {
-  0% { opacity: 0.95; }
-  100% { opacity: 0; }
-}
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-10px); }
-  40% { transform: translateX(10px); }
-  60% { transform: translateX(-6px); }
-  80% { transform: translateX(6px); }
+
+@keyframes screenIn {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
 }
 @keyframes swing {
-  0%, 100% { transform: rotate(-8deg); }
-  50% { transform: rotate(8deg); }
+  0%,
+  100% {
+    transform: rotate(-14deg) translate(0, 0);
+  }
+  50% {
+    transform: rotate(10deg) translate(18px, -8px);
+  }
 }
-
-/* Every surface in this design is a hard-edged box with a solid offset
-   shadow. These three classes carry that language so the screens do not have
-   to repeat it. */
-@utility sheet {
-  background: var(--card);
-  color: #0e0e0e;
-  border: 3px solid #0e0e0e;
+@keyframes sweep {
+  0% {
+    transform: translate(-60%, -10%);
+  }
+  50% {
+    transform: translate(40%, 20%);
+  }
+  100% {
+    transform: translate(-60%, -10%);
+  }
 }
-
-@utility pressable {
-  cursor: pointer;
-  transition:
-    transform 0.08s,
-    box-shadow 0.08s;
+@keyframes flicker {
+  0%,
+  92%,
+  100% {
+    opacity: 1;
+  }
+  93% {
+    opacity: 0.35;
+  }
+  95% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 0.6;
+  }
 }
-
-/* Paper and file cards are ruled like a police report. */
-@utility ruled {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0 38px,
-    rgba(14, 14, 14, 0.12) 38px 40px
-  );
+@keyframes stampIn {
+  0% {
+    opacity: 0;
+    transform: rotate(-12deg) scale(3);
+  }
+  60% {
+    opacity: 1;
+    transform: rotate(-12deg) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+@keyframes stampSlam {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--r)) scale(2.6);
+  }
+  55% {
+    opacity: 1;
+    transform: rotate(var(--r)) scale(0.92);
+  }
+  75% {
+    transform: rotate(var(--r)) scale(1.04);
+  }
+  100% {
+    opacity: 0.94;
+    transform: rotate(var(--r)) scale(1);
+  }
+}
+@keyframes wobble {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(6deg) translateY(-6px);
+  }
+}
+@keyframes scan {
+  0% {
+    transform: translateX(-70px) rotate(-10deg);
+  }
+  50% {
+    transform: translateX(70px) rotate(10deg);
+  }
+  100% {
+    transform: translateX(-70px) rotate(-10deg);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-4deg);
+  }
+  70% {
+    transform: scale(1.06) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
 }

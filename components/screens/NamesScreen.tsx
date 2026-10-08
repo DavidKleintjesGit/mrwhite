@@ -1,12 +1,14 @@
 "use client";
 
-import BrutalButton from "@/components/ui/BrutalButton";
-import ScreenHeader from "@/components/ui/ScreenHeader";
+import Press from "@/components/ui/Press";
+import Screen, { FooterPair, Header } from "@/components/ui/Screen";
 import { format, type Dictionary } from "@/lib/i18n";
+
+const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
-  count: number;
+  players: number;
   names: string[];
   onChange: (names: string[]) => void;
   onBack: () => void;
@@ -15,88 +17,134 @@ type Props = {
 
 export default function NamesScreen({
   dict,
-  count,
+  players,
   names,
   onChange,
   onBack,
   onDeal,
 }: Props) {
   const t = dict.names;
-  const fields = Array.from({ length: count }, (_, index) => names[index] ?? "");
-
-  function setName(index: number, value: string) {
-    const next = [...fields];
-    next[index] = value;
-    onChange(next);
-  }
+  const fields = Array.from({ length: players }, (_, i) => names[i] ?? "");
 
   return (
-    <div className="flex flex-1 flex-col gap-[18px]">
-      <ScreenHeader
+    <Screen
+      label={t.title}
+      style={{ display: "flex", flexDirection: "column", gap: 18 }}
+    >
+      <Header
         kicker={t.kicker}
         title={t.title}
-        onBack={onBack}
         backLabel={dict.common.back}
+        onBack={onBack}
       />
 
-      <p className="m-0 text-[15px] text-muted">{t.hint}</p>
+      <p style={{ margin: 0, fontSize: 16, lineHeight: 1.4 }}>{t.hint}</p>
 
-      <form
-        className="flex flex-col gap-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          onDeal();
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+          gap: 12,
         }}
       >
         {fields.map((value, index) => {
-          const placeholder = format(t.placeholder, { number: index + 1 });
+          const placeholder = format(t.placeholder, { n: index + 1 });
           return (
-            <div
+            <label
               key={index}
-              className="flex items-center gap-[10px]"
-              style={{ animation: "slideUp .3s ease-out both" }}
+              style={{
+                display: "flex",
+                alignItems: "stretch",
+                border: "3px solid var(--fg)",
+                background: "var(--card)",
+                animation: "popIn .3s both",
+              }}
             >
-              <div className="font-display flex h-[52px] w-12 flex-none items-center justify-center border-[3px] border-ink bg-evidence text-[18px] text-ink">
+              <span
+                style={{
+                  flex: "none",
+                  width: 42,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "#0d0d0d",
+                  color: "#FFD23F",
+                  fontFamily: ARCHIVO,
+                  fontSize: 16,
+                }}
+              >
                 {index + 1}
-              </div>
+              </span>
               <input
-                type="text"
                 value={value}
-                onChange={(event) => setName(index, event.target.value)}
                 placeholder={placeholder}
                 aria-label={placeholder}
-                maxLength={24}
                 autoComplete="off"
-                className="font-mono h-[52px] min-w-0 flex-1 border-[3px] border-ink bg-[var(--card)] px-[14px] text-[18px] font-bold text-ink outline-none"
-                style={{ boxShadow: "4px 4px 0 var(--soft)" }}
-                onFocus={(event) => {
-                  event.currentTarget.style.boxShadow = "4px 4px 0 #e8322b";
+                onChange={(event) => {
+                  const next = fields.slice();
+                  next[index] = event.target.value;
+                  onChange(next);
                 }}
-                onBlur={(event) => {
-                  event.currentTarget.style.boxShadow = "4px 4px 0 var(--soft)";
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  fontFamily: "inherit",
+                  fontWeight: 700,
+                  fontSize: 17,
+                  padding: "13px 12px",
+                  background: "var(--card)",
+                  color: "#0d0d0d",
+                  border: "none",
+                  outline: "none",
                 }}
               />
-            </div>
+            </label>
           );
         })}
-        {/* Lets Enter submit without showing a second button. */}
-        <button type="submit" className="hidden" aria-hidden="true" />
-      </form>
+      </div>
 
-      <div className="mt-auto grid grid-cols-[1fr_1.4fr] gap-[14px] pt-3">
-        <BrutalButton
-          variant="outline"
-          shadow="var(--soft)"
-          depth={5}
+      <FooterPair>
+        <Press
           onClick={onBack}
-          className="h-16 text-[14px]"
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 15,
+            textTransform: "uppercase",
+            background: "var(--bg)",
+            color: "var(--fg)",
+            border: "3px solid var(--fg)",
+            padding: "16px 8px",
+            boxShadow: "5px 5px 0 var(--line)",
+            cursor: "pointer",
+          }}
+          press={{
+            transform: "translate(4px,4px)",
+            boxShadow: "1px 1px 0 var(--line)",
+          }}
         >
           {t.back}
-        </BrutalButton>
-        <BrutalButton onClick={onDeal} className="h-16 text-[17px]">
+        </Press>
+        <Press
+          onClick={onDeal}
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 17,
+            textTransform: "uppercase",
+            background: "#FFD23F",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            padding: "16px 8px",
+            boxShadow: "6px 6px 0 var(--fg)",
+            cursor: "pointer",
+          }}
+          press={{
+            transform: "translate(5px,5px)",
+            boxShadow: "1px 1px 0 var(--fg)",
+          }}
+        >
           {t.deal}
-        </BrutalButton>
-      </div>
-    </div>
+        </Press>
+      </FooterPair>
+    </Screen>
   );
 }

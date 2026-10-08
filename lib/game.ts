@@ -1,51 +1,42 @@
 import {
-  availablePairs,
-  type CategoryId,
-  type CustomPair,
-  type Difficulty,
-  type WordPair,
+  ALIASES,
+  CATEGORY_IDS,
+  WORDS,
+  type BucketId,
+  type LangId,
+  type Pair,
 } from "./words";
 
 /**
- * Every rule of the game lives in this one file, so there is a single place to
- * check when a rule is in doubt. Nothing here touches React or the browser.
+ * Every rule of the game lives here, so there is one place to check when a
+ * rule is in doubt. Nothing in this file touches React or the browser.
  */
 
 export const MIN_PLAYERS = 3;
 export const MAX_PLAYERS = 20;
 
-export type Role = "civilian" | "undercover" | "mrwhite";
-
-/** How many of each role a round is dealt with. */
-export type Lineup = {
-  players: number;
-  undercovers: number;
-  mrWhites: number;
-};
+export type Role = "burger" | "undercover" | "white";
 
 export type Player = {
   name: string;
   role: Role;
   /** Null for Mr. White, who gets no word at all. */
   word: string | null;
-  /** Ticked off on the hand-out screen so the group sees who still has to look. */
   seen: boolean;
   alive: boolean;
 };
 
-export type Game = {
-  players: Player[];
-  /** The civilians' word. */
-  wordA: string;
-  /** The undercovers' word. */
-  wordB: string;
-  round: number;
-};
+/** [civilian word, undercover word] */
+export type WordPair = [string, string];
 
-export type Outcome = "civilians" | "infiltrators" | "mrwhite";
+export type Winner = "burgers" | "infiltranten" | "white";
+
+export type Difficulty = "makkelijk" | "mix" | "moeilijk";
+
+export type CustomPair = { a: string; b: string };
 
 export function shuffle<T>(items: readonly T[]): T[] {
-  const result = [...items];
+  const result = items.slice();
   for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
@@ -53,163 +44,186 @@ export function shuffle<T>(items: readonly T[]): T[] {
   return result;
 }
 
-// --- Line-up ---------------------------------------------------------------
-
 /**
- * Infiltrators win once a single civilian is left, so they have to start well
- * short of half the table or the game is over before anyone has spoken.
+ * Most infiltrators a table of this size can take. Infiltrators win once a
+ * single civilian is left, so they have to start well short of half.
  */
-export function maxInfiltrators(players: number): number {
-  return Math.floor((players - 1) / 2);
-}
-
-export function civilianCount(lineup: Lineup): number {
-  return lineup.players - lineup.undercovers - lineup.mrWhites;
-}
-
-export function infiltratorCount(lineup: Lineup): number {
-  return lineup.undercovers + lineup.mrWhites;
+export function cap(players: number): number {
+  return Math.max(1, Math.floor((players - 1) / 2));
 }
 
 /**
- * Changing the player count can leave the old line-up unplayable, so the
- * infiltrators are trimmed back until it fits, keeping at least one.
+ * Trims the infiltrators back until the new player count can carry them,
+ * dropping whichever side is ahead first.
  */
-export function withPlayers(lineup: Lineup, players: number): Lineup {
-  const clamped = Math.max(MIN_PLAYERS, Math.min(MAX_PLAYERS, players));
-  let { undercovers, mrWhites } = lineup;
-  const max = maxInfiltrators(clamped);
-
-  while (undercovers + mrWhites > max) {
-    if (mrWhites > undercovers && mrWhites > 0) mrWhites--;
-    else if (undercovers > 0) undercovers--;
-    else mrWhites--;
+export function fitRoles(
+  players: number,
+  undercovers: number,
+  whites: number,
+): { undercovers: number; whites: number } {
+  const limit = cap(players);
+  let u = undercovers;
+  let w = whites;
+  while (u + w > limit) {
+    if (u > 0 && u >= w) u--;
+    else w--;
   }
-  if (undercovers + mrWhites < 1) undercovers = 1;
-
-  return { players: clamped, undercovers, mrWhites };
+  return { undercovers: u, whites: w };
 }
 
-/** Null when the change would break the line-up, so the caller can ignore it. */
-export function withRole(
-  lineup: Lineup,
-  field: "undercovers" | "mrWhites",
-  delta: number,
-): Lineup | null {
-  const next = lineup[field] + delta;
-  const other = field === "undercovers" ? lineup.mrWhites : lineup.undercovers;
-  if (next < 0) return null;
-  if (next + other > maxInfiltrators(lineup.players)) return null;
-  if (next + other < 1) return null;
-  return { ...lineup, [field]: next };
+export function clampPlayers(players: number): number {
+  return Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, players));
 }
 
 // --- Dealing ---------------------------------------------------------------
 
 export type DealOptions = {
-  lineup: Lineup;
+  players: number;
+  undercovers: number;
+  whites: number;
   names: readonly string[];
-  fallbackName: (index: number) => string;
-  categories: readonly CategoryId[];
+  lang: LangId;
+  buckets: Record<string, boolean>;
   difficulty: Difficulty;
   custom: readonly CustomPair[];
-  /** Which language the words themselves are in. */
-  wordLanguage: "nl" | "en";
+  /** Used when every name is blank and the aliases run out. */
+  fallbackName: (index: number) => string;
 };
 
-function pickPair(options: DealOptions): WordPair {
-  const pool = availablePairs(
-    options.categories,
-    options.difficulty,
-    options.custom,
-  );
-  // Turning every category off should not leave the game with nothing to deal.
-  const usable = pool.length
-    ? pool
-    : availablePairs(
-        ["eten", "dieren", "plekken", "beroepen", "dingen", "sport"],
-        "normal",
-        [],
-      );
-  return usable[Math.floor(Math.random() * usable.length)];
+export function pickPair(options: DealOptions): WordPair {
+  const table = WORDS[options.lang] ?? WORDS.nl;
+  let pool: Pair[] = [];
+  for (const id of CATEGORY_IDS) {
+    if (options.buckets[id]) pool = pool.concat(table[id]);
+  }
+
+  if (options.difficulty === "makkelijk") pool = pool.filter((p) => p[2] === 1);
+  if (options.difficulty === "moeilijk") pool = pool.filter((p) => p[2] === 2);
+
+  if (options.buckets.eigen) {
+    pool = pool.concat(
+      options.custom.map((c): Pair => [c.a, c.b, 0]),
+    );
+  }
+
+  // Switching everything off should not leave the game with nothing to deal.
+  if (!pool.length) pool = CATEGORY_IDS.flatMap((id) => WORDS.nl[id]);
+
+  const picked = pool[Math.floor(Math.random() * pool.length)];
+  // Which of the two is the civilians' word is a coin flip, so a pair does not
+  // always point the same way.
+  return Math.random() < 0.5 ? [picked[0], picked[1]] : [picked[1], picked[0]];
 }
 
-export function deal(options: DealOptions): Game {
-  const pair = pickPair(options);
-  let [wordA, wordB] = pair[options.wordLanguage];
-  // Which of the two is the civilians' word is a coin flip, so a pair does
-  // not always point the same way.
-  if (Math.random() < 0.5) [wordA, wordB] = [wordB, wordA];
+/** Blank fields get a detective alias, never a duplicate of a typed name. */
+export function fillNames(
+  names: readonly string[],
+  players: number,
+  fallbackName: (index: number) => string,
+): string[] {
+  const taken = new Set(
+    names
+      .slice(0, players)
+      .map((name) => (name || "").trim())
+      .filter(Boolean),
+  );
+  const free = shuffle(ALIASES.filter((alias) => !taken.has(alias)));
+  return Array.from(
+    { length: players },
+    (_, index) =>
+      (names[index] || "").trim() || free.shift() || fallbackName(index),
+  );
+}
 
-  const { lineup } = options;
+export function deal(options: DealOptions): {
+  players: Player[];
+  pair: WordPair;
+} {
+  const pair = pickPair(options);
+  const names = fillNames(options.names, options.players, options.fallbackName);
+
   const roles = shuffle<Role>([
-    ...Array<Role>(civilianCount(lineup)).fill("civilian"),
-    ...Array<Role>(lineup.undercovers).fill("undercover"),
-    ...Array<Role>(lineup.mrWhites).fill("mrwhite"),
+    ...Array<Role>(options.whites).fill("white"),
+    ...Array<Role>(options.undercovers).fill("undercover"),
+    ...Array<Role>(
+      options.players - options.whites - options.undercovers,
+    ).fill("burger"),
   ]);
 
-  const players: Player[] = roles.map((role, index) => ({
-    name: (options.names[index] ?? "").trim() || options.fallbackName(index),
-    role,
-    word: role === "mrwhite" ? null : role === "undercover" ? wordB : wordA,
+  const players = names.map((name, index) => ({
+    name,
+    role: roles[index],
+    word:
+      roles[index] === "burger"
+        ? pair[0]
+        : roles[index] === "undercover"
+          ? pair[1]
+          : null,
     seen: false,
     alive: true,
   }));
 
-  return { players, wordA, wordB, round: 1 };
+  return { players, pair };
 }
 
 // --- Playing ---------------------------------------------------------------
 
-export function livingIndexes(game: Game): number[] {
-  return game.players.flatMap((player, index) => (player.alive ? [index] : []));
-}
-
 /**
  * Picks who opens and lays out the speaking order from there.
  *
- * With `mrWhiteNeverFirst` on, a Mr. White is kept out of the opening slot:
- * before anyone has spoken he has nothing at all to go on. Undercovers can
- * open, so the opener still gives nothing away.
+ * With `mrNotFirst` on, a Mr. White is kept out of the opening slot: before
+ * anyone has spoken he has nothing at all to go on. Undercovers can open, so
+ * the opener still gives nothing away.
  */
 export function openingOrder(
-  game: Game,
-  mrWhiteNeverFirst: boolean,
-): { starter: number; order: number[] } {
-  const alive = livingIndexes(game);
-  const eligible = mrWhiteNeverFirst
-    ? alive.filter((index) => game.players[index].role !== "mrwhite")
+  players: readonly Player[],
+  mrNotFirst: boolean,
+): number[] {
+  const alive = players.flatMap((player, index) => (player.alive ? [index] : []));
+  const eligible = mrNotFirst
+    ? alive.filter((index) => players[index].role !== "white")
     : alive;
   const pool = eligible.length ? eligible : alive;
 
   const starter = pool[Math.floor(Math.random() * pool.length)];
   const at = alive.indexOf(starter);
-  return { starter, order: [...alive.slice(at), ...alive.slice(0, at)] };
+  return [...alive.slice(at), ...alive.slice(0, at)];
 }
 
-export function eliminate(game: Game, index: number): Game {
-  return {
-    ...game,
-    players: game.players.map((player, i) =>
-      i === index ? { ...player, alive: false } : player,
-    ),
-  };
+export function eliminate(players: readonly Player[], index: number): Player[] {
+  return players.map((player, i) =>
+    i === index ? { ...player, alive: false } : player,
+  );
 }
 
 /** Null while the game is still running. */
-export function outcomeOf(game: Game): Outcome | null {
-  const alive = game.players.filter((player) => player.alive);
-  const infiltrators = alive.filter(
-    (player) => player.role !== "civilian",
+export function outcomeOf(players: readonly Player[]): Winner | null {
+  const infiltrators = players.filter(
+    (player) => player.alive && player.role !== "burger",
   ).length;
-  const civilians = alive.length - infiltrators;
+  const civilians = players.filter(
+    (player) => player.alive && player.role === "burger",
+  ).length;
 
-  if (infiltrators === 0) return "civilians";
-  if (civilians <= 1) return "infiltrators";
+  if (infiltrators === 0) return "burgers";
+  if (civilians <= 1) return "infiltranten";
   return null;
 }
 
-/** Mr. White's one guess. Spacing and capitals should not decide a game. */
-export function isCivilianWord(game: Game, guess: string): boolean {
-  return guess.trim().toLowerCase() === game.wordA.trim().toLowerCase();
+/**
+ * Mr. White's one guess. Accents, punctuation, spacing and capitals should
+ * never decide a game, so they are all stripped before comparing.
+ */
+export function normaliseGuess(value: string): string {
+  return (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]/g, "");
 }
+
+export function isCivilianWord(pair: WordPair, guess: string): boolean {
+  return normaliseGuess(guess) === normaliseGuess(pair[0]);
+}
+
+export type { BucketId };

@@ -1,157 +1,263 @@
 "use client";
 
-import BrutalButton from "@/components/ui/BrutalButton";
-import ClueTimer from "@/components/ui/ClueTimer";
-import type { Game } from "@/lib/game";
+import { useEffect, useRef, useState } from "react";
+import Press from "@/components/ui/Press";
+import Screen, { FooterPair } from "@/components/ui/Screen";
+import type { Player } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
+
+const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
-  game: Game;
+  players: Player[];
   order: number[];
-  index: number;
+  turn: number;
+  round: number;
   /** Seconds per clue, or 0 for no timer. */
   timer: number;
-  notes: Record<string, string>;
-  onNote: (key: string, value: string) => void;
+  dark: boolean;
   onNext: () => void;
   onVote: () => void;
 };
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
-export const noteKey = (round: number, player: number) => `${round}-${player}`;
-
 export default function HintScreen({
   dict,
-  game,
+  players,
   order,
-  index,
+  turn,
+  round,
   timer,
-  notes,
-  onNote,
+  dark,
   onNext,
   onVote,
 }: Props) {
   const t = dict.hint;
-  const speaker = game.players[order[index]];
-  const isLast = index >= order.length - 1;
-  const key = noteKey(game.round, order[index]);
-
+  const speaker = players[order[turn]];
+  const last = turn >= order.length - 1;
 
   return (
-    <div className="flex flex-1 flex-col gap-[18px]">
+    <Screen
+      label={format(t.title, { n: round })}
+      style={{ display: "flex", flexDirection: "column", gap: 20 }}
+    >
       <div
-        className="flex items-end justify-between"
-        style={{ animation: "slideUp .35s ease-out both" }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          gap: 12,
+        }}
       >
         <div>
           <div
-            className="font-type text-[13px] text-tag"
-            style={{ letterSpacing: ".18em" }}
+            style={{
+              fontSize: 12,
+              letterSpacing: ".2em",
+              textTransform: "uppercase",
+              color: "var(--muted)",
+            }}
           >
-            {format(t.kicker, { number: game.round })}
+            {t.kicker}
           </div>
-          <div className="font-display text-[30px] leading-none">{t.title}</div>
+          <h2
+            style={{
+              margin: 0,
+              fontFamily: ARCHIVO,
+              fontSize: 30,
+              textTransform: "uppercase",
+              lineHeight: 1,
+            }}
+          >
+            {format(t.title, { n: round })}
+          </h2>
         </div>
-        <div className="font-display text-[18px] text-dim">
-          {index + 1}/{order.length}
+        <div style={{ fontSize: 14, fontWeight: 700 }}>
+          {turn + 1} / {order.length}
         </div>
       </div>
 
+      {/* Keyed on the turn so each speaker pops in afresh. */}
       <div
-        className="sheet relative px-5 py-[22px] text-center"
+        key={turn}
         style={{
-          boxShadow: "8px 8px 0 #e8322b",
-          animation: "popIn .4s ease-out both",
+          position: "relative",
+          background: "var(--card)",
+          color: "#0d0d0d",
+          border: "3px solid #0d0d0d",
+          boxShadow: "8px 8px 0 #FFD23F",
+          padding: "30px 20px",
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+          alignItems: "center",
+          animation: "popIn .45s both",
         }}
-        key={index}
       >
         <div
-          className="font-type text-[14px] text-[#5d5a53]"
-          style={{ letterSpacing: ".25em" }}
+          style={{
+            fontSize: 13,
+            letterSpacing: ".2em",
+            textTransform: "uppercase",
+            fontWeight: 700,
+          }}
         >
           {t.speaking}
         </div>
-        <div className="font-display my-[6px] mt-2 text-[46px] leading-[1.05] break-words">
+        <div
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: "clamp(42px, 13vw, 64px)",
+            lineHeight: 1,
+            textTransform: "uppercase",
+            wordBreak: "break-word",
+          }}
+        >
           {speaker.name}
         </div>
-        <div className="text-[15px]">{t.instruction}</div>
-
-        {timer > 0 && (
-          <ClueTimer key={index} seconds={timer} timeUpLabel={t.timeUp} />
+        <div style={{ fontSize: 16, maxWidth: 280, lineHeight: 1.4 }}>
+          {t.instruction}
+        </div>
+        {turn === 0 && (
+          <div
+            style={{
+              position: "absolute",
+              top: -16,
+              right: -8,
+              fontFamily: "var(--font-permanent-marker), cursive",
+              background: "#FF3D3D",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: "2px 10px",
+              transform: "rotate(8deg)",
+              fontSize: 16,
+            }}
+          >
+            {t.begins}
+          </div>
         )}
       </div>
 
-      {/* A notepad page: red margin rule, blue feint lines, written in marker. */}
-      <div
-        className="relative border-[3px] border-ink pt-[10px] pr-[14px] pb-2 pl-[46px] text-ink"
-        style={{
-          background: "#fffdf6",
-          boxShadow: "5px 5px 0 var(--soft)",
-          backgroundImage:
-            "linear-gradient(to right,transparent 32px,#e8322b 32px,#e8322b 34px,transparent 34px),repeating-linear-gradient(to bottom,transparent 0 35px,#c7d3e6 35px 36px)",
-          transform: "rotate(-.6deg)",
-        }}
-      >
-        <div
-          className="font-type text-[12px] text-[#5d5a53]"
-          style={{ letterSpacing: ".15em" }}
-        >
-          {format(t.noteLabel, { name: speaker.name })}
-        </div>
-        <input
-          type="text"
-          value={notes[key] ?? ""}
-          onChange={(event) => onNote(key, event.target.value)}
-          placeholder={t.notePlaceholder}
-          aria-label={format(t.noteLabel, { name: speaker.name })}
-          className="font-marker h-10 w-full border-none bg-transparent text-[22px] text-marker outline-none"
-        />
-      </div>
+      {timer > 0 && <ClueTimer key={turn} seconds={timer} dark={dark} />}
 
-      <div className="flex flex-col gap-2">
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         {order.map((playerIndex, position) => {
-          const state =
-            position < index ? "done" : position === index ? "current" : "next";
+          const done = position < turn;
+          const now = position === turn;
           return (
-            <div
+            <span
               key={playerIndex}
-              className="flex items-center gap-3 px-3 py-[10px] text-[17px] font-bold"
               style={{
-                border: `2px solid ${state === "current" ? "#0e0e0e" : "var(--soft)"}`,
-                background: state === "current" ? "#f5d90a" : "transparent",
-                color: state === "current" ? "#0e0e0e" : "var(--fg)",
-                opacity: state === "done" ? 0.55 : 1,
+                padding: "6px 10px",
+                border: "2px solid var(--fg)",
+                fontSize: 14,
+                fontWeight: 700,
+                background: now ? "#FFD23F" : done ? "transparent" : "var(--bg)",
+                color: now ? "#0d0d0d" : done ? "var(--muted)" : "var(--fg)",
+                textDecoration: done ? "line-through" : "none",
               }}
             >
-              <div className="font-display w-7">
-                {state === "done" ? "✓" : state === "current" ? "▸" : pad(position + 1)}
-              </div>
-              <div className="min-w-0 flex-1">
-                {game.players[playerIndex].name}
-              </div>
-              <div className="font-marker max-w-[55%] truncate text-[16px] font-normal">
-                {notes[noteKey(game.round, playerIndex)] ?? ""}
-              </div>
-            </div>
+              {players[playerIndex].name}
+            </span>
           );
         })}
       </div>
 
-      <div className="mt-auto grid grid-cols-[1fr_1.4fr] gap-[14px] pt-3">
-        <BrutalButton
-          variant="outline"
-          shadow="var(--soft)"
-          depth={5}
+      <FooterPair>
+        <Press
           onClick={onVote}
-          className="h-16 text-[14px]"
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 15,
+            textTransform: "uppercase",
+            background: "var(--bg)",
+            color: "var(--fg)",
+            border: "3px solid var(--fg)",
+            padding: "16px 8px",
+            boxShadow: "5px 5px 0 #FF3D3D",
+            cursor: "pointer",
+          }}
+          press={{
+            transform: "translate(4px,4px)",
+            boxShadow: "1px 1px 0 #FF3D3D",
+          }}
         >
-          {t.toVote}
-        </BrutalButton>
-        <BrutalButton onClick={onNext} className="h-16 text-[17px]">
-          {isLast ? t.last : t.next}
-        </BrutalButton>
+          {t.voteNow}
+        </Press>
+        <Press
+          onClick={onNext}
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 17,
+            textTransform: "uppercase",
+            background: "#FFD23F",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            padding: "16px 8px",
+            boxShadow: "6px 6px 0 var(--fg)",
+            cursor: "pointer",
+          }}
+          press={{
+            transform: "translate(5px,5px)",
+            boxShadow: "1px 1px 0 var(--fg)",
+          }}
+        >
+          {last ? t.toVote : t.next}
+        </Press>
+      </FooterPair>
+    </Screen>
+  );
+}
+
+/**
+ * Counts one clue down. The parent gives it a fresh key per speaker, so the
+ * clock resets by remounting rather than by writing state from an effect.
+ */
+function ClueTimer({ seconds, dark }: { seconds: number; dark: boolean }) {
+  const [left, setLeft] = useState(seconds);
+  const handle = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    handle.current = setInterval(() => {
+      setLeft((current) => {
+        if (current <= 1) {
+          if (handle.current) clearInterval(handle.current);
+          return 0;
+        }
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (handle.current) clearInterval(handle.current);
+    };
+  }, []);
+
+  const colour = left <= 5 ? "#FF3D3D" : dark ? "#FFD23F" : "#0d0d0d";
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <div style={{ flex: 1, height: 18, border: "3px solid var(--fg)" }}>
+        <div
+          style={{
+            height: "100%",
+            width: `${Math.round((left / seconds) * 100)}%`,
+            background: colour,
+            transition: "width 1s linear, background .3s",
+          }}
+        />
+      </div>
+      <div
+        style={{
+          width: 56,
+          textAlign: "right",
+          fontFamily: ARCHIVO,
+          fontSize: 26,
+          color: colour,
+        }}
+      >
+        {left}
       </div>
     </div>
   );

@@ -40,29 +40,77 @@ export default function EntryPage() {
 
   return (
     <main
-      className="flex min-h-screen flex-col items-center justify-center gap-8 p-6 text-fg"
       style={{
-        backgroundColor: "var(--bg)",
-        backgroundImage: "radial-gradient(var(--dot) 1px,transparent 1.3px)",
-        backgroundSize: "6px 6px",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 32,
+        padding: 24,
+        background: "#0d0d0d",
+        backgroundImage:
+          "radial-gradient(rgba(243,240,232,.08) 1px, transparent 1.6px)",
+        backgroundSize: "9px 9px",
+        color: "#F3F0E8",
+        fontFamily: "var(--font-courier-prime), 'Courier New', monospace",
       }}
     >
       <h1
-        className="font-display text-center text-[56px] leading-none"
-        style={{ textShadow: "5px 5px 0 #e8322b" }}
+        style={{
+          margin: 0,
+          fontFamily: "var(--font-archivo-black), sans-serif",
+          fontSize: 56,
+          lineHeight: 1,
+          textTransform: "uppercase",
+          textAlign: "center",
+        }}
       >
-        MR. WHITE
+        Mr.{" "}
+        <span
+          style={{
+            display: "inline-block",
+            background: "#FFD23F",
+            color: "#0d0d0d",
+            padding: "2px 12px 5px",
+            transform: "rotate(-2deg)",
+            boxShadow: "6px 6px 0 #F3F0E8",
+          }}
+        >
+          White
+        </span>
       </h1>
 
-      <nav className="flex w-full max-w-xs flex-col gap-3">
+      <nav
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+          width: "100%",
+          maxWidth: 320,
+        }}
+      >
         {LOCALES.map((locale) => (
           <a
             key={locale}
             href={`/${locale}`}
             lang={locale}
             hrefLang={locale}
-            className="font-display flex h-14 items-center justify-center border-[3px] border-[var(--fg)] bg-[var(--bg)] text-[16px] tracking-[.06em]"
-            style={{ boxShadow: "5px 5px 0 #f5d90a" }}
+            style={{
+              fontFamily: "var(--font-archivo-black), sans-serif",
+              display: "flex",
+              height: 56,
+              alignItems: "center",
+              justifyContent: "center",
+              border: "3px solid #F3F0E8",
+              background: "#0d0d0d",
+              color: "#F3F0E8",
+              fontSize: 16,
+              letterSpacing: ".06em",
+              textTransform: "uppercase",
+              textDecoration: "none",
+              boxShadow: "5px 5px 0 #FFD23F",
+            }}
           >
             {LOCALE_NAMES[locale]}
           </a>

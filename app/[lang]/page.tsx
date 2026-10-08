@@ -1,15 +1,10 @@
 import { notFound } from "next/navigation";
-import AppShell from "@/components/shell/AppShell";
-import HomeScreen from "@/components/screens/HomeScreen";
+import App from "@/components/App";
 import { getDictionary, isLocale } from "@/lib/i18n";
 
-export default async function HomePage({ params }: PageProps<"/[lang]">) {
+export default async function Page({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
-  return (
-    <AppShell>
-      <HomeScreen dict={getDictionary(lang)} lang={lang} />
-    </AppShell>
-  );
+  return <App dict={getDictionary(lang)} lang={lang} />;
 }
