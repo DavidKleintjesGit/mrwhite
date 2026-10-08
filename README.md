@@ -8,7 +8,10 @@ Nederlandstalig social-deduction woordspel. Pass-and-play: één telefoon gaat r
 ## Stack
 
 Next.js (App Router, statische export) · TypeScript · Tailwind · later Capacitor voor iOS/Android.
-Geen backend, geen database — alle spellogica draait client-side.
+Alle spellogica en alle woorden draaien lokaal — het spel werkt volledig offline.
+
+Vanaf fase 6 komt er een aparte backend bij voor accounts en aankopen van woordpakketten.
+Die staat los van de app: het spel moet blijven werken als de server plat ligt.
 
 ## Aan de slag
 
