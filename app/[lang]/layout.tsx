@@ -1,14 +1,42 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import {
+  Archivo_Black,
+  Courier_Prime,
+  Permanent_Marker,
+  Special_Elite,
+} from "next/font/google";
 import { notFound } from "next/navigation";
-import { LOCALES, isLocale } from "@/lib/i18n";
-import { getDictionary } from "@/lib/i18n";
+import ThemeScript from "@/components/shell/ThemeScript";
+import { LOCALES, getDictionary, isLocale } from "@/lib/i18n";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivoBlack = Archivo_Black({
+  variable: "--font-archivo-black",
+  weight: "400",
   subsets: ["latin"],
 });
+
+const courierPrime = Courier_Prime({
+  variable: "--font-courier-prime",
+  weight: ["400", "700"],
+  subsets: ["latin"],
+});
+
+const permanentMarker = Permanent_Marker({
+  variable: "--font-permanent-marker",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const specialElite = Special_Elite({
+  variable: "--font-special-elite",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const FONTS = [archivoBlack, courierPrime, permanentMarker, specialElite]
+  .map((font) => font.variable)
+  .join(" ");
 
 export const dynamicParams = false;
 
@@ -27,7 +55,7 @@ export async function generateMetadata({
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0b0b10",
+  themeColor: "#0b0b0b",
   // This is a phone game: zooming does not help and breaks the layout.
   maximumScale: 1,
 };
@@ -40,8 +68,11 @@ export default async function LocaleLayout({
   if (!isLocale(lang)) notFound();
 
   return (
-    <html lang={lang} className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang={lang} className={`${FONTS} h-full antialiased`}>
+      <head>
+        <ThemeScript />
+      </head>
+      <body className="min-h-full">{children}</body>
     </html>
   );
 }

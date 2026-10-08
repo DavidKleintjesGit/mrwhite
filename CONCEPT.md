@@ -248,3 +248,27 @@ Fase 1 tot en met 6 heeft geen backend nodig. Pas bij fase 7 komt er een server 
 - **Taal** — alleen Nederlands, of vanaf het begin meertalig opzetten?
 - **Verdienmodel** — eenmalige ontgrendeling of abonnement
 - **Gratis of betaald** — waar ligt de grens, zodat de gratis versie op zichzelf leuk blijft
+
+---
+
+## 10. Vormgeving en regelwijzigingen (redesign)
+
+Het ontwerp is nagebouwd uit de redesign van 8 oktober 2026: een politiedossier-stijl
+met afzetlint, stempels, filmkorrel, typemachine- en markerletters, en een donker
+(nachtdienst) en licht (dagdienst) thema.
+
+**Vier regels zijn daarbij veranderd ten opzichte van dit document hierboven.**
+Ze staan hier zodat het verschil niet stilletjes wegzakt:
+
+| Was | Is nu |
+|---|---|
+| Infiltranten winnen bij gelijk aantal | Infiltranten winnen zodra er nog **één burger** over is |
+| Undercover ziet zijn rol | Undercover ziet **alleen zijn woord** — hij weet zelf niet dat hij undercover is. Alleen Mr. White krijgt zijn rol te zien |
+| Mr. White die goed raadt laat de infiltranten winnen | Mr. White die goed raadt **wint alleen**, als derde uitkomst |
+| 3 tot 10 spelers | 3 tot 20 spelers |
+
+Verder nieuw ten opzichte van fase 1 en 2: categorieën, eigen woordparen, moeilijkheid,
+hint-timer, aantekeningen per speler, taal van de woorden los van de interfacetaal,
+en een thema-keuze.
+
+**Vervallen:** de puntentelling en het scorebord uit fase 2. De redesign kent geen punten.

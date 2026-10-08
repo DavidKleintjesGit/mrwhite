@@ -1,36 +1,159 @@
 @import "tailwindcss";
 
-/* Dark by default: this gets played at parties and in bars.
-   High contrast, large hit areas. */
+/* Design tokens, dark by default. The light theme is applied by setting
+   data-theme="light" on <html>; see ThemeScript. */
 :root {
-  --background: #0b0b10;
-  --surface: #16161f;
-  --surface-hover: #1e1e2a;
-  --border: #2a2a38;
-  --foreground: #f4f4f6;
-  --muted: #9a9aab;
-  --accent: #e4342f;
-  --accent-hover: #f2453f;
-  --accent-foreground: #ffffff;
+  --bg: #0b0b0b;
+  --fg: #f2efe6;
+  --card: #f2efe6;
+  --pop: #f2efe6;
+  --soft: #3a3936;
+  --muted: #b9b5a9;
+  --dim: #8a877f;
+  --tag: #f5d90a;
+  --dot: rgba(255, 255, 255, 0.07);
+  --vig: rgba(0, 0, 0, 0.75);
 }
 
+:root[data-theme="light"] {
+  --bg: #ece8dc;
+  --fg: #0e0e0e;
+  --card: #fffdf6;
+  --pop: #0e0e0e;
+  --soft: #bdb7a6;
+  --muted: #3f3d38;
+  --dim: #6b675e;
+  --tag: #c4231d;
+  --dot: rgba(0, 0, 0, 0.09);
+  --vig: rgba(80, 70, 50, 0.18);
+}
+
+/* Fixed colours: these stay the same in both themes, because the ink and the
+   evidence tape do not change colour when the lights go on. */
 @theme inline {
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-surface-hover: var(--surface-hover);
-  --color-border: var(--border);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-card: var(--card);
+  --color-pop: var(--pop);
+  --color-soft: var(--soft);
   --color-muted: var(--muted);
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-foreground: var(--accent-foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-dim: var(--dim);
+  --color-tag: var(--tag);
+
+  --color-ink: #0e0e0e;
+  --color-paper: #f2efe6;
+  --color-evidence: #f5d90a;
+  --color-blood: #e8322b;
+  --color-marker: #c4231d;
+
+  --font-display: var(--font-archivo-black);
+  --font-mono: var(--font-courier-prime);
+  --font-marker: var(--font-permanent-marker);
+  --font-type: var(--font-special-elite);
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  /* Stops a long press from selecting the page instead of revealing a word. */
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono), monospace;
   -webkit-tap-highlight-color: transparent;
+}
+
+input::placeholder {
+  color: var(--dim);
+}
+
+@keyframes sweep {
+  0% { transform: translate(-150px, 14px) rotate(-12deg); }
+  50% { transform: translate(130px, -10px) rotate(10deg); }
+  100% { transform: translate(-150px, 14px) rotate(-12deg); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes popIn {
+  0% { transform: scale(0.5) rotate(-6deg); opacity: 0; }
+  60% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(26px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes stamp {
+  0% { transform: scale(3.2) rotate(-35deg); opacity: 0; }
+  65% { transform: scale(0.88) rotate(-10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-12deg); opacity: 1; }
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+@keyframes blink {
+  0%, 55% { opacity: 1; }
+  56%, 100% { opacity: 0.15; }
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-4%, 3%); }
+  66% { transform: translate(3%, -4%); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes flicker {
+  0%, 90%, 94%, 100% { opacity: 1; }
+  91% { opacity: 0.35; }
+  93% { opacity: 0.7; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes flash {
+  0% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+@keyframes swing {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+}
+
+/* Every surface in this design is a hard-edged box with a solid offset
+   shadow. These three classes carry that language so the screens do not have
+   to repeat it. */
+@utility sheet {
+  background: var(--card);
+  color: #0e0e0e;
+  border: 3px solid #0e0e0e;
+}
+
+@utility pressable {
+  cursor: pointer;
+  transition:
+    transform 0.08s,
+    box-shadow 0.08s;
+}
+
+/* Paper and file cards are ruled like a police report. */
+@utility ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 38px,
+    rgba(14, 14, 14, 0.12) 38px 40px
+  );
 }

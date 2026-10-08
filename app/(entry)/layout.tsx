@@ -1,31 +1,46 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Archivo_Black, Courier_Prime } from "next/font/google";
+import ThemeScript from "@/components/shell/ThemeScript";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivoBlack = Archivo_Black({
+  variable: "--font-archivo-black",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const courierPrime = Courier_Prime({
+  variable: "--font-courier-prime",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "Mr. White",
   description:
-    "Word game for 3 to 10 players. Everyone gets the same secret word — except the infiltrators.",
+    "Word game for 3 to 20 players. Everyone gets the same secret word — except the infiltrators.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0b10",
+  themeColor: "#0b0b0b",
   maximumScale: 1,
 };
 
 /**
  * Root layout for `/` only. Every real page lives under `app/[lang]`, which
- * carries its own root layout with the right `lang` attribute.
+ * carries its own root layout with the right `lang` attribute. Only the two
+ * fonts this page actually shows are loaded here.
  */
 export default function EntryLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html
+      lang="en"
+      className={`${archivoBlack.variable} ${courierPrime.variable} h-full antialiased`}
+    >
+      <head>
+        <ThemeScript />
+      </head>
+      <body className="min-h-full">{children}</body>
     </html>
   );
 }

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import PlayFlow from "@/components/PlayFlow";
+import AppShell from "@/components/shell/AppShell";
+import PlayFlow from "@/components/game/PlayFlow";
 import { getDictionary, isLocale } from "@/lib/i18n";
 
 export default async function PlayPage({ params }: PageProps<"/[lang]/play">) {
@@ -7,10 +8,8 @@ export default async function PlayPage({ params }: PageProps<"/[lang]/play">) {
   if (!isLocale(lang)) notFound();
 
   return (
-    <PlayFlow
-      dict={getDictionary(lang)}
-      lang={lang}
-      homeHref={`/${lang}`}
-    />
+    <AppShell>
+      <PlayFlow dict={getDictionary(lang)} lang={lang} />
+    </AppShell>
   );
 }

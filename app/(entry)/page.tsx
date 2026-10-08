@@ -39,19 +39,30 @@ export default function EntryPage() {
   }, []);
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-8 p-6">
-      <h1 className="text-center text-4xl font-bold tracking-tight">
-        Mr.<span className="text-accent"> White</span>
+    <main
+      className="flex min-h-screen flex-col items-center justify-center gap-8 p-6 text-fg"
+      style={{
+        backgroundColor: "var(--bg)",
+        backgroundImage: "radial-gradient(var(--dot) 1px,transparent 1.3px)",
+        backgroundSize: "6px 6px",
+      }}
+    >
+      <h1
+        className="font-display text-center text-[56px] leading-none"
+        style={{ textShadow: "5px 5px 0 #e8322b" }}
+      >
+        MR. WHITE
       </h1>
 
-      <nav className="flex flex-col gap-3">
+      <nav className="flex w-full max-w-xs flex-col gap-3">
         {LOCALES.map((locale) => (
           <a
             key={locale}
             href={`/${locale}`}
             lang={locale}
             hrefLang={locale}
-            className="rounded-2xl border border-border bg-surface px-6 py-4 text-center font-medium transition-colors hover:bg-surface-hover"
+            className="font-display flex h-14 items-center justify-center border-[3px] border-[var(--fg)] bg-[var(--bg)] text-[16px] tracking-[.06em]"
+            style={{ boxShadow: "5px 5px 0 #f5d90a" }}
           >
             {LOCALE_NAMES[locale]}
           </a>
