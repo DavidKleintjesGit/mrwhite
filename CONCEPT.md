@@ -16,6 +16,9 @@ Groepen van 3 tot 10 mensen die fysiek bij elkaar zitten: borrel, verjaardag, va
 treincoupé. Eén telefoon gaat rond. Geen account, geen installatie, geen uitleg nodig — binnen
 30 seconden speel je.
 
+**Pass-and-play is de enige modus.** Geen online rooms, geen spelen op afstand. Dat is een
+bewuste keuze, geen tijdelijke beperking: het spel leeft van mensen die bij elkaar zitten.
+
 ## 3. Spelregels
 
 ### Rollen
@@ -85,13 +88,12 @@ Onderzocht: [mrwhiteonline.com](https://mrwhiteonline.com), [meneerwit.com](http
 
 | Probleem bij de concurrentie | Onze aanpak |
 |---|---|
-| Woordparen zijn klakkeloos vertaald uit het Engels, vaak onlogisch | Handgeschreven Nederlandse paren, met Nederlandse thema's (Sinterklaas, koningsdag, snackbar) |
-| Je vergeet halverwege wie wat gezegd heeft | Hints worden optioneel vastgelegd en staan op het stemscherm bij elke naam |
-| Reclame tussen elke ronde, breekt het feestje | Geen ads in de spelloop |
-| Mr. White mag soms als eerste praten → kansloos | Startspeler is gegarandeerd een burger |
+| Woordparen zijn klakkeloos vertaald uit het Engels, vaak onlogisch | Handgeschreven Nederlandse paren, met Nederlandse thema's (Sinterklaas, Koningsdag, snackbar) |
+| Mr. White mag soms als eerste praten, en is dan kansloos | Startspeler is gegarandeerd een burger |
 | Je bent drie rondes achter elkaar Mr. White | Rolhistorie onthouden, niet twee keer achter elkaar dezelfde rol |
+| Reclame tussen elke ronde, breekt het feestje | Geen advertenties in de spelloop |
 | Kleine knopjes, licht thema, onbruikbaar op een donker feestje | Grote trefvlakken, dark mode standaard, hoog contrast |
-| Werkt niet zonder internet | Volledig offline na eerste keer laden |
+| Werkt niet zonder internet | Volledig offline, ook de categorieën |
 
 ## 5. Schermen
 
@@ -100,16 +102,23 @@ Onderzocht: [mrwhiteonline.com](https://mrwhiteonline.com), [meneerwit.com](http
 3. **Ronde-instellingen** — aantal undercovers, Mr. White aan/uit, thema, moeilijkheid
 4. **Rol onthullen** — "Geef de telefoon aan Sanne" → ingedrukt houden → woord → doorgeven
 5. **Startspeler** — "Joost begint"
-6. **Hintronde** — optionele timer, optioneel hints intypen
-7. **Stemmen** — tegels per speler, met hun hints eronder
+6. **Hintronde** — spreekvolgorde met wie aan de beurt is, één tik naar de volgende
+7. **Stemmen** — tegels per speler
 8. **Onthulling** — wie lag eruit, en wat was hij
 9. **Gok van Mr. White** — alleen als die weggestemd is
 10. **Einde ronde** — winnaar, punten, scorebord
 11. **Volgende ronde** of stoppen
 
+### Hints bijhouden: optioneel, standaard uit
+
+Overwogen en teruggeschaald. Hints laten intypen betekent dat één persoon zit te typen terwijl de
+rest praat — dat remt het tempo en legt al het werk bij de telefoonhouder. Standaard toont de app
+dus alleen de spreekvolgorde, zonder invoer. Wie het wél wil, zet het aan in de instellingen: dan
+verschijnt per speler een veld voor één woord en staan de hints op het stemscherm.
+
 ## 6. Woordenbank
 
-JSON in de repo, geen database. Per paar: burgerwoord, undercoverwoord, thema, moeilijkheid.
+JSON in de repo, meegeleverd in de bundel. Per paar: burgerwoord, undercoverwoord, thema, moeilijkheid.
 
 ```json
 { "civilian": "pannenkoek", "undercover": "poffertje", "theme": "eten", "difficulty": 2 }
@@ -118,28 +127,57 @@ JSON in de repo, geen database. Per paar: burgerwoord, undercoverwoord, thema, m
 Moeilijkheid 1 = ver uit elkaar (hond/kat), 3 = bijna identiek (thee/kruidenthee).
 Doel voor de MVP: 150 paren. Doel voor v1.0: 500+, verdeeld over thema's.
 
+Nieuwe pakketten uitrollen zonder app-update kan via een `packs.json` met versienummer op een CDN.
+Dat is een statisch bestand, geen API: de app haalt het op als er toevallig internet is, en gebruikt
+anders wat in de bundel zit.
+
 ## 7. Techniek
 
-**Keuze: Next.js + TypeScript + Tailwind, als statische export. Later verpakt met Capacitor.**
+**Keuze: Next.js + TypeScript + Tailwind als statische export, later verpakt met Capacitor.
+Daarnaast een aparte, kleine backend — maar pas zodra we iets gaan verkopen.**
 
-Eén codebase die drie dingen oplevert: website, installeerbare PWA, en echte app in de stores.
+### Drie losse delen
 
-- **Next.js (App Router)** met `output: 'export'` → puur statische bestanden, geen server nodig.
-  Dat is ook precies wat Capacitor nodig heeft, dus de webapp en de native app blijven identiek.
-- **Geen backend, geen database, geen accounts.** Het spel draait volledig in de browser.
-  Dit is de directe winst van pass-and-play: geen hostingkosten, geen privacyvraagstuk,
-  geen AVG-verplichtingen, werkt in een kelder zonder bereik.
-- **State** in een reducer of Zustand-store, weggeschreven naar `localStorage` zodat een
-  per ongeluk herladen pagina de ronde niet weggooit.
-- **PWA**: manifest + service worker → "Zet op beginscherm" en volledig offline.
-- **Later Capacitor**: dezelfde statische build wordt een iOS- en Android-app. Alleen voor
-  push, haptics en de storevermelding is native code nodig.
+1. **De app** — alle spellogica en alle woorden, draait volledig lokaal, werkt zonder internet.
+   Next.js App Router met `output: 'export'`, dus puur statische bestanden. Dat is precies wat
+   Capacitor nodig heeft, dus web en native app komen uit dezelfde build.
+2. **Woordpakketten** — in de bundel, optioneel aangevuld met een `packs.json` van een CDN.
+3. **Backend** — apart deploybaar op `api.mrwhite.nl`. Kan Laravel zijn, sluit aan op de
+   bestaande stack. Taken: account, entitlements (wat heeft deze gebruiker gekocht),
+   betaalwebhooks, bonvalidatie van de stores.
 
-### Consequentie om vast te houden
+### Waarom de backend apart staat, en niet als Next.js API-routes
 
-Geen Next.js API-routes en geen server components met serverlogica — die overleven de statische
-export niet. Alle logica client-side. Komt er later toch online multiplayer, dan komt daar een
-aparte realtime-service naast; de bestaande code blijft dan gewoon werken als "lokale modus".
+- API-routes overleven `output: 'export'` niet, en die export is nodig voor Capacitor
+- Het dwingt de goede scheiding af: ligt de server plat, dan speelt het spel gewoon door
+- Los deploybaar en los te versioneren, en je kunt hem in Laravel bouwen
+
+### Het principe dat we vasthouden
+
+**De API mag nooit nodig zijn om te spelen.** Categorieën ophalen hoort dus níét via een API-call:
+dat is statische data die mee de bundel in gaat. De API gaat uitsluitend over één vraag —
+*wat heeft deze gebruiker gekocht?* Het antwoord daarop wordt lokaal gecachet, zodat ook dat
+offline werkt.
+
+### Betalingen — de lastige realiteit
+
+| Platform | Betaalweg | Commissie |
+|---|---|---|
+| Web / PWA | Stripe Checkout + webhook | alleen de Stripe-fee |
+| iOS | Verplicht in-app purchase (StoreKit) | 15–30% |
+| Android | Verplicht Google Play Billing | 15–30% |
+
+Apple en Google verplichten hun eigen betaalsysteem voor digitale content; Stripe mag daar niet
+voor gebruikt worden. De regels rond uitlinken naar extern betalen zijn in de EU en de VS
+versoepeld — controleer de actuele voorwaarden op het moment van indienen.
+
+**Gevolg:** twee betaalwegen, en zodra iemand op web koopt en het in de app wil gebruiken heb je
+**accounts** nodig om de ontgrendeling te koppelen. Dat accountsysteem is veruit het meeste werk
+van het hele verdienmodel, meer dan de betaling zelf.
+
+**Overweging:** een abonnement op een feestspel dat je vier keer per jaar speelt is een moeilijke
+verkoop. Eén eenmalige "alles ontgrendelen" is makkelijker te verkopen en bespaart de hele
+administratie van opzeggingen en verlopen rechten.
 
 ### Datamodel (schets)
 
@@ -153,29 +191,33 @@ type Player = {
   word: string | null   // null voor Mr. White
   alive: boolean
   score: number
-  hints: string[]
+  hints: string[]       // alleen gevuld als hints bijhouden aan staat
 }
 
 type Phase = 'setup' | 'reveal' | 'hints' | 'voting' | 'elimination' | 'mrwhite-guess' | 'result'
 ```
+
+State in een reducer of Zustand-store, weggeschreven naar `localStorage` zodat een per ongeluk
+herladen pagina de ronde niet weggooit.
 
 ## 8. Fasering
 
 | Fase | Inhoud |
 |---|---|
 | **0** | Concept vastleggen — *dit document* |
-| **1 · MVP** | Spelers invoeren, rollen verdelen, woord onthullen, stemmen, win-check, Mr. White-gok. Lelijk mag. Doel: één keer helemaal uitspelen |
-| **2 · Speelbaar** | Scorebord over meerdere rondes, hintlog, thema's, timer, foutbestendigheid |
+| **1 · MVP** | Spelers invoeren, rollen verdelen, woord onthullen, stemmen, win-check, gok van Mr. White. Lelijk mag. Doel: één keer helemaal uitspelen |
+| **2 · Speelbaar** | Scorebord over meerdere rondes, thema's, rolrotatie, timer, foutbestendigheid |
 | **3 · Af** | Vormgeving, animaties, geluid, dark mode, 500 woordparen |
 | **4 · PWA** | Offline, installeerbaar, eigen domein |
 | **5 · App** | Capacitor, iOS + Android, storevermelding |
-| **6 · optioneel** | Online rooms met roomcode — alleen als fase 5 loopt |
+| **6 · Verkoop** | Backend, accounts, Stripe op web, in-app purchase op native, betaalde pakketten |
+
+Fase 1 tot en met 5 heeft geen backend nodig. Pas bij fase 6 komt er een server bij.
 
 ## 9. Nog te beslissen
 
 - **Naam en merk** — "Mr. White" is de werktitel. De naam wordt breed gebruikt door concurrenten;
   voor een storevermelding is iets eigens sterker en juridisch rustiger
 - **Taal** — alleen Nederlands, of vanaf het begin meertalig opzetten?
-- **Woordpakketten** — gratis basispakket plus betaalde thema's (18+, films, voetbal), of alles gratis?
-- **Verdienmodel** — gratis met één bescheiden advertentie buiten de spelloop, eenmalige
-  betaling voor extra pakketten, of puur gratis?
+- **Verdienmodel** — eenmalige ontgrendeling of abonnement
+- **Gratis of betaald** — waar ligt de grens, zodat de gratis versie op zichzelf leuk blijft
