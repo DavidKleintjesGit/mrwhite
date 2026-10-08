@@ -8,7 +8,7 @@ type Props = {
   dict: Dictionary["play"];
   round: Round;
   onSeen: (playerId: string) => void;
-  onRestart: () => void;
+  onReDeal: () => void;
   onStart: () => void;
 };
 
@@ -16,7 +16,7 @@ export default function WordReveal({
   dict,
   round,
   onSeen,
-  onRestart,
+  onReDeal,
   onStart,
 }: Props) {
   const t = dict.reveal;
@@ -25,7 +25,6 @@ export default function WordReveal({
   const openPlayer =
     round.players.find((player) => player.id === openPlayerId) ?? null;
   const seenCount = round.players.filter((player) => player.seenWord).length;
-  const everyoneLooked = seenCount === round.players.length;
 
   return (
     <>
@@ -46,7 +45,7 @@ export default function WordReveal({
                 {player.name}
               </span>
               {player.seenWord && (
-                <span aria-hidden="true" className="shrink-0 text-accent">
+                <span aria-hidden="true" className="shrink-0 text-muted">
                   ✓
                 </span>
               )}
@@ -55,14 +54,11 @@ export default function WordReveal({
         ))}
       </ul>
 
-      <p
-        aria-live="polite"
-        className={`text-sm ${everyoneLooked ? "text-muted" : "text-accent"}`}
-      >
-        {format(t.progress, {
-          seen: seenCount,
-          total: round.players.length,
-        })}
+      {/* A plain counter, never styled as a warning: starting before everyone
+          has looked is allowed, and the accent colour means "something is
+          wrong" everywhere else in the app. */}
+      <p aria-live="polite" className="text-sm text-muted">
+        {format(t.progress, { seen: seenCount, total: round.players.length })}
       </p>
 
       <div className="mt-auto flex flex-col gap-3 sm:flex-row-reverse">
@@ -75,10 +71,10 @@ export default function WordReveal({
         </button>
         <button
           type="button"
-          onClick={onRestart}
+          onClick={onReDeal}
           className="rounded-2xl border border-border px-6 py-5 font-medium transition-colors hover:bg-surface-hover sm:flex-1"
         >
-          {t.restart}
+          {t.reDeal}
         </button>
       </div>
 
@@ -108,11 +104,6 @@ function WordSheet({
   const t = dict.reveal;
   const [holding, setHolding] = useState(false);
 
-  function startHolding() {
-    setHolding(true);
-    onHeld();
-  }
-
   return (
     <div className="fixed inset-0 z-10 flex flex-col bg-background p-6 sm:p-8">
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6">
@@ -122,7 +113,10 @@ function WordSheet({
           type="button"
           // Pointer events cover both a finger and a mouse, so holding works
           // the same on a phone and on a desktop.
-          onPointerDown={startHolding}
+          onPointerDown={() => {
+            setHolding(true);
+            onHeld();
+          }}
           onPointerUp={() => setHolding(false)}
           onPointerLeave={() => setHolding(false)}
           onPointerCancel={() => setHolding(false)}
@@ -149,7 +143,6 @@ function WordSheet({
                   </span>
                 </>
               )}
-              <span className="mt-4 text-xs text-muted">{t.holdOn}</span>
             </>
           ) : (
             <span className="text-lg font-medium text-muted">{t.hold}</span>

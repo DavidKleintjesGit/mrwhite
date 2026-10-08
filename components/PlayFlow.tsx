@@ -2,19 +2,27 @@
 
 import { useState } from "react";
 import FirstClue from "@/components/FirstClue";
-import GameSetup from "@/components/GameSetup";
+import LineupPicker from "@/components/LineupPicker";
 import NameEntry from "@/components/NameEntry";
 import Screen from "@/components/Screen";
 import WordReveal from "@/components/WordReveal";
-import { createRound, type Round } from "@/lib/game";
+import { dealRound, suggestedFor, type Lineup, type Round } from "@/lib/game";
 import type { Dictionary, Locale } from "@/lib/i18n";
-import { recommendedFor, type RoleSetup } from "@/lib/roles";
 import { randomWordPair } from "@/lib/words";
 
 /** Only the names are kept between games; a half-played round is not. */
 const NAMES_STORAGE_KEY = "mrwhite.names";
 
-type Phase = "setup" | "names" | "reveal" | "firstClue";
+/**
+ * A round only exists once it has been dealt, so it belongs to the stage
+ * rather than sitting in a nullable field. No screen can then be reached
+ * without the data it needs.
+ */
+type Stage =
+  | { name: "lineup" }
+  | { name: "names" }
+  | { name: "reveal"; round: Round }
+  | { name: "firstClue"; round: Round };
 
 type Props = {
   dict: Dictionary;
@@ -35,111 +43,118 @@ function readStoredNames(): string[] {
   }
 }
 
-export default function PlayFlow({ dict, lang, homeHref }: Props) {
-  const [phase, setPhase] = useState<Phase>("setup");
-  const [setup, setSetup] = useState<RoleSetup>(() => recommendedFor(6));
-  const [names, setNames] = useState<string[]>([]);
-  const [round, setRound] = useState<Round | null>(null);
+function storeNames(names: readonly string[]) {
+  try {
+    localStorage.setItem(NAMES_STORAGE_KEY, JSON.stringify(names));
+  } catch {
+    // Not remembering the names is a nuisance, not a failure.
+  }
+}
 
-  function confirmSetup(confirmed: RoleSetup) {
-    setSetup(confirmed);
+export default function PlayFlow({ dict, lang, homeHref }: Props) {
+  const [stage, setStage] = useState<Stage>({ name: "lineup" });
+  const [lineup, setLineup] = useState<Lineup>(() => suggestedFor(6));
+  const [names, setNames] = useState<string[]>([]);
+
+  function goToNames() {
     // Read here rather than on mount: the page is prerendered, so touching
     // localStorage during render would not match the server-rendered HTML.
     if (names.length === 0) setNames(readStoredNames());
-    setPhase("names");
+    setStage({ name: "names" });
+  }
+
+  function deal(forNames: readonly string[]) {
+    setStage({
+      name: "reveal",
+      round: dealRound(lineup, forNames, randomWordPair(lang)),
+    });
   }
 
   function confirmNames(confirmed: string[]) {
     setNames(confirmed);
-    try {
-      localStorage.setItem(NAMES_STORAGE_KEY, JSON.stringify(confirmed));
-    } catch {
-      // Not remembering the names is a nuisance, not a failure.
-    }
-    setRound(createRound(setup, confirmed, randomWordPair(lang)));
-    setPhase("reveal");
+    storeNames(confirmed);
+    deal(confirmed);
   }
 
   function markSeen(playerId: string) {
-    setRound((current) =>
-      current === null
-        ? current
-        : {
-            ...current,
-            players: current.players.map((player) =>
-              player.id === playerId ? { ...player, seenWord: true } : player,
-            ),
-          },
-    );
+    setStage((current) => {
+      if (current.name !== "reveal") return current;
+      return {
+        ...current,
+        round: {
+          ...current.round,
+          players: current.round.players.map((player) =>
+            player.id === playerId ? { ...player, seenWord: true } : player,
+          ),
+        },
+      };
+    });
   }
 
-  function deal() {
-    setRound(createRound(setup, names, randomWordPair(lang)));
-  }
+  switch (stage.name) {
+    case "lineup":
+      return (
+        <Screen
+          title={dict.play.title}
+          backLabel={dict.common.back}
+          backHref={homeHref}
+        >
+          <LineupPicker
+            dict={dict.play}
+            lineup={lineup}
+            onChange={setLineup}
+            onConfirm={goToNames}
+          />
+        </Screen>
+      );
 
-  if (phase === "names") {
-    return (
-      <Screen
-        title={dict.play.names.title}
-        backLabel={dict.common.back}
-        onBack={() => setPhase("setup")}
-        wide
-      >
-        <NameEntry
-          dict={dict.play}
-          count={setup.players}
-          initialNames={names}
-          onBack={() => setPhase("setup")}
-          onConfirm={confirmNames}
-        />
-      </Screen>
-    );
-  }
+    case "names":
+      return (
+        <Screen
+          title={dict.play.names.title}
+          backLabel={dict.common.back}
+          onBack={() => setStage({ name: "lineup" })}
+          wide
+        >
+          <NameEntry
+            dict={dict.play}
+            count={lineup.players}
+            initialNames={names}
+            onBack={() => setStage({ name: "lineup" })}
+            onConfirm={confirmNames}
+          />
+        </Screen>
+      );
 
-  if (phase === "reveal" && round) {
-    return (
-      <Screen
-        title={dict.play.reveal.title}
-        backLabel={dict.common.back}
-        onBack={() => setPhase("names")}
-        wide
-      >
-        <WordReveal
-          dict={dict.play}
-          round={round}
-          onSeen={markSeen}
-          onRestart={deal}
-          onStart={() => setPhase("firstClue")}
-        />
-      </Screen>
-    );
-  }
+    case "reveal":
+      return (
+        <Screen
+          title={dict.play.reveal.title}
+          backLabel={dict.common.back}
+          onBack={() => setStage({ name: "names" })}
+          wide
+        >
+          <WordReveal
+            dict={dict.play}
+            round={stage.round}
+            onSeen={markSeen}
+            onReDeal={() => deal(names)}
+            onStart={() => setStage({ name: "firstClue", round: stage.round })}
+          />
+        </Screen>
+      );
 
-  if (phase === "firstClue" && round) {
-    return (
-      // No way back: once the round starts the words are out of reach, which
-      // is the point. See CONCEPT.md.
-      <Screen title={dict.play.firstClue.title} backLabel={dict.common.back}>
-        <FirstClue
-          dict={dict.play}
-          round={round}
-          onNewGame={() => setPhase("setup")}
-        />
-      </Screen>
-    );
+    // No way back: once the round starts the words are out of reach, which is
+    // the point. See CONCEPT.md.
+    case "firstClue":
+      return (
+        <Screen title={dict.play.firstClue.title}>
+          <FirstClue
+            dict={dict.play}
+            round={stage.round}
+            onNewGame={() => setStage({ name: "lineup" })}
+          />
+        </Screen>
+      );
   }
-
-  return (
-    <Screen
-      title={dict.play.title}
-      backLabel={dict.common.back}
-      backHref={homeHref}
-    >
-      <GameSetup
-        dict={dict.play}
-        initialSetup={setup}
-        onConfirm={confirmSetup}
-      />
-    </Screen>
-  );
 }

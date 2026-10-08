@@ -59,9 +59,7 @@ const en = {
         "Look as often as you like. Once the round starts, the words are gone.",
       progress: "{seen} of {total} have looked",
       hold: "Hold to read",
-      holdOn: "Keep holding",
       close: "Done",
-      notEveryone: "Not everyone has looked yet.",
       start: "Start round 1",
       roleNames: {
         civilian: "Civilian",
@@ -70,7 +68,7 @@ const en = {
       },
       yourWord: "Your word",
       noWord: "You get no word. Listen closely and bluff along.",
-      restart: "Deal again",
+      reDeal: "Deal again",
     },
 
     firstClue: {

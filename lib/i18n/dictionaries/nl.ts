@@ -57,9 +57,7 @@ const nl: Dictionary = {
         "Kijk zo vaak als je wil. Zodra de ronde start zijn de woorden weg.",
       progress: "{seen} van de {total} hebben gekeken",
       hold: "Ingedrukt houden",
-      holdOn: "Blijf vasthouden",
       close: "Klaar",
-      notEveryone: "Nog niet iedereen heeft gekeken.",
       start: "Start ronde 1",
       roleNames: {
         civilian: "Burger",
@@ -68,7 +66,7 @@ const nl: Dictionary = {
       },
       yourWord: "Jouw woord",
       noWord: "Jij krijgt geen woord. Luister goed en bluf mee.",
-      restart: "Opnieuw verdelen",
+      reDeal: "Opnieuw verdelen",
     },
 
     firstClue: {

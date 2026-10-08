@@ -52,4 +52,5 @@ npm install
 npm run dev     # http://localhost:3000
 npm run build   # static site in out/
 npm run lint
+npm test        # game rules, run straight from TypeScript by Node
 ```

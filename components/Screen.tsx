@@ -3,10 +3,10 @@ import type { ReactNode } from "react";
 
 type Props = {
   title: string;
-  /** Either a link back, or a button handled by the caller. */
+  /** A link back, a handler, or neither for a screen with no way back. */
   backHref?: string;
   onBack?: () => void;
-  backLabel: string;
+  backLabel?: string;
   /** Roomier column for grids; forms stay narrow so fields do not stretch. */
   wide?: boolean;
   children: ReactNode;
@@ -14,6 +14,39 @@ type Props = {
 
 const BACK_CLASSES =
   "grid size-10 shrink-0 place-items-center rounded-xl border border-border transition-colors hover:bg-surface-hover";
+
+function BackControl({
+  href,
+  onClick,
+  label,
+}: {
+  href?: string;
+  onClick?: () => void;
+  label?: string;
+}) {
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={label}
+        className={BACK_CLASSES}
+      >
+        ←
+      </button>
+    );
+  }
+
+  if (href) {
+    return (
+      <Link href={href} aria-label={label} className={BACK_CLASSES}>
+        ←
+      </Link>
+    );
+  }
+
+  return null;
+}
 
 export default function Screen({
   title,
@@ -30,22 +63,7 @@ export default function Screen({
       }`}
     >
       <header className="flex items-center gap-3">
-        {onBack ? (
-          <button
-            type="button"
-            onClick={onBack}
-            aria-label={backLabel}
-            className={BACK_CLASSES}
-          >
-            ←
-          </button>
-        ) : (
-          backHref && (
-            <Link href={backHref} aria-label={backLabel} className={BACK_CLASSES}>
-              ←
-            </Link>
-          )
-        )}
+        <BackControl href={backHref} onClick={onBack} label={backLabel} />
         <h1 className="text-2xl font-semibold sm:text-3xl">{title}</h1>
       </header>
 

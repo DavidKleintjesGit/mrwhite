@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { findDuplicateName, normaliseNames } from "@/lib/game";
+import { fillInBlankNames, findDuplicateName } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
 
 type Props = {
@@ -38,7 +38,7 @@ export default function NameEntry({
 
   function submit() {
     if (duplicate) return;
-    onConfirm(normaliseNames(names, fallback));
+    onConfirm(fillInBlankNames(names, fallback));
   }
 
   return (
