@@ -161,7 +161,7 @@ toestel, en het spel nog volledig werkt terwijl de server onbereikbaar is.
 
 | Beslissing | Moet uiterlijk in |
 |---|---|
-| Alleen Nederlands, of meertalig opzetten | fase 3 — later verbouwen is duurder |
+| ~~Alleen Nederlands, of meertalig~~ — besloten: Engels als brontaal, Nederlands als vertaling, taal in de URL | ✓ fase 1 |
 | Definitieve naam en merk | fase 6 |
 | Eenmalige ontgrendeling of abonnement | fase 7 |
 | Welke pakketten gratis blijven | fase 7 |

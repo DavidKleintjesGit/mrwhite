@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -10,18 +10,21 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "Mr. White",
   description:
-    "Nederlands woordspel voor 3 tot 10 spelers. Iedereen krijgt hetzelfde geheime woord — behalve de infiltranten.",
+    "Word game for 3 to 10 players. Everyone gets the same secret word — except the infiltrators.",
 };
 
 export const viewport: Viewport = {
   themeColor: "#0b0b10",
-  // Het spel is een telefoon-app: inzoomen helpt niet en verpest de layout.
   maximumScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+/**
+ * Root layout for `/` only. Every real page lives under `app/[lang]`, which
+ * carries its own root layout with the right `lang` attribute.
+ */
+export default function EntryLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="nl" className={`${geistSans.variable} h-full antialiased`}>
+    <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

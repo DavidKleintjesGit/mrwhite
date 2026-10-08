@@ -204,8 +204,14 @@ administratie van opzeggingen en verlopen rechten.
 
 ### Datamodel (schets)
 
+De codebase is Engels — bestandsnamen, variabelen, commentaar, commits en de
+README. De spelteksten zitten in woordenboeken per taal (`lib/i18n/dictionaries/`),
+met Engels als brontaal en Nederlands als vertaling. Elke taal heeft eigen routes
+(`/en/play`, `/nl/play`) zodat beide los vindbaar zijn in Google. Deze
+planningsdocumenten blijven Nederlands.
+
 ```ts
-type Role = 'burger' | 'undercover' | 'mrwhite'
+type Role = 'civilian' | 'undercover' | 'mrwhite'
 
 type Player = {
   id: string
