@@ -152,9 +152,16 @@ Mac, of een cloud-build (Codemagic, EAS, Bitrise).
 
 ### Losse einden
 
-- **Er is een domein gekocht** (2026-10-09). Welke is nog niet doorgegeven.
-  Zodra dat bekend is: de site erheen verhuizen en het privacybeleid daar
-  neerzetten, zodat het server-IP uit de openbare repo kan blijven.
+- **Domein: `misterwhite.online`.** De Caddy-configuratie op de server staat
+  klaar voor het apex-domein en `www`, en wijst naar dezelfde webroot. Anders
+  dan de showcase-sites staat er géén `noindex` op — dit is de echte plek.
+  Wachtend op DNS: A-record `@` → 178.105.197.213 en A-record `www` →
+  hetzelfde. Zodra dat propageert haalt Caddy vanzelf een certificaat.
+  Daarna kan het privacybeleid daar en kan het server-IP helemaal uit beeld.
+- **Overweging bij de naam:** het domein heet *misterwhite*, de app heet nu
+  *Mr. White*. "Mr. White" is in beide winkels bezet; "Mister White" is dat
+  veel minder. Het domein lost het naamprobleem dus half op als je de app
+  meeverandert.
 - `public/manifest.webmanifest` is door `capacitor-assets` gemaakt maar nog
   nergens aan gekoppeld. Voor PWA-installatie moet die nog in de `<head>`.
 - Bij het stemmen zit geen gelijkspel-afhandeling en een stem is niet terug te
