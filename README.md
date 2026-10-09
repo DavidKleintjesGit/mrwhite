@@ -62,3 +62,11 @@ npm run build   # static site in out/
 npm run lint
 npm test        # game rules, run straight from TypeScript by Node
 ```
+
+## Deploying
+
+The build is a static site, so deploying is copying `out/` to a web root.
+`./deploy.sh` runs the tests, builds, and sends the result over SSH as one
+tar stream. It takes the target from an SSH host alias rather than an address,
+so no server details live in this repo; see the comments in the script for the
+one-time web-server setup a new site needs.
