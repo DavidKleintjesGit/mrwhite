@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+
+    // The native projects are generated, and they carry a copy of the built
+    // web bundle. Linting minified output buries real findings in thousands
+    // of warnings.
+    "android/**",
+    "ios/**",
   ]),
 ]);
 
