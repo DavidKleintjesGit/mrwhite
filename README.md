@@ -3,6 +3,8 @@
 A social deduction word game for 3 to 20 people in the same room. One phone gets
 passed around — no account, no sign-up, no internet connection needed.
 
+Current state, decisions and what is left before the stores: **[STATUS.md](STATUS.md)**.
+
 ## The game
 
 Everyone gets the same secret word, except the infiltrators.

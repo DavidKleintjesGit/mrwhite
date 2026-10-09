@@ -1,3 +1,9 @@
+> **Let op:** dit document beschrijft het oorspronkelijke idee van 8 oktober 2026.
+> Het ontwerp "Mr White VERSIE 2" heeft onderdelen hiervan vervangen — onder meer
+> de puntentelling, de winvoorwaarde en de rolonthulling. De actuele stand en de
+> geldende beslissingen staan in [STATUS.md](STATUS.md); waar dit document daarmee
+> botst, wint STATUS.md.
+
 # Mr. White — concept
 
 **Status:** concept, nog geen code
