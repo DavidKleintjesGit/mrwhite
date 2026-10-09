@@ -96,14 +96,46 @@ In volgorde van wachttijd, niet van werk.
    grootste afwijzingsrisico (richtlijn 4.3, duplicaat/spam) in een genre dat
    vol klonen zit. Het eigen ontwerp helpt daartegen, de naam niet.
 
-### Android — kan het eerst af
+### Android — alles staat klaar behalve de gereedschapsketen
 
-- JDK en Android SDK installeren (Android Studio); stond bij het laatste
-  controlepunt nog niet op deze machine
-- Signing key aanmaken en Gradle erop wijzen. **De keystore en het wachtwoord
-  horen van David te zijn en niet in de repo**; `android/keystore.properties`
-  hoort in `.gitignore`
-- `npx cap open android` → release-AAB bouwen → Play Console, $25 eenmalig
+Gradle is al ingericht om te ondertekenen; het leest
+`android/keystore.properties`, en dat bestand staat in `.gitignore`.
+Bestaat het niet, dan komt er gewoon een niet-ondertekende build uit.
+
+**1. Android Studio installeren.** Op deze machine staat geen Java, geen
+Android SDK en geen Android Studio — gecontroleerd op 2026-10-09. Dit is de
+enige reden dat er nog geen AAB ligt.
+
+**2. Een upload key maken.** Kies zelf een wachtwoord; schrijf het nergens op
+waar het in de repo kan belanden.
+
+```bash
+keytool -genkey -v -keystore mrwhite-upload.jks -keyalg RSA -keysize 2048   -validity 10000 -alias upload
+```
+
+Zet de `.jks` buiten de repo, bijvoorbeeld in je documenten, en maak er een
+back-up van. **Raak je 'm kwijt, dan kun je de app niet meer bijwerken** —
+tenzij je Play App Signing aanzet, wat ik zou doen, want dan kan Google een
+verloren uploadsleutel resetten.
+
+**3. `android/keystore.properties` aanmaken** (wordt niet gecommit):
+
+```properties
+storeFile=C:/pad/naar/mrwhite-upload.jks
+storePassword=...
+keyAlias=upload
+keyPassword=...
+```
+
+**4. Bouwen en uploaden.**
+
+```bash
+npm run build && npx cap sync
+cd android && ./gradlew bundleRelease
+```
+
+De AAB komt in `android/app/build/outputs/bundle/release/`. Play Console
+kost $25 eenmalig.
 
 ### iOS — kan niet op deze machine
 

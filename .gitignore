@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# The Android upload key and its password. Losing this file means losing the
+# ability to update the app, so keep a backup somewhere safe — just not here.
+android/keystore.properties
+*.jks
+*.keystore
