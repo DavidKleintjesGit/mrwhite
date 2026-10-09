@@ -1,6 +1,6 @@
 import type { CustomPair, Difficulty } from "./game.ts";
 import { isResumable, type Stage } from "./stage.ts";
-import { CATEGORY_IDS, type LangId } from "./words.ts";
+import { CATEGORY_IDS } from "./words.ts";
 
 /** Same key as the design uses, so a saved game carries over. */
 const STORAGE_KEY = "mrwhite-noir-v1";
@@ -21,8 +21,6 @@ export type Settings = {
   timer: number;
   mrGuess: boolean;
   mrNotFirst: boolean;
-  /** The language of the word pairs, independent of the interface language. */
-  lang: LangId;
   diff: Difficulty;
   theme: Theme;
 };
@@ -39,7 +37,7 @@ export type Stored = {
   stageAt: number;
 };
 
-export function defaultSettings(lang: LangId): Settings {
+export function defaultSettings(): Settings {
   const cats: Record<string, boolean> = { eigen: true };
   for (const id of CATEGORY_IDS) cats[id] = true;
   return {
@@ -48,15 +46,14 @@ export function defaultSettings(lang: LangId): Settings {
     timer: 30,
     mrGuess: true,
     mrNotFirst: true,
-    lang,
     diff: "mix",
     theme: "donker",
   };
 }
 
-export function defaultStored(lang: LangId): Stored {
+export function defaultStored(): Stored {
   return {
-    settings: defaultSettings(lang),
+    settings: defaultSettings(),
     names: [],
     nPlayers: 6,
     nUnder: 1,
@@ -79,8 +76,8 @@ export function readStored(): string | null {
   }
 }
 
-export function parseStored(raw: string | null, lang: LangId): Stored {
-  const fallback = defaultStored(lang);
+export function parseStored(raw: string | null): Stored {
+  const fallback = defaultStored();
   if (!raw) return fallback;
 
   let saved: Partial<Stored>;

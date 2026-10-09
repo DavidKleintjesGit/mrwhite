@@ -19,6 +19,8 @@
  * Sinterklaas because that is what a Dutch table knows; a translated list
  * feels Dutch in every language.
  */
+import type { Locale } from "./i18n/config.ts";
+
 export type Pair = [string, string, number];
 
 export type CategoryId =
@@ -33,7 +35,8 @@ export type CategoryId =
 /** The custom-words bucket is a category too, so it can be switched off. */
 export type BucketId = CategoryId | "eigen";
 
-export type LangId = "nl" | "en" | "de" | "fr" | "es" | "it" | "tr";
+/** The word language is the app language; there is only one. */
+export type LangId = Locale;
 
 export const CATEGORY_IDS: CategoryId[] = [
   "eten",
@@ -45,30 +48,8 @@ export const CATEGORY_IDS: CategoryId[] = [
   "pop",
 ];
 
-export const LANGS: { id: LangId; name: string }[] = [
-  { id: "nl", name: "Nederlands" },
-  { id: "en", name: "English" },
-  { id: "de", name: "Deutsch" },
-  { id: "fr", name: "Français" },
-  { id: "es", name: "Español" },
-  { id: "it", name: "Italiano" },
-  { id: "tr", name: "Türkçe" },
-];
-
-/**
- * Languages somebody has actually read through. The other five are written
- * but unchecked, so they stay out of the picker rather than shipping content
- * nobody on the team can read. Their pairs stay in the file, ready for a
- * native speaker to go over.
- */
-export const VERIFIED_LANGS: LangId[] = ["nl", "en"];
-
 /** Minimum a verified language has to carry before it goes in the picker. */
 export const MIN_VERIFIED_PAIRS = 150;
-
-export const PICKABLE_LANGS = LANGS.filter((lang) =>
-  VERIFIED_LANGS.includes(lang.id),
-);
 
 export const WORDS: Record<LangId, Record<CategoryId, Pair[]>> = {
   nl: {

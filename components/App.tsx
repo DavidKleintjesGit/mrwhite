@@ -33,7 +33,13 @@ import {
   type Player,
   type WordPair,
 } from "@/lib/game";
-import { format, type Dictionary, type Locale } from "@/lib/i18n";
+import {
+  LOCALE_NAMES,
+  LOCALE_STORAGE_KEY,
+  format,
+  type Dictionary,
+  type Locale,
+} from "@/lib/i18n";
 import {
   THEMES,
   parseStored,
@@ -43,7 +49,6 @@ import {
   type Stored,
 } from "@/lib/settings";
 import type { Stage } from "@/lib/stage";
-import { PICKABLE_LANGS } from "@/lib/words";
 
 type Props = {
   dict: Dictionary;
@@ -59,7 +64,7 @@ export default function App({ dict, lang }: Props) {
   // Read through useSyncExternalStore so the prerendered HTML and the first
   // client render agree, and the saved settings arrive without an effect.
   const raw = useSyncExternalStore(subscribe, readStored, () => null);
-  const saved = useMemo(() => parseStored(raw, lang), [raw, lang]);
+  const saved = useMemo(() => parseStored(raw), [raw]);
 
   const [edited, setEdited] = useState<Stored | null>(null);
   const stored = edited ?? saved;
@@ -102,7 +107,7 @@ export default function App({ dict, lang }: Props) {
       undercovers: stored.nUnder,
       whites: stored.nWhite,
       names: stored.names,
-      lang: settings.lang,
+      lang,
       buckets: settings.cats,
       difficulty: settings.diff,
       custom: settings.custom,
@@ -144,9 +149,20 @@ export default function App({ dict, lang }: Props) {
   // --- Chrome --------------------------------------------------------------
 
   const theme = THEMES[settings.theme];
-  const current =
-    PICKABLE_LANGS.find((entry) => entry.id === settings.lang) ??
-    PICKABLE_LANGS[0];
+  /**
+   * Switching language means loading the other language's page. That is a
+   * full page load, which is fine: the game is saved on every move, so the
+   * round comes straight back on the other side.
+   */
+  function switchLanguage(next: Locale) {
+    try {
+      localStorage.setItem(LOCALE_STORAGE_KEY, next);
+    } catch {
+      // Not remembering the choice is a nuisance, not a failure.
+    }
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- each language is its own root layout, which the client router cannot cross
+    window.location.assign(`/${next}`);
+  }
 
   const root: CSSProperties = {
     minHeight: "100vh",
@@ -196,6 +212,7 @@ export default function App({ dict, lang }: Props) {
       {dialog === "categories" && (
         <CategoryDialog
           dict={dict}
+          lang={lang}
           settings={settings}
           update={updateSettings}
           onClose={() => setDialog("none")}
@@ -204,8 +221,8 @@ export default function App({ dict, lang }: Props) {
       {dialog === "language" && (
         <LanguageDialog
           dict={dict}
-          settings={settings}
-          update={updateSettings}
+          current={lang}
+          onPick={switchLanguage}
           onClose={() => setDialog("none")}
         />
       )}
@@ -225,8 +242,8 @@ export default function App({ dict, lang }: Props) {
         return (
           <HomeScreen
             dict={dict}
-            langCode={current.id.toUpperCase()}
-            langName={current.name}
+            langCode={lang.toUpperCase()}
+            langName={LOCALE_NAMES[lang]}
             themeLabel={
               settings.theme === "licht"
                 ? dict.settings.themeLight
@@ -260,8 +277,8 @@ export default function App({ dict, lang }: Props) {
             dict={dict}
             settings={settings}
             update={updateSettings}
-            langCode={current.id.toUpperCase()}
-            langName={current.name}
+            langCode={lang.toUpperCase()}
+            langName={LOCALE_NAMES[lang]}
             onBack={() => go({ name: "home" })}
             onOpenCategories={() => setDialog("categories")}
             onOpenLanguage={() => setDialog("language")}

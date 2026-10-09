@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo_Black, Courier_Prime, Permanent_Marker } from "next/font/google";
 import { notFound } from "next/navigation";
-import { LOCALES, getDictionary, isLocale } from "@/lib/i18n";
+import { VERIFIED_LOCALES, getDictionary, isLocale, isVerified } from "@/lib/i18n";
 import "../globals.css";
 
 const archivoBlack = Archivo_Black({
@@ -28,15 +28,16 @@ const FONTS = [archivoBlack, courierPrime, permanentMarker]
 
 export const dynamicParams = false;
 
+// Only languages that have been read through get a page.
 export function generateStaticParams() {
-  return LOCALES.map((lang) => ({ lang }));
+  return VERIFIED_LOCALES.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
 }: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
-  if (!isLocale(lang)) notFound();
+  if (!isLocale(lang) || !isVerified(lang)) notFound();
 
   const { meta } = getDictionary(lang);
   return { title: meta.title, description: meta.description };
@@ -52,7 +53,7 @@ export default async function LocaleLayout({
   params,
 }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
-  if (!isLocale(lang)) notFound();
+  if (!isLocale(lang) || !isVerified(lang)) notFound();
 
   return (
     <html lang={lang} className={FONTS}>

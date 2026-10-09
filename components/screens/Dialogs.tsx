@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import Modal, { MODAL_BODY, ModalFooter } from "@/components/ui/Modal";
 import Press from "@/components/ui/Press";
 import Stamp from "@/components/ui/Stamp";
-import { format, type Dictionary } from "@/lib/i18n";
-import type { Settings } from "@/lib/settings";
 import {
-  CATEGORY_IDS,
-  PICKABLE_LANGS,
-  pairCount,
-  totalPairs,
-  type LangId,
-} from "@/lib/words";
+  LOCALE_NAMES,
+  VERIFIED_LOCALES,
+  format,
+  type Dictionary,
+  type Locale,
+} from "@/lib/i18n";
+import type { Settings } from "@/lib/settings";
+import { CATEGORY_IDS, pairCount, totalPairs } from "@/lib/words";
 
 const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
@@ -38,11 +38,13 @@ const CLOSE_PRESS = {
 /** The word-category archive: search, toggle, all on, all off. */
 export function CategoryDialog({
   dict,
+  lang,
   settings,
   update,
   onClose,
 }: {
   dict: Dictionary;
+  lang: Locale;
   settings: Settings;
   update: (change: Partial<Settings>) => void;
   onClose: () => void;
@@ -174,7 +176,7 @@ export function CategoryDialog({
           const count =
             id === "eigen"
               ? settings.custom.length
-              : pairCount(settings.lang, id as (typeof CATEGORY_IDS)[number]);
+              : pairCount(lang, id as (typeof CATEGORY_IDS)[number]);
           return (
             <Press
               key={id}
@@ -258,13 +260,13 @@ export function CategoryDialog({
 /** Which language the secret words come in. */
 export function LanguageDialog({
   dict,
-  settings,
-  update,
+  current,
+  onPick,
   onClose,
 }: {
   dict: Dictionary;
-  settings: Settings;
-  update: (change: Partial<Settings>) => void;
+  current: Locale;
+  onPick: (locale: Locale) => void;
   onClose: () => void;
 }) {
   const t = dict.language;
@@ -307,12 +309,12 @@ export function LanguageDialog({
           gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
         }}
       >
-        {PICKABLE_LANGS.map((language) => {
-          const active = settings.lang === language.id;
+        {VERIFIED_LOCALES.map((language) => {
+          const active = current === language;
           return (
             <Press
-              key={language.id}
-              onClick={() => update({ lang: language.id as LangId })}
+              key={language}
+              onClick={() => onPick(language)}
               style={{
                 position: "relative",
                 display: "flex",
@@ -344,7 +346,7 @@ export function LanguageDialog({
                   fontSize: 15,
                 }}
               >
-                {language.id.toUpperCase()}
+                {language.toUpperCase()}
               </span>
               <span
                 style={{
@@ -362,10 +364,10 @@ export function LanguageDialog({
                     textTransform: "uppercase",
                   }}
                 >
-                  {language.name}
+                  {LOCALE_NAMES[language]}
                 </span>
                 <span style={{ fontSize: 13, fontWeight: 700 }}>
-                  {format(dict.archive.pairs, { n: totalPairs(language.id) })}
+                  {format(dict.archive.pairs, { n: totalPairs(language) })}
                 </span>
               </span>
               {active && (

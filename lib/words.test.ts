@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  LOCALES,
+  LOCALE_NAMES,
+  VERIFIED_LOCALES,
+} from "./i18n/config.ts";
+import {
   CATEGORY_IDS,
-  LANGS,
   MIN_VERIFIED_PAIRS,
-  VERIFIED_LANGS,
   WORDS,
   totalPairs,
   type Pair,
@@ -41,8 +44,8 @@ const tokens = (word: string) =>
     .split(/[^\p{L}\p{N}]+/u)
     .filter(Boolean);
 
-for (const { id: lang, name } of LANGS) {
-  const label = `${name} (${lang})`;
+for (const lang of LOCALES) {
+  const label = `${LOCALE_NAMES[lang]} (${lang})`;
 
   test(`${label}: every word is present, trimmed and sane in length`, () => {
     for (const { id, pair } of everyPair(lang)) {
@@ -119,7 +122,7 @@ for (const { id: lang, name } of LANGS) {
 }
 
 test("a language only goes in the picker once it carries enough pairs", () => {
-  for (const lang of VERIFIED_LANGS) {
+  for (const lang of VERIFIED_LOCALES) {
     const total = totalPairs(lang);
     assert.ok(
       total >= MIN_VERIFIED_PAIRS,
@@ -131,7 +134,7 @@ test("a language only goes in the picker once it carries enough pairs", () => {
 test("both sides of a pair come up as the civilians' word", () => {
   // `pickPair` flips the pair on a coin toss, so neither word is always the
   // one the undercover gets. This pins that the data does not rely on order.
-  for (const lang of VERIFIED_LANGS) {
+  for (const lang of VERIFIED_LOCALES) {
     for (const { pair } of everyPair(lang)) {
       assert.ok(pair[0] && pair[1], `${key(pair)} cannot be flipped`);
     }
