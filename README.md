@@ -65,8 +65,11 @@ npm test        # game rules, run straight from TypeScript by Node
 
 ## Deploying
 
-The build is a static site, so deploying is copying `out/` to a web root.
-`./deploy.sh` runs the tests, builds, and sends the result over SSH as one
-tar stream. It takes the target from an SSH host alias rather than an address,
-so no server details live in this repo; see the comments in the script for the
-one-time web-server setup a new site needs.
+```bash
+./deploy.sh
+```
+
+Runs the tests, builds, and copies `out/` to the staging server. The deploy
+itself is shared across projects and lives outside this repo, along with the
+server details — this repo is public and the staging URL contains the
+server's address.
