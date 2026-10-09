@@ -43,7 +43,7 @@ import {
   type Stored,
 } from "@/lib/settings";
 import type { Stage } from "@/lib/stage";
-import { LANGS } from "@/lib/words";
+import { PICKABLE_LANGS } from "@/lib/words";
 
 type Props = {
   dict: Dictionary;
@@ -144,7 +144,9 @@ export default function App({ dict, lang }: Props) {
   // --- Chrome --------------------------------------------------------------
 
   const theme = THEMES[settings.theme];
-  const current = LANGS.find((entry) => entry.id === settings.lang) ?? LANGS[0];
+  const current =
+    PICKABLE_LANGS.find((entry) => entry.id === settings.lang) ??
+    PICKABLE_LANGS[0];
 
   const root: CSSProperties = {
     minHeight: "100vh",

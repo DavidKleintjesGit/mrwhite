@@ -8,7 +8,7 @@ import { format, type Dictionary } from "@/lib/i18n";
 import type { Settings } from "@/lib/settings";
 import {
   CATEGORY_IDS,
-  LANGS,
+  PICKABLE_LANGS,
   pairCount,
   totalPairs,
   type LangId,
@@ -307,7 +307,7 @@ export function LanguageDialog({
           gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
         }}
       >
-        {LANGS.map((language) => {
+        {PICKABLE_LANGS.map((language) => {
           const active = settings.lang === language.id;
           return (
             <Press
