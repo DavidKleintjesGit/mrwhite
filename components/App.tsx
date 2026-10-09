@@ -161,7 +161,7 @@ export default function App({ dict, lang }: Props) {
       // Not remembering the choice is a nuisance, not a failure.
     }
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- each language is its own root layout, which the client router cannot cross
-    window.location.assign(`/${next}`);
+    window.location.assign(`/${next}/`);
   }
 
   const root: CSSProperties = {

@@ -63,6 +63,29 @@ npm run lint
 npm test        # game rules, run straight from TypeScript by Node
 ```
 
+## Native apps
+
+```bash
+npm run build && npx cap sync      # web build into both native projects
+npx cap open android               # needs Android Studio
+npx cap open ios                   # needs Xcode, so macOS
+```
+
+The native apps are the same static build in a WebView. Everything — the
+words, the fonts, the whole interface — ships in the bundle, so the game
+works with no connection at all.
+
+Two things this relies on, both easy to undo by accident:
+
+- `trailingSlash: true` in `next.config.ts`. The export has to write
+  `nl/index.html`, not `nl.html`: a web server can paper over the
+  difference, a WebView cannot, and the app would open on a blank screen.
+- `viewportFit: "cover"` plus `env(safe-area-inset-*)` in `Screen.tsx`,
+  which keeps the content clear of the notch and the home indicator.
+
+Icons and the launch screen come from `assets/icon.svg` and
+`assets/splash.svg`; regenerate every size with `npx capacitor-assets generate`.
+
 ## Deploying
 
 ```bash

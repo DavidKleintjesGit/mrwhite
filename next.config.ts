@@ -6,6 +6,12 @@ const nextConfig: NextConfig = {
   // exactly this. Note that it rules out API routes and server-side rendering.
   output: "export",
 
+  // Write /nl as nl/index.html rather than nl.html. A web server can paper
+  // over the difference with try_files, but Capacitor serves the files
+  // straight from the bundle with no such fallback, so without this the
+  // native app opens on a blank screen.
+  trailingSlash: true,
+
   // Without a server there is no image optimisation.
   images: { unoptimized: true },
 

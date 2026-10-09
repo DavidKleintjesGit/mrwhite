@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- The app mark: the magnifier from the card screen, on the game's yellow.
+       Black on yellow so it still reads at the smallest icon size. -->
+  <rect width="1024" height="1024" fill="#FFD23F"/>
+  <g transform="translate(512 512) rotate(-12) translate(-512 -512)">
+    <!-- handle first, so the lens sits on top of it -->
+    <rect x="596" y="596" width="132" height="330" rx="34"
+          fill="#0d0d0d" transform="rotate(-45 662 596)"/>
+    <circle cx="470" cy="454" r="238" fill="none" stroke="#0d0d0d" stroke-width="74"/>
+    <!-- a glint, the same highlight the in-game lens has -->
+    <path d="M370 330 A 190 190 0 0 0 346 430" fill="none"
+          stroke="#FFD23F" stroke-width="30" stroke-linecap="round" opacity=".85"/>
+  </g>
+</svg>

@@ -2,9 +2,9 @@
 
 import { useEffect } from "react";
 import {
-  LOCALES,
   LOCALE_NAMES,
   LOCALE_STORAGE_KEY,
+  VERIFIED_LOCALES,
   isLocale,
   matchLocale,
 } from "@/lib/i18n";
@@ -35,7 +35,7 @@ export default function EntryPage() {
         ? stored
         : matchLocale(navigator.languages ?? [navigator.language]);
 
-    window.location.replace(`/${locale}`);
+    window.location.replace(`/${locale}/`);
   }, []);
 
   return (
@@ -90,10 +90,10 @@ export default function EntryPage() {
           maxWidth: 320,
         }}
       >
-        {LOCALES.map((locale) => (
+        {VERIFIED_LOCALES.map((locale) => (
           <a
             key={locale}
-            href={`/${locale}`}
+            href={`/${locale}/`}
             lang={locale}
             hrefLang={locale}
             style={{

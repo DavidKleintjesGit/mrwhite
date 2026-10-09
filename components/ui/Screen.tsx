@@ -1,15 +1,29 @@
 import type { CSSProperties, ReactNode } from "react";
 import Press from "@/components/ui/Press";
 
+/**
+ * The design's padding, plus whatever the device reserves for its notch and
+ * home indicator. On anything without them the insets are zero and the
+ * numbers are exactly what the design says.
+ */
+const TOP = "calc(clamp(24px,4vw,56px) + env(safe-area-inset-top))";
+const BOTTOM = "calc(clamp(24px,4vw,56px) + env(safe-area-inset-bottom))";
+
 /** The wide screens; the card, unmask and guess screens use the narrow one. */
 const WIDE: CSSProperties = {
   maxWidth: 1240,
-  padding: "clamp(24px,4vw,56px) clamp(20px,5vw,72px)",
+  paddingTop: TOP,
+  paddingBottom: BOTTOM,
+  paddingLeft: "calc(clamp(20px,5vw,72px) + env(safe-area-inset-left))",
+  paddingRight: "calc(clamp(20px,5vw,72px) + env(safe-area-inset-right))",
 };
 
 const NARROW: CSSProperties = {
   maxWidth: 760,
-  padding: "clamp(24px,4vw,56px) clamp(20px,5vw,40px)",
+  paddingTop: TOP,
+  paddingBottom: BOTTOM,
+  paddingLeft: "calc(clamp(20px,5vw,40px) + env(safe-area-inset-left))",
+  paddingRight: "calc(clamp(20px,5vw,40px) + env(safe-area-inset-right))",
 };
 
 type Props = {

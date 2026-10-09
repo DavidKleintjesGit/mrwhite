@@ -46,6 +46,10 @@ export async function generateMetadata({
 export const viewport: Viewport = {
   themeColor: "#0d0d0d",
   maximumScale: 1,
+  // Draw behind the notch and the home indicator, then keep the content
+  // clear of them with env(safe-area-inset-*). Without this the page simply
+  // stops at the notch and the dark background shows a band at the top.
+  viewportFit: "cover",
 };
 
 export default async function LocaleLayout({
