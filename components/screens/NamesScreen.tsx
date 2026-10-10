@@ -49,7 +49,7 @@ export default function NamesScreen({
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-          gap: 12,
+          gap: 16,
         }}
       >
         {fields.map((value, index) => {

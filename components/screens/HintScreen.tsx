@@ -92,7 +92,7 @@ export default function HintScreen({
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
-            gap: 12,
+            gap: 16,
             alignItems: "center",
             animation: "popIn .45s both",
           }}
@@ -145,7 +145,7 @@ export default function HintScreen({
 
       {timer > 0 && <ClueTimer key={turn} seconds={timer} dark={dark} />}
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
         {order.map((playerIndex, position) => {
           const done = position < turn;
           const now = position === turn;

@@ -69,7 +69,7 @@ export default function VoteScreen({
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
-          gap: 14,
+          gap: 20,
         }}
       >
         {alive.map(({ player, index }) => {

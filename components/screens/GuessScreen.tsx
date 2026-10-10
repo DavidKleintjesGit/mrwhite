@@ -74,6 +74,7 @@ export default function GuessScreen({
           style={{
             display: "flex",
             flexDirection: "column",
+            flex: 1,
             gap: 18,
             alignItems: "flex-start",
           }}
@@ -99,6 +100,7 @@ export default function GuessScreen({
           <Press
             onClick={onMiss}
             style={{
+              marginTop: "auto",
               width: "100%",
               fontFamily: ARCHIVO,
               fontSize: 19,
@@ -119,7 +121,9 @@ export default function GuessScreen({
           </Press>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div
+          style={{ flex: 1, display: "flex", flexDirection: "column", gap: 18 }}
+        >
           <input
             value={guess}
             placeholder={t.placeholder}
@@ -143,6 +147,7 @@ export default function GuessScreen({
           <Press
             onClick={submit}
             style={{
+              marginTop: "auto",
               fontFamily: ARCHIVO,
               fontSize: 19,
               textTransform: "uppercase",

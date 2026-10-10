@@ -260,39 +260,43 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
           )}
 
           {/*
-            The secret challenge sits inside the torchlight with the word,
-            not beside it. A challenge everyone can read is not a challenge:
-            the whole thing rests on nobody knowing what you are steering
-            towards.
+            Inside the torchlight with the word, as the design has it. A
+            challenge everyone can read is not a challenge: the whole thing
+            rests on nobody knowing what you are steering towards.
           */}
           {player.challenge !== null && (
             <div
               style={{
-                borderTop: "3px dashed #0d0d0d",
-                paddingTop: 12,
-                marginTop: 4,
+                marginTop: 10,
+                width: "100%",
+                maxWidth: 320,
+                boxSizing: "border-box",
+                background: "#0d0d0d",
+                color: "#F3F0E8",
+                padding: "14px 16px",
+                textAlign: "left",
                 display: "flex",
                 flexDirection: "column",
-                gap: 4,
-                maxWidth: 320,
+                gap: 6,
+                transform: "rotate(1deg)",
               }}
             >
-              <div
+              <span
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   letterSpacing: ".2em",
                   textTransform: "uppercase",
+                  color: "#FFD23F",
                   fontWeight: 700,
                 }}
               >
                 {dict.drink.challengeKicker}
-              </div>
-              <div
+              </span>
+              <span
                 style={{
                   fontFamily: ARCHIVO,
-                  fontSize: "clamp(17px,4vw,21px)",
+                  fontSize: 19,
                   textTransform: "uppercase",
-                  lineHeight: 1.1,
                 }}
               >
                 {
@@ -302,8 +306,8 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
                     ) as keyof typeof dict.drink.challenges
                   ].t
                 }
-              </div>
-              <div style={{ fontSize: 14, lineHeight: 1.35 }}>
+              </span>
+              <span style={{ fontSize: 14, lineHeight: 1.4 }}>
                 {
                   dict.drink.challenges[
                     String(
@@ -311,12 +315,12 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
                     ) as keyof typeof dict.drink.challenges
                   ].d
                 }
-              </div>
-              <div style={{ fontSize: 13, fontWeight: 700 }}>
-                {format(dict.drink.challengeReward, {
+              </span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: "#FFD23F" }}>
+                {format(dict.drink.challengeHint, {
                   n: challengeReward(player.challenge),
                 })}
-              </div>
+              </span>
             </div>
           )}
         </div>

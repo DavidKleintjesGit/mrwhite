@@ -154,7 +154,8 @@ export function FooterPair({ children }: { children: ReactNode }) {
         justifySelf: "end",
         display: "grid",
         gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)",
-        gap: 14,
+        gap: 18,
+        paddingTop: 12,
       }}
     >
       {children}
