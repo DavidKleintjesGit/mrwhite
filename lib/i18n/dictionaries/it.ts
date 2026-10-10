@@ -311,6 +311,34 @@ const it: Dictionary = {
     challengeCheck:
       "Apri il fascicolo di qualcuno per controllare la sua sfida.",
 
+    sheetTag: "FEDINA",
+
+    sheetAsk: "Chi deve bere?",
+
+    challengeLabel: "Sfida: {t}",
+
+    caseNo: "Caso n. 0042",
+
+    agents: "Agenti",
+
+    quit: "Esci",
+
+    reveal: "Tocca per leggere",
+
+    fileLabel: "Fascicolo personale · N. {n}",
+
+    status: "Stato",
+
+    role: "Ruolo",
+
+    roleHidden: "segreto segreto",
+
+    achieved: "Riuscita",
+
+    rulesHelp: "Infranta? Fai un sorso. Il gruppo controlla.",
+
+    close: "Chiudi",
+
     sheetOpen: "Fascicolo del caso ▾",
     sheetClose: "Chiudi ▴",
     sheetTitle: "Fedina penale",

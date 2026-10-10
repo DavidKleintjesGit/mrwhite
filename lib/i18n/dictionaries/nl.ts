@@ -308,6 +308,34 @@ const nl = {
     challengesTitle: "Challenges van dit potje",
     challengeCheck: "Open iemands dossier om zijn challenge te controleren.",
 
+    sheetTag: "STRAFBLAD",
+
+    sheetAsk: "Wie moet drinken?",
+
+    challengeLabel: "Challenge: {t}",
+
+    caseNo: "Zaak Nr. 0042",
+
+    agents: "Agenten",
+
+    quit: "Verlaten",
+
+    reveal: "Tik om in te zien",
+
+    fileLabel: "Persoonsdossier · Nr. {n}",
+
+    status: "Status",
+
+    role: "Rol",
+
+    roleHidden: "geheim geheim",
+
+    achieved: "Gehaald",
+
+    rulesHelp: "Overtreden? Gewoon een slok nemen. De groep let op.",
+
+    close: "Sluiten",
+
     sheetOpen: "Zaakdossier ▾",
     sheetClose: "Sluiten ▴",
     sheetTitle: "Strafblad",

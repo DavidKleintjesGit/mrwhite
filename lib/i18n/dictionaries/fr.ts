@@ -308,6 +308,34 @@ const fr: Dictionary = {
     challengesTitle: "Les défis de cette partie",
     challengeCheck: "Ouvre le dossier de quelqu'un pour vérifier son défi.",
 
+    sheetTag: "CASIER",
+
+    sheetAsk: "Qui doit boire ?",
+
+    challengeLabel: "Défi : {t}",
+
+    caseNo: "Affaire n° 0042",
+
+    agents: "Agents",
+
+    quit: "Quitter",
+
+    reveal: "Touche pour lire",
+
+    fileLabel: "Dossier personnel · N° {n}",
+
+    status: "Statut",
+
+    role: "Rôle",
+
+    roleHidden: "secret secret",
+
+    achieved: "Réussi",
+
+    rulesHelp: "Enfreinte ? Prends une gorgée. Le groupe surveille.",
+
+    close: "Fermer",
+
     sheetOpen: "Dossier d'affaire ▾",
     sheetClose: "Fermer ▴",
     sheetTitle: "Casier",

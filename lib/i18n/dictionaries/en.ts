@@ -301,6 +301,34 @@ const en: Dictionary = {
     challengesTitle: "This game's challenges",
     challengeCheck: "Open someone's file to check their challenge.",
 
+    sheetTag: "CHARGE SHEET",
+
+    sheetAsk: "Who has to drink?",
+
+    challengeLabel: "Challenge: {t}",
+
+    caseNo: "Case no. 0042",
+
+    agents: "Agents",
+
+    quit: "Leave",
+
+    reveal: "Tap to read",
+
+    fileLabel: "Personal file · No. {n}",
+
+    status: "Status",
+
+    role: "Role",
+
+    roleHidden: "secret secret",
+
+    achieved: "Done",
+
+    rulesHelp: "Broke one? Just take a sip. The table keeps watch.",
+
+    close: "Close",
+
     sheetOpen: "Case file ▾",
     sheetClose: "Close ▴",
     sheetTitle: "Charge sheet",

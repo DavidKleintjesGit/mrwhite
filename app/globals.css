@@ -25,6 +25,15 @@ input::placeholder {
   color: #8a877f;
 }
 
+/* The case file sliding down from the top edge, as the design has it. */
+@keyframes drawerIn {
+  0% {
+    transform: translateY(-105%);
+  }
+  100% {
+    transform: none;
+  }
+}
 @keyframes screenIn {
   0% {
     opacity: 0;

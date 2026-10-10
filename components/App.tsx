@@ -7,6 +7,7 @@ import {
   type CSSProperties,
 } from "react";
 import CardScreen from "@/components/screens/CardScreen";
+import CaseFileDrawer from "@/components/screens/CaseFileDrawer";
 import ChargeSheet from "@/components/screens/ChargeSheet";
 import DealScreen from "@/components/screens/DealScreen";
 import DrinkRulesScreen from "@/components/screens/DrinkRulesScreen";
@@ -85,6 +86,7 @@ export default function App({ dict, lang }: Props) {
   /** The rule cards reshuffling; a flourish, so it stays out of storage. */
   const [rolling, setRolling] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const drink = stored.mode === "drink";
   /** The Drinking Edition deals its house rules as a step of its own. */
@@ -328,42 +330,71 @@ export default function App({ dict, lang }: Props) {
       {renderStage()}
 
       {/*
-        The tally is reachable from every screen of a round, because a rule
-        gets broken mid-sentence and the moment passes if you have to
-        navigate for it.
+        The case file hangs off the top edge during a round, exactly where
+        the design puts it: a rule gets broken mid-sentence and the moment
+        passes if you have to navigate for it.
       */}
-      {drink && "players" in stage && stage.name !== "card" && (
+      {"players" in stage && stage.name !== "card" && !drawerOpen && (
         <Press
-          onClick={() => setSheetOpen(true)}
+          onClick={() => setDrawerOpen(true)}
           style={{
-            position: "fixed",
-            right: "calc(16px + env(safe-area-inset-right))",
-            bottom: "calc(16px + env(safe-area-inset-bottom))",
-            zIndex: 30,
+            position: "absolute",
+            top: 0,
+            right: "max(16px, calc((100% - 1240px) / 2 + 20px))",
+            zIndex: 40,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
             fontFamily: "var(--font-archivo-black), sans-serif",
             fontSize: 12,
+            letterSpacing: ".14em",
             textTransform: "uppercase",
-            background: "#FF3D3D",
+            background: "#E9DDB8",
             color: "#0d0d0d",
-            border: "3px solid #0d0d0d",
-            padding: "12px 14px",
-            boxShadow: "4px 4px 0 var(--fg)",
+            border: "2px solid #0d0d0d",
+            borderTop: "none",
+            borderRadius: "0 0 10px 10px",
+            padding: "9px 14px 10px",
+            boxShadow: "3px 3px 0 #FFD23F",
             cursor: "pointer",
+            transition: "padding .15s",
           }}
-          press={{
-            transform: "translate(3px,3px)",
-            boxShadow: "1px 1px 0 var(--fg)",
-          }}
+          hover={{ paddingTop: 13 }}
+          press={{ paddingTop: 15 }}
         >
           {dict.drink.sheetOpen}
         </Press>
       )}
 
-      {sheetOpen && drink && "players" in stage && (
-        <ChargeSheet
+      {drawerOpen && "players" in stage && (
+        <CaseFileDrawer
           dict={dict}
           players={stage.players}
           rules={stored.rules}
+          drink={drink}
+          onChallengeDone={(index) =>
+            recordOnPlayers((players) =>
+              players.map((player, i) =>
+                i === index ? { ...player, challengeDone: true } : player
+              )
+            )
+          }
+          onOpenSheet={() => {
+            setDrawerOpen(false);
+            setSheetOpen(true);
+          }}
+          onQuit={() => {
+            setDrawerOpen(false);
+            go({ name: "home" });
+          }}
+          onClose={() => setDrawerOpen(false)}
+        />
+      )}
+
+      {sheetOpen && "players" in stage && (
+        <ChargeSheet
+          dict={dict}
+          players={stage.players}
           onViolation={(index) =>
             recordOnPlayers((players) =>
               players.map((player, i) =>

@@ -307,6 +307,34 @@ const tr: Dictionary = {
     challengesTitle: "Bu oyunun görevleri",
     challengeCheck: "Görevini kontrol etmek için birinin dosyasını aç.",
 
+    sheetTag: "SABIKA",
+
+    sheetAsk: "Kim içiyor?",
+
+    challengeLabel: "Görev: {t}",
+
+    caseNo: "Dava No. 0042",
+
+    agents: "Ajanlar",
+
+    quit: "Çık",
+
+    reveal: "Okumak için dokun",
+
+    fileLabel: "Şahıs dosyası · No. {n}",
+
+    status: "Durum",
+
+    role: "Rol",
+
+    roleHidden: "gizli gizli",
+
+    achieved: "Tamam",
+
+    rulesHelp: "Çiğnendi mi? Bir yudum al. Grup denetler.",
+
+    close: "Kapat",
+
     sheetOpen: "Dava dosyası ▾",
     sheetClose: "Kapat ▴",
     sheetTitle: "Sabıka kaydı",

@@ -2,47 +2,36 @@
 
 import { useEffect, useState } from "react";
 import Press from "@/components/ui/Press";
-import { challengeReward, ruleCategory } from "@/lib/drink";
+import { challengeReward } from "@/lib/drink";
 import type { Player } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
 
 const ARCHIVO = "var(--font-archivo-black), sans-serif";
-
-const COLOUR: Record<string, string> = {
-  A: "#FFD23F",
-  B: "#3DD6FF",
-  C: "#FF3D3D",
-  D: "#B6F03C",
-};
+const MARKER = "var(--font-permanent-marker), cursive";
 
 type Props = {
   dict: Dictionary;
   players: Player[];
-  rules: number[];
   onViolation: (index: number) => void;
   onChallengeDone: (index: number) => void;
   onClose: () => void;
 };
 
 /**
- * The running tally for the Drinking Edition: the house rules on one side,
- * who owes what on the other.
+ * The charge sheet: who owes what, taken from the design's own markup.
  *
- * It only records what the table already decided. Nothing here enforces a
- * rule — the app cannot hear anyone — so every button is somebody tapping
- * "yes, that happened", and the count is explicitly a memory aid rather than
- * a referee.
+ * It records what the table already decided. Nothing here enforces a rule —
+ * the app cannot hear anyone — so every button is somebody tapping "yes,
+ * that happened".
  */
 export default function ChargeSheet({
   dict,
   players,
-  rules,
   onViolation,
   onChallengeDone,
   onClose,
 }: Props) {
   const t = dict.drink;
-  const [tab, setTab] = useState<"sheet" | "rules">("sheet");
   const [flash, setFlash] = useState<{ index: number; text: string } | null>(
     null
   );
@@ -55,116 +44,78 @@ export default function ChargeSheet({
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={t.sheetTitle}
+      onClick={onClose}
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 40,
-        background: "rgba(0,0,0,.6)",
+        zIndex: 50,
+        background: "rgba(13,13,13,.82)",
         display: "flex",
-        alignItems: "flex-end",
+        alignItems: "center",
         justifyContent: "center",
-        padding: "0 0 env(safe-area-inset-bottom)",
+        padding: 20,
+        animation: "screenIn .25s both",
       }}
-      onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={t.sheetAsk}
         onClick={(event) => event.stopPropagation()}
         style={{
+          position: "relative",
           width: "100%",
-          maxWidth: 680,
-          maxHeight: "86vh",
+          maxWidth: 640,
+          maxHeight: "calc(100dvh - 40px)",
+          boxSizing: "border-box",
+          background: "#F3F0E8",
+          color: "#0d0d0d",
+          border: "4px solid #0d0d0d",
+          boxShadow: "10px 10px 0 #FF3D3D",
           display: "flex",
           flexDirection: "column",
-          background: "var(--bg)",
-          color: "var(--fg)",
-          border: "3px solid var(--fg)",
-          borderBottom: "none",
-          animation: "screenIn .3s cubic-bezier(.2,1.3,.4,1) both",
         }}
       >
         <div
           style={{
-            padding: "18px 20px 14px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-            borderBottom: "3px solid var(--line)",
+            position: "absolute",
+            top: -18,
+            left: 18,
+            fontFamily: MARKER,
+            fontSize: 18,
+            background: "#FF3D3D",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            padding: "1px 12px",
+            transform: "rotate(-4deg)",
           }}
         >
-          <div
+          {t.sheetTag}
+        </div>
+
+        <div
+          style={{
+            padding: "34px 24px 18px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+            borderBottom: "3px solid #0d0d0d",
+          }}
+        >
+          <h3
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 12,
+              margin: 0,
+              fontFamily: ARCHIVO,
+              fontSize: 26,
+              textTransform: "uppercase",
+              lineHeight: 1.05,
             }}
           >
-            <h2
-              style={{
-                margin: 0,
-                fontFamily: ARCHIVO,
-                fontSize: 22,
-                textTransform: "uppercase",
-              }}
-            >
-              {tab === "sheet" ? t.sheetTitle : t.houseRules}
-            </h2>
-            <Press
-              onClick={onClose}
-              style={{
-                fontFamily: ARCHIVO,
-                fontSize: 13,
-                textTransform: "uppercase",
-                background: "var(--bg)",
-                color: "var(--fg)",
-                border: "3px solid var(--fg)",
-                padding: "8px 12px",
-                cursor: "pointer",
-              }}
-              press={{ transform: "translate(2px,2px)" }}
-            >
-              {t.sheetClose}
-            </Press>
-          </div>
-
-          <div style={{ display: "flex", gap: 8 }}>
-            {(["sheet", "rules"] as const).map((which) => (
-              <Press
-                key={which}
-                onClick={() => setTab(which)}
-                style={{
-                  flex: 1,
-                  fontFamily: ARCHIVO,
-                  fontSize: 13,
-                  textTransform: "uppercase",
-                  background: tab === which ? "#FFD23F" : "var(--off)",
-                  color: tab === which ? "#0d0d0d" : "var(--offfg)",
-                  border: "3px solid #0d0d0d",
-                  padding: "10px 6px",
-                  cursor: "pointer",
-                }}
-                press={{ transform: "translate(2px,2px)" }}
-              >
-                {which === "sheet" ? t.sheetTitle : t.rulesTab}
-              </Press>
-            ))}
-          </div>
-
-          {tab === "sheet" && (
-            <p
-              style={{
-                margin: 0,
-                fontSize: 14,
-                lineHeight: 1.45,
-                color: "var(--muted)",
-              }}
-            >
-              {t.sheetIntro}
-            </p>
-          )}
+            {t.sheetAsk}
+          </h3>
+          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
+            {t.sheetIntro}
+          </p>
         </div>
 
         <div
@@ -172,177 +123,191 @@ export default function ChargeSheet({
             flex: 1,
             minHeight: 0,
             overflowY: "auto",
-            padding: "16px 20px 24px",
+            overflowX: "hidden",
+            padding: "16px 24px",
             display: "flex",
             flexDirection: "column",
             gap: 12,
           }}
         >
-          {tab === "rules"
-            ? rules.map((id, index) => {
-                const rule = t.rules[String(id) as keyof typeof t.rules];
-                return (
-                  <div
-                    key={id}
-                    style={{
-                      background: "var(--card)",
-                      color: "#0d0d0d",
-                      border: "3px solid #0d0d0d",
-                      borderLeft: `10px solid ${COLOUR[ruleCategory(id)]}`,
-                      padding: 14,
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: ARCHIVO,
-                        fontSize: 16,
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {String(index + 1).padStart(2, "0")} · {rule.t}
-                    </span>
-                    <span style={{ fontSize: 14, lineHeight: 1.4 }}>
-                      {rule.d}
-                    </span>
-                  </div>
-                );
-              })
-            : players.map((player, index) => {
-                const lit = flash?.index === index;
-                return (
-                  <div
-                    key={`${player.name}-${index}`}
-                    style={{
-                      position: "relative",
-                      background: player.challengeDone
-                        ? "#E4F8FF"
-                        : "var(--card)",
-                      color: "#0d0d0d",
-                      border: "3px solid #0d0d0d",
-                      padding: 14,
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      opacity: player.alive ? 1 : 0.55,
-                    }}
-                  >
-                    <div
-                      style={{
-                        flex: 1,
-                        minWidth: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 3,
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: ARCHIVO,
-                          fontSize: 16,
-                          textTransform: "uppercase",
-                          textDecoration: player.alive
-                            ? "none"
-                            : "line-through",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {player.name}
-                      </span>
-                      <span style={{ fontSize: 13 }}>
-                        {format(player.sips === 1 ? t.sip : t.sips, {
-                          n: player.sips,
-                        })}
-                        {" · "}
-                        {player.challengeDone
-                          ? format(t.challengeWon, {
-                              n: player.challenge
-                                ? challengeReward(player.challenge)
-                                : 0,
-                            })
-                          : player.alive
-                          ? t.challengeBusy
-                          : t.challengeLost}
-                      </span>
-                    </div>
+          {players.map((player, index) => {
+            const reward = player.challenge
+              ? challengeReward(player.challenge)
+              : 0;
+            const challengeText = player.challengeDone
+              ? `${
+                  player.challenge
+                    ? t.challenges[
+                        String(player.challenge) as keyof typeof t.challenges
+                      ].t
+                    : ""
+                } ✓`
+              : player.alive
+              ? t.challengeSecret
+              : t.challengeLapsed;
 
+            return (
+              <div
+                key={`${player.name}-${index}`}
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "center",
+                  gap: "10px 14px",
+                  border: "3px solid #0d0d0d",
+                  background: player.challengeDone ? "#E4F8FF" : "#F3F0E8",
+                  padding: "12px 14px",
+                  opacity: player.alive ? 1 : 0.5,
+                }}
+              >
+                <div
+                  style={{
+                    flex: "1 1 160px",
+                    minWidth: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: ARCHIVO,
+                      fontSize: 17,
+                      textTransform: "uppercase",
+                      textDecoration: player.alive ? "none" : "line-through",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {player.name}
+                  </span>
+                  <span style={{ fontSize: 13, fontWeight: 700 }}>
+                    {format(player.sips === 1 ? t.sip : t.sips, {
+                      n: player.sips,
+                    })}
+                  </span>
+                  <span style={{ fontSize: 13 }}>
+                    {format(t.challengeLabel, { t: challengeText })}
+                  </span>
+                </div>
+
+                {player.alive && (
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <Press
                       onClick={() => {
                         onViolation(index);
                         setFlash({ index, text: t.violationFlash });
                       }}
                       style={{
-                        flex: "none",
                         fontFamily: ARCHIVO,
                         fontSize: 12,
                         textTransform: "uppercase",
                         background: "#FF3D3D",
                         color: "#0d0d0d",
-                        border: "3px solid #0d0d0d",
-                        padding: "10px 10px",
+                        border: "2px solid #0d0d0d",
+                        padding: "10px 12px",
+                        boxShadow: "3px 3px 0 #0d0d0d",
                         cursor: "pointer",
                       }}
-                      press={{ transform: "translate(2px,2px)" }}
+                      press={{
+                        transform: "translate(2px,2px)",
+                        boxShadow: "1px 1px 0 #0d0d0d",
+                      }}
                     >
                       {t.violation}
                     </Press>
 
-                    {player.alive && !player.challengeDone && (
+                    {!player.challengeDone && (
                       <Press
                         onClick={() => {
                           onChallengeDone(index);
                           setFlash({
                             index,
-                            text: format(t.challengeHandOut, {
-                              n: player.challenge
-                                ? challengeReward(player.challenge)
-                                : 0,
-                            }),
+                            text: format(t.challengeHandOut, { n: reward }),
                           });
                         }}
                         style={{
-                          flex: "none",
                           fontFamily: ARCHIVO,
                           fontSize: 12,
                           textTransform: "uppercase",
                           background: "#3DD6FF",
                           color: "#0d0d0d",
-                          border: "3px solid #0d0d0d",
-                          padding: "10px 10px",
+                          border: "2px solid #0d0d0d",
+                          padding: "10px 12px",
+                          boxShadow: "3px 3px 0 #0d0d0d",
                           cursor: "pointer",
                         }}
-                        press={{ transform: "translate(2px,2px)" }}
-                      >
-                        ✓
-                      </Press>
-                    )}
-
-                    {lit && (
-                      <span
-                        aria-live="polite"
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          display: "grid",
-                          placeItems: "center",
-                          background: "rgba(13,13,13,.88)",
-                          color: "#FFD23F",
-                          fontFamily: ARCHIVO,
-                          fontSize: 16,
-                          textTransform: "uppercase",
-                          pointerEvents: "none",
+                        press={{
+                          transform: "translate(2px,2px)",
+                          boxShadow: "1px 1px 0 #0d0d0d",
                         }}
                       >
-                        {flash.text}
-                      </span>
+                        {t.challengeDone}
+                      </Press>
                     )}
                   </div>
-                );
-              })}
+                )}
+
+                {flash?.index === index && (
+                  <span
+                    aria-live="polite"
+                    style={{
+                      position: "absolute",
+                      right: 12,
+                      top: -12,
+                      display: "inline-block",
+                      fontFamily: ARCHIVO,
+                      fontSize: 13,
+                      letterSpacing: ".08em",
+                      textTransform: "uppercase",
+                      lineHeight: 1,
+                      color: "#E8202A",
+                      border: "5px double #E8202A",
+                      padding: "6px 10px",
+                      background: "#F3F0E8",
+                      transform: "rotate(-8deg)",
+                      animation: "stampIn .4s both",
+                      pointerEvents: "none",
+                    }}
+                  >
+                    {flash.text}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div
+          style={{
+            padding: "16px 24px 20px",
+            borderTop: "3px solid #0d0d0d",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Press
+            onClick={onClose}
+            style={{
+              width: "100%",
+              maxWidth: 260,
+              fontFamily: ARCHIVO,
+              fontSize: 17,
+              textTransform: "uppercase",
+              background: "#FFD23F",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: 14,
+              boxShadow: "4px 4px 0 #0d0d0d",
+              cursor: "pointer",
+            }}
+            press={{
+              transform: "translate(3px,3px)",
+              boxShadow: "1px 1px 0 #0d0d0d",
+            }}
+          >
+            {t.close}
+          </Press>
         </div>
       </div>
     </div>

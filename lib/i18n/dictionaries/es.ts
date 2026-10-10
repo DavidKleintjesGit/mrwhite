@@ -306,6 +306,34 @@ const es: Dictionary = {
     challengesTitle: "Los retos de esta partida",
     challengeCheck: "Abre el expediente de alguien para comprobar su reto.",
 
+    sheetTag: "ANTECEDENTES",
+
+    sheetAsk: "¿Quién bebe?",
+
+    challengeLabel: "Reto: {t}",
+
+    caseNo: "Caso n.º 0042",
+
+    agents: "Agentes",
+
+    quit: "Salir",
+
+    reveal: "Toca para leer",
+
+    fileLabel: "Expediente personal · N.º {n}",
+
+    status: "Estado",
+
+    role: "Rol",
+
+    roleHidden: "secreto secreto",
+
+    achieved: "Conseguido",
+
+    rulesHelp: "¿Rota? Da un trago. El grupo vigila.",
+
+    close: "Cerrar",
+
     sheetOpen: "Expediente del caso ▾",
     sheetClose: "Cerrar ▴",
     sheetTitle: "Antecedentes",

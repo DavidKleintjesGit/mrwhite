@@ -23,9 +23,8 @@ type Props = {
 };
 
 /**
- * The case file each edition is dressed as. The locked ones are not
- * placeholders I invented: they are in the design, and they tell a new group
- * that more is coming without promising a date.
+ * Every edition dressed as a case file. The locked ones come from the design
+ * and tell a new group that more is coming without promising a date.
  */
 export default function ModesScreen({ dict, onBack, onPick }: Props) {
   const t = dict.modes;
@@ -50,7 +49,7 @@ export default function ModesScreen({ dict, onBack, onPick }: Props) {
       desc: item.desc,
       meta: t.soon,
       mode: null,
-      colour: "#8a877f",
+      colour: "var(--card)",
     })),
   ];
 
@@ -70,8 +69,8 @@ export default function ModesScreen({ dict, onBack, onPick }: Props) {
         style={{
           display: "grid",
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
-          gap: 16,
+            "repeat(auto-fill, minmax(min(100%, 280px), 1fr))",
+          gap: 22,
         }}
       >
         {cases.map((item, index) => {
@@ -82,19 +81,24 @@ export default function ModesScreen({ dict, onBack, onPick }: Props) {
               disabled={!open}
               onClick={() => item.mode && onPick(item.mode)}
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
+                position: "relative",
                 textAlign: "left",
-                background: open ? item.colour : "var(--card)",
+                fontFamily: "inherit",
+                background: item.colour,
                 color: "#0d0d0d",
                 border: "3px solid #0d0d0d",
-                padding: 18,
+                padding: 0,
                 boxShadow: `6px 6px 0 ${open ? "var(--fg)" : "var(--line)"}`,
-                opacity: open ? 1 : 0.55,
                 cursor: open ? "pointer" : "default",
-                fontFamily: "inherit",
+                display: "flex",
+                flexDirection: "column",
+                minHeight: 240,
               }}
+              hover={
+                open
+                  ? { transform: "rotate(-1deg) translateY(-3px)" }
+                  : undefined
+              }
               press={
                 open
                   ? {
@@ -107,24 +111,26 @@ export default function ModesScreen({ dict, onBack, onPick }: Props) {
               <span
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
                   alignItems: "center",
+                  justifyContent: "space-between",
                   gap: 12,
-                  fontSize: 12,
-                  letterSpacing: ".18em",
-                  textTransform: "uppercase",
+                  padding: "10px 14px",
+                  background: "#0d0d0d",
+                  color: open ? item.colour : "#8a877f",
                 }}
               >
-                <span>
+                <span
+                  style={{
+                    fontFamily: ARCHIVO,
+                    fontSize: 13,
+                    letterSpacing: ".14em",
+                    textTransform: "uppercase",
+                  }}
+                >
                   {t.caseLabel} {String(index + 1).padStart(2, "0")}
                 </span>
                 <span
-                  style={{
-                    background: "#0d0d0d",
-                    color: open ? item.colour : "#8a877f",
-                    padding: "4px 8px",
-                    whiteSpace: "nowrap",
-                  }}
+                  style={{ fontSize: 13, fontWeight: 700, color: "#F3F0E8" }}
                 >
                   {item.meta}
                 </span>
@@ -132,31 +138,68 @@ export default function ModesScreen({ dict, onBack, onPick }: Props) {
 
               <span
                 style={{
-                  fontFamily: ARCHIVO,
-                  fontSize: "clamp(20px,4vw,26px)",
-                  textTransform: "uppercase",
-                  lineHeight: 1.1,
-                  maxWidth: "100%",
-                  overflowWrap: "break-word",
+                  padding: "18px 16px 20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                  opacity: open ? 1 : 0.55,
                 }}
               >
-                {item.title}
-              </span>
-
-              <span style={{ fontSize: 15, lineHeight: 1.45 }}>
-                {item.desc}
-              </span>
-
-              {open && (
                 <span
                   style={{
-                    marginTop: 4,
                     fontFamily: ARCHIVO,
-                    fontSize: 13,
+                    fontSize: 24,
                     textTransform: "uppercase",
+                    lineHeight: 1.05,
+                    overflowWrap: "break-word",
+                  }}
+                >
+                  {item.title}
+                </span>
+                <span
+                  style={{
+                    fontSize: 15,
+                    lineHeight: 1.45,
+                    textWrap: "pretty",
+                  }}
+                >
+                  {item.desc}
+                </span>
+              </span>
+
+              {open ? (
+                <span
+                  style={{
+                    margin: "auto 16px 18px",
+                    alignSelf: "flex-start",
+                    fontFamily: ARCHIVO,
+                    fontSize: 14,
+                    textTransform: "uppercase",
+                    background: "#0d0d0d",
+                    color: "#FFD23F",
+                    padding: "10px 14px",
                   }}
                 >
                   {t.open}
+                </span>
+              ) : (
+                <span
+                  style={{
+                    margin: "auto 18px 20px",
+                    alignSelf: "flex-end",
+                    display: "inline-block",
+                    fontFamily: ARCHIVO,
+                    fontSize: 15,
+                    letterSpacing: ".08em",
+                    textTransform: "uppercase",
+                    lineHeight: 1,
+                    color: "#E8202A",
+                    border: "5px double #E8202A",
+                    padding: "8px 12px",
+                    transform: "rotate(-9deg)",
+                  }}
+                >
+                  {t.soon}
                 </span>
               )}
             </Press>

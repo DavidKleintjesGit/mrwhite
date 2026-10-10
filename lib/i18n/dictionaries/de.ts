@@ -308,6 +308,34 @@ const de: Dictionary = {
     challengesTitle: "Challenges dieser Runde",
     challengeCheck: "Öffne jemandes Akte, um seine Challenge zu prüfen.",
 
+    sheetTag: "VORSTRAFEN",
+
+    sheetAsk: "Wer muss trinken?",
+
+    challengeLabel: "Challenge: {t}",
+
+    caseNo: "Fall Nr. 0042",
+
+    agents: "Agenten",
+
+    quit: "Verlassen",
+
+    reveal: "Zum Lesen tippen",
+
+    fileLabel: "Personalakte · Nr. {n}",
+
+    status: "Status",
+
+    role: "Rolle",
+
+    roleHidden: "geheim geheim",
+
+    achieved: "Geschafft",
+
+    rulesHelp: "Gebrochen? Einfach einen Schluck nehmen. Die Gruppe passt auf.",
+
+    close: "Schließen",
+
     sheetOpen: "Fallakte ▾",
     sheetClose: "Schließen ▴",
     sheetTitle: "Vorstrafen",
