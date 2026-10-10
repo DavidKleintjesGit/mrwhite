@@ -2,28 +2,36 @@ import type { CSSProperties, ReactNode } from "react";
 import Press from "@/components/ui/Press";
 
 /**
- * The design's padding, plus whatever the device reserves for its notch and
- * home indicator. On anything without them the insets are zero and the
- * numbers are exactly what the design says.
+ * The screen container, with the design's padding written out as it has it.
+ *
+ * Two things are ours rather than the design's, both for the native app:
+ *
+ *   - `env(safe-area-inset-*)` is added to each side. The design is a browser
+ *     mock-up and has no notch to dodge; on a desktop or a phone without one
+ *     the insets are zero and the numbers are exactly what the design says.
+ *   - `--toppad` reserves room for the case-file tab hanging off the top
+ *     edge. The app sets it on its root, 38px during a round and 0px
+ *     elsewhere, exactly as the design does.
  */
-const TOP = "calc(clamp(24px,4vw,56px) + env(safe-area-inset-top))";
-const BOTTOM = "calc(clamp(24px,4vw,56px) + env(safe-area-inset-bottom))";
+const TOP =
+  "calc(clamp(16px,4vw,56px) + var(--toppad, 0px) + env(safe-area-inset-top))";
+const BOTTOM = "calc(clamp(16px,4vw,56px) + env(safe-area-inset-bottom))";
 
 /** The wide screens; the card, unmask and guess screens use the narrow one. */
 const WIDE: CSSProperties = {
   maxWidth: 1240,
   paddingTop: TOP,
   paddingBottom: BOTTOM,
-  paddingLeft: "calc(clamp(20px,5vw,72px) + env(safe-area-inset-left))",
-  paddingRight: "calc(clamp(20px,5vw,72px) + env(safe-area-inset-right))",
+  paddingLeft: "calc(clamp(18px,5vw,72px) + env(safe-area-inset-left))",
+  paddingRight: "calc(clamp(18px,5vw,72px) + env(safe-area-inset-right))",
 };
 
 const NARROW: CSSProperties = {
   maxWidth: 760,
   paddingTop: TOP,
   paddingBottom: BOTTOM,
-  paddingLeft: "calc(clamp(20px,5vw,40px) + env(safe-area-inset-left))",
-  paddingRight: "calc(clamp(20px,5vw,40px) + env(safe-area-inset-right))",
+  paddingLeft: "calc(clamp(18px,5vw,40px) + env(safe-area-inset-left))",
+  paddingRight: "calc(clamp(18px,5vw,40px) + env(safe-area-inset-right))",
 };
 
 type Props = {
@@ -46,7 +54,9 @@ export default function Screen({
     <div
       data-screen-label={label}
       style={{
-        minHeight: "100vh",
+        // 100dvh, not 100vh: on a phone the browser chrome slides away and
+        // 100vh keeps reserving space for it, leaving a gap at the bottom.
+        minHeight: "100dvh",
         margin: "0 auto",
         boxSizing: "border-box",
         animation: `screenIn ${duration}s cubic-bezier(.2,1.3,.4,1) both`,
@@ -77,7 +87,8 @@ export function Header({
         gridColumn: "1 / -1",
         display: "flex",
         alignItems: "center",
-        gap: 14,
+        gap: 16,
+        paddingBottom: 4,
       }}
     >
       <Press
@@ -109,6 +120,7 @@ export function Header({
             letterSpacing: ".2em",
             textTransform: "uppercase",
             color: "var(--muted)",
+            marginBottom: 4,
           }}
         >
           {kicker}

@@ -10,7 +10,6 @@ const ARCHIVO = "var(--font-archivo-black), sans-serif";
 type Props = {
   dict: Dictionary;
   langCode: string;
-  langName: string;
   themeLabel: string;
   themeDot: string;
   onLanguage: () => void;
@@ -23,7 +22,6 @@ type Props = {
 export default function HomeScreen({
   dict,
   langCode,
-  langName,
   themeLabel,
   themeDot,
   onLanguage,
@@ -41,9 +39,9 @@ export default function HomeScreen({
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
-        alignContent: "center",
+        gridTemplateRows: "auto 1fr",
         alignItems: "center",
-        gap: "40px clamp(40px,6vw,96px)",
+        gap: "32px clamp(40px,6vw,96px)",
         position: "relative",
       }}
     >
@@ -53,40 +51,42 @@ export default function HomeScreen({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          // The design keeps this on one line, which runs off the right edge
-          // of a phone. Wrapping costs nothing on a wide screen, where it
-          // still fits on that one line.
           flexWrap: "wrap",
-          gap: 12,
+          gap: "14px 20px",
           fontSize: 13,
           letterSpacing: ".18em",
           textTransform: "uppercase",
           color: "var(--muted)",
         }}
       >
-        <span>{t.caseNumber}</span>
         <span
           style={{
             display: "flex",
             alignItems: "center",
-            flexWrap: "wrap",
-            justifyContent: "flex-end",
-            gap: 16,
+            gap: 8,
+            whiteSpace: "nowrap",
           }}
         >
-          <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span
-              style={{
-                width: 9,
-                height: 9,
-                borderRadius: "50%",
-                background: "#FF3D3D",
-                animation: "blink 1.2s steps(1) infinite",
-              }}
-            />
-            {t.rec}
-          </span>
+          <span
+            style={{
+              width: 9,
+              height: 9,
+              borderRadius: "50%",
+              background: "#FF3D3D",
+              animation: "blink 1.2s steps(1) infinite",
+            }}
+          />
+          {t.recNumber}
+        </span>
 
+        <span
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            marginLeft: "auto",
+          }}
+        >
           <Press
             onClick={onLanguage}
             style={{
@@ -118,7 +118,7 @@ export default function HomeScreen({
             >
               {langCode}
             </span>
-            {langName}
+            {dict.settings.language}
           </Press>
 
           <Press
@@ -163,17 +163,41 @@ export default function HomeScreen({
           position: "relative",
           display: "flex",
           flexDirection: "column",
-          gap: 14,
+          gap: 20,
+          paddingTop: 22,
           textAlign: "left",
         }}
       >
         <Stamp
+          stacked
           fontSize={18}
           rotate={9}
           delay={0.5}
-          style={{ position: "absolute", right: 0, top: -14 }}
+          style={{ position: "absolute", right: 4, top: 0 }}
         >
-          {t.stamp}
+          <span
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 18,
+              letterSpacing: ".1em",
+              textTransform: "uppercase",
+              lineHeight: 1,
+            }}
+          >
+            {t.stamp}
+          </span>
+          <span
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              letterSpacing: ".16em",
+              textTransform: "uppercase",
+              borderTop: "2px solid #E8202A",
+              paddingTop: 3,
+            }}
+          >
+            {t.caseNumber}
+          </span>
         </Stamp>
 
         <h1
@@ -205,7 +229,7 @@ export default function HomeScreen({
 
         <p
           style={{
-            margin: "18px 0 0",
+            margin: "12px 0 0",
             maxWidth: 440,
             fontSize: "clamp(17px,1.5vw,21px)",
             lineHeight: 1.45,
@@ -216,7 +240,7 @@ export default function HomeScreen({
         </p>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
         <Press
           onClick={onPlay}
           style={{
@@ -242,7 +266,7 @@ export default function HomeScreen({
         </Press>
 
         <div
-          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}
         >
           <Press
             onClick={onRules}

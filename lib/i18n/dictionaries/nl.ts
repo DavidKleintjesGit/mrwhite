@@ -35,6 +35,7 @@ const nl = {
   home: {
     caseNumber: "Dossier nr. 0042",
     rec: "Rec",
+    recNumber: "Nr. 0042",
     stamp: "Strikt geheim",
     titleTop: "Mr.",
     titleBottom: "White",

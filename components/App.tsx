@@ -298,6 +298,9 @@ export default function App({ dict, lang }: Props) {
     "--hl": theme.hl,
     "--cy": theme.cy,
     "--dot": theme.dot,
+    // Room for the case-file tab hanging off the top edge, so no screen
+    // tucks its first line underneath it. Zero everywhere else.
+    "--toppad": "players" in stage && stage.name !== "card" ? "38px" : "0px",
     backgroundColor: "var(--bg)",
     backgroundImage: "radial-gradient(var(--dot) 1px, transparent 1.6px)",
     backgroundSize: "9px 9px",
@@ -447,7 +450,6 @@ export default function App({ dict, lang }: Props) {
           <HomeScreen
             dict={dict}
             langCode={lang.toUpperCase()}
-            langName={LOCALE_NAMES[lang]}
             themeLabel={
               settings.theme === "licht"
                 ? dict.settings.themeLight

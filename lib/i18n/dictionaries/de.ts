@@ -36,6 +36,7 @@ const de: Dictionary = {
   home: {
     caseNumber: "Akte Nr. 0042",
     rec: "Rec",
+    recNumber: "Nr. 0042",
     stamp: "Streng geheim",
     titleTop: "Mr.",
     titleBottom: "White",

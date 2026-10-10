@@ -36,6 +36,7 @@ const tr: Dictionary = {
   home: {
     caseNumber: "Dosya no. 0042",
     rec: "Kayıt",
+    recNumber: "No. 0042",
     stamp: "Çok gizli",
     titleTop: "Mr.",
     titleBottom: "White",
