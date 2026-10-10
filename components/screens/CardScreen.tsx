@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Magnifier from "@/components/ui/Magnifier";
 import Press from "@/components/ui/Press";
 import Screen from "@/components/ui/Screen";
@@ -28,19 +28,58 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
   const [holding, setHolding] = useState(false);
   const [at, setAt] = useState({ x: 0, y: 0 });
 
+  /**
+   * The card fills the screen, so swallowing every touch on it made the page
+   * impossible to scroll on a phone. A touch now starts as a scroll and only
+   * becomes a hold once the finger has stayed put for a moment: drag within
+   * that moment and the browser keeps the gesture, hold still and the card
+   * takes it.
+   */
+  const HOLD_MS = 160;
+  const SLOP = 10;
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const start = useRef({ x: 0, y: 0, id: -1 });
+  const target = useRef<HTMLDivElement | null>(null);
+
+  function cancelPending() {
+    if (timer.current === null) return;
+    clearTimeout(timer.current);
+    timer.current = null;
+  }
+
+  useEffect(() => cancelPending, []);
+
   function down(event: React.PointerEvent<HTMLDivElement>) {
-    event.preventDefault();
-    try {
-      event.currentTarget.setPointerCapture(event.pointerId);
-    } catch {
-      // Pointer capture is a nicety; without it the hold still works.
-    }
+    // Deliberately no preventDefault: that is what would kill the scroll.
     const box = event.currentTarget.getBoundingClientRect();
-    setAt({ x: event.clientX - box.left, y: event.clientY - box.top });
-    setHolding(true);
+    const point = { x: event.clientX - box.left, y: event.clientY - box.top };
+    start.current = { x: event.clientX, y: event.clientY, id: event.pointerId };
+    target.current = event.currentTarget;
+
+    cancelPending();
+    timer.current = setTimeout(() => {
+      timer.current = null;
+      try {
+        target.current?.setPointerCapture(start.current.id);
+      } catch {
+        // Pointer capture is a nicety; without it the hold still works.
+      }
+      setAt(point);
+      setHolding(true);
+    }, HOLD_MS);
+  }
+
+  function move(event: React.PointerEvent<HTMLDivElement>) {
+    if (holding || timer.current === null) return;
+    const moved =
+      Math.abs(event.clientX - start.current.x) > SLOP ||
+      Math.abs(event.clientY - start.current.y) > SLOP;
+    // Moved before the hold took: the group is scrolling, not reading.
+    if (moved) cancelPending();
   }
 
   function up() {
+    cancelPending();
     if (!holding) return;
     setHolding(false);
     onSeen();
@@ -86,6 +125,7 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
 
       <div
         onPointerDown={down}
+        onPointerMove={move}
         onPointerUp={up}
         onPointerLeave={up}
         onPointerCancel={up}
@@ -98,7 +138,8 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
           background: "var(--card)",
           color: "#0d0d0d",
           boxShadow: "8px 8px 0 #FFD23F",
-          touchAction: "none",
+          // Only once the hold has taken; before that the page must scroll.
+          touchAction: holding ? "none" : "pan-y",
           cursor: "pointer",
           overflow: "hidden",
         }}

@@ -173,6 +173,10 @@ const fr: Dictionary = {
     cancel: "Annuler",
     yes: "Oui, redistribuer",
     waiting: "Lisez d'abord… {n}",
+    quitTitle: "Arrêter la partie ?",
+    quitBody:
+      "La manche s'arrête et tu reviens au menu. Les rôles et les votes sont effacés.",
+    quitYes: "Oui, arrêter",
   },
 
   card: {
@@ -305,17 +309,8 @@ const fr: Dictionary = {
     challengeHandOut: "Distribue {n} gorgées",
     challengeSecret: "secret",
     challengeLapsed: "annulé",
-    challengeBusy: "Défi en cours",
-    challengeWon: "Défi réussi · a distribué {n} gorgées",
-    challengeLost: "Éliminé · défi annulé",
     challengesTitle: "Les défis de cette partie",
     challengeCheck: "Ouvre le dossier de quelqu'un pour vérifier son défi.",
-
-    sheetTag: "CASIER",
-
-    sheetAsk: "Qui doit boire ?",
-
-    challengeLabel: "Défi : {t}",
 
     caseNo: "Affaire n° 0042",
 
@@ -346,10 +341,6 @@ const fr: Dictionary = {
       "Règle enfreinte ? Touche Infraction. Le groupe surveille, le compteur n'est qu'une aide.",
     rulesTab: "Règles",
     houseRules: "Règles maison",
-    violation: "Infraction",
-    violationFlash: "Santé +1",
-    sip: "{n} gorgée",
-    sips: "{n} gorgées",
     eliminated: "Éliminé",
     active: "En jeu",
 

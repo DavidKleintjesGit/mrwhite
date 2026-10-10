@@ -172,6 +172,10 @@ const it: Dictionary = {
     cancel: "Annulla",
     yes: "Sì, ridistribuisci",
     waiting: "Leggi prima… {n}",
+    quitTitle: "Fermare la partita?",
+    quitBody:
+      "La partita finisce e torni al menu. Ruoli e voti vengono cancellati.",
+    quitYes: "Sì, fermati",
   },
 
   card: {
@@ -307,18 +311,9 @@ const it: Dictionary = {
     challengeHandOut: "Distribuisci {n} sorsi",
     challengeSecret: "segreta",
     challengeLapsed: "annullata",
-    challengeBusy: "Sfida ancora in corso",
-    challengeWon: "Sfida riuscita · ha distribuito {n} sorsi",
-    challengeLost: "Eliminato · sfida annullata",
     challengesTitle: "Le sfide di questa partita",
     challengeCheck:
       "Apri il fascicolo di qualcuno per controllare la sua sfida.",
-
-    sheetTag: "FEDINA",
-
-    sheetAsk: "Chi deve bere?",
-
-    challengeLabel: "Sfida: {t}",
 
     caseNo: "Caso n. 0042",
 
@@ -349,10 +344,6 @@ const it: Dictionary = {
       "Regola infranta? Tocca Infrazione. Il gruppo controlla, il conteggio è solo un aiuto.",
     rulesTab: "Regole",
     houseRules: "Regole della casa",
-    violation: "Infrazione",
-    violationFlash: "Salute +1",
-    sip: "{n} sorso",
-    sips: "{n} sorsi",
     eliminated: "Eliminato",
     active: "In gioco",
 

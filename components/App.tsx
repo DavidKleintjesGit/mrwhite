@@ -8,7 +8,6 @@ import {
 } from "react";
 import CardScreen from "@/components/screens/CardScreen";
 import CaseFileDrawer from "@/components/screens/CaseFileDrawer";
-import ChargeSheet from "@/components/screens/ChargeSheet";
 import DealScreen from "@/components/screens/DealScreen";
 import DrinkRulesScreen from "@/components/screens/DrinkRulesScreen";
 import {
@@ -65,7 +64,7 @@ type Props = {
   lang: Locale;
 };
 
-type Dialog = "none" | "categories" | "language" | "confirm";
+type Dialog = "none" | "categories" | "language" | "confirm" | "quit";
 
 /** The stored settings do not change behind our back while a page is open. */
 const subscribe = () => () => {};
@@ -85,7 +84,6 @@ export default function App({ dict, lang }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
   /** The rule cards reshuffling; a flourish, so it stays out of storage. */
   const [rolling, setRolling] = useState(false);
-  const [sheetOpen, setSheetOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const drink = stored.mode === "drink";
@@ -240,7 +238,7 @@ export default function App({ dict, lang }: Props) {
 
     go({
       name: "unmask",
-      players: eliminate(from.players, result.out, from.votes),
+      players: eliminate(from.players, result.out),
       pair: from.pair,
       index: result.out,
       round: from.round,
@@ -382,37 +380,11 @@ export default function App({ dict, lang }: Props) {
               )
             )
           }
-          onOpenSheet={() => {
-            setDrawerOpen(false);
-            setSheetOpen(true);
-          }}
           onQuit={() => {
             setDrawerOpen(false);
-            go({ name: "home" });
+            setDialog("quit");
           }}
           onClose={() => setDrawerOpen(false)}
-        />
-      )}
-
-      {sheetOpen && "players" in stage && (
-        <ChargeSheet
-          dict={dict}
-          players={stage.players}
-          onViolation={(index) =>
-            recordOnPlayers((players) =>
-              players.map((player, i) =>
-                i === index ? { ...player, sips: player.sips + 1 } : player
-              )
-            )
-          }
-          onChallengeDone={(index) =>
-            recordOnPlayers((players) =>
-              players.map((player, i) =>
-                i === index ? { ...player, challengeDone: true } : player
-              )
-            )
-          }
-          onClose={() => setSheetOpen(false)}
         />
       )}
 
@@ -438,6 +410,17 @@ export default function App({ dict, lang }: Props) {
           dict={dict}
           onCancel={() => setDialog("none")}
           onConfirm={startDeal}
+        />
+      )}
+      {dialog === "quit" && (
+        <ConfirmDialog
+          dict={dict}
+          kind="quit"
+          onCancel={() => setDialog("none")}
+          onConfirm={() => {
+            setDialog("none");
+            go({ name: "home" });
+          }}
         />
       )}
     </div>

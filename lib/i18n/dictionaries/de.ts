@@ -172,6 +172,10 @@ const de: Dictionary = {
     cancel: "Abbrechen",
     yes: "Ja, neu austeilen",
     waiting: "Erst lesen… {n}",
+    quitTitle: "Spiel beenden?",
+    quitBody:
+      "Die Runde endet und ihr geht zurück ins Menü. Rollen und Stimmen werden gelöscht.",
+    quitYes: "Ja, beenden",
   },
 
   card: {
@@ -305,17 +309,8 @@ const de: Dictionary = {
     challengeHandOut: "Verteile {n} Schlucke",
     challengeSecret: "geheim",
     challengeLapsed: "verfallen",
-    challengeBusy: "Challenge läuft noch",
-    challengeWon: "Challenge geschafft · durfte {n} Schlucke verteilen",
-    challengeLost: "Ausgeschieden · Challenge verfallen",
     challengesTitle: "Challenges dieser Runde",
     challengeCheck: "Öffne jemandes Akte, um seine Challenge zu prüfen.",
-
-    sheetTag: "VORSTRAFEN",
-
-    sheetAsk: "Wer muss trinken?",
-
-    challengeLabel: "Challenge: {t}",
 
     caseNo: "Fall Nr. 0042",
 
@@ -346,10 +341,6 @@ const de: Dictionary = {
       "Regel gebrochen? Tippe auf Verstoß. Die Gruppe passt selbst auf, die Zählung ist nur eine Hilfe.",
     rulesTab: "Regeln",
     houseRules: "Hausregeln",
-    violation: "Verstoß",
-    violationFlash: "Prost +1",
-    sip: "{n} Schluck",
-    sips: "{n} Schlucke",
     eliminated: "Ausgeschieden",
     active: "Im Spiel",
 

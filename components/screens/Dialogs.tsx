@@ -399,19 +399,23 @@ export function LanguageDialog({
 }
 
 /**
- * Re-dealing wipes everyone's word, so the confirm button stays locked for
- * three seconds — long enough to actually read what it says.
+ * Re-dealing wipes everyone's word and quitting throws the round away, so
+ * the confirm button stays locked for three seconds — long enough to
+ * actually read what it says.
  */
 export function ConfirmDialog({
   dict,
+  kind = "reshuffle",
   onCancel,
   onConfirm,
 }: {
   dict: Dictionary;
+  kind?: "reshuffle" | "quit";
   onCancel: () => void;
   onConfirm: () => void;
 }) {
   const t = dict.confirm;
+  const quitting = kind === "quit";
   const [left, setLeft] = useState(3);
 
   useEffect(() => {
@@ -446,7 +450,7 @@ export function ConfirmDialog({
           lineHeight: 1.05,
         }}
       >
-        {t.title}
+        {quitting ? t.quitTitle : t.title}
       </h3>
       <p
         style={{
@@ -456,7 +460,7 @@ export function ConfirmDialog({
           textWrap: "pretty",
         }}
       >
-        {t.bodyStart}
+        {quitting ? `${t.quitBody} ` : t.bodyStart}
         <strong>{t.bodyStrong}</strong>
       </p>
 
@@ -513,7 +517,7 @@ export function ConfirmDialog({
             }}
             press={CLOSE_PRESS}
           >
-            {t.yes}
+            {quitting ? t.quitYes : t.yes}
           </Press>
         ) : (
           <button

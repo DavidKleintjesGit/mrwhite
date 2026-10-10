@@ -172,6 +172,9 @@ const tr: Dictionary = {
     cancel: "Vazgeç",
     yes: "Evet, yeniden dağıt",
     waiting: "Önce oku… {n}",
+    quitTitle: "Oyun dursun mu?",
+    quitBody: "Tur biter ve menüye dönersin. Roller ve oylar silinir.",
+    quitYes: "Evet, durdur",
   },
 
   card: {
@@ -304,17 +307,8 @@ const tr: Dictionary = {
     challengeHandOut: "{n} yudum dağıt",
     challengeSecret: "gizli",
     challengeLapsed: "iptal",
-    challengeBusy: "Görev sürüyor",
-    challengeWon: "Görev tamam · {n} yudum dağıttı",
-    challengeLost: "Elendi · görev iptal",
     challengesTitle: "Bu oyunun görevleri",
     challengeCheck: "Görevini kontrol etmek için birinin dosyasını aç.",
-
-    sheetTag: "SABIKA",
-
-    sheetAsk: "Kim içiyor?",
-
-    challengeLabel: "Görev: {t}",
 
     caseNo: "Dava No. 0042",
 
@@ -345,10 +339,6 @@ const tr: Dictionary = {
       "Kural mı çiğnendi? İhlal'e dokun. Grup denetler, sayaç sadece yardımcıdır.",
     rulesTab: "Kurallar",
     houseRules: "Ev kuralları",
-    violation: "İhlal",
-    violationFlash: "Şerefe +1",
-    sip: "{n} yudum",
-    sips: "{n} yudum",
     eliminated: "Elendi",
     active: "Oyunda",
 

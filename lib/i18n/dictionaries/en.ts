@@ -166,6 +166,10 @@ const en: Dictionary = {
     cancel: "Cancel",
     yes: "Yes, deal again",
     waiting: "Read it first… {n}",
+    quitTitle: "Stop the game?",
+    quitBody:
+      "The round ends and you go back to the menu. Roles and votes are wiped.",
+    quitYes: "Yes, stop",
   },
 
   card: {
@@ -298,17 +302,8 @@ const en: Dictionary = {
     challengeHandOut: "Hand out {n} sips",
     challengeSecret: "secret",
     challengeLapsed: "lapsed",
-    challengeBusy: "Challenge still running",
-    challengeWon: "Challenge done · handed out {n} sips",
-    challengeLost: "Out of the game · challenge lapsed",
     challengesTitle: "This game's challenges",
     challengeCheck: "Open someone's file to check their challenge.",
-
-    sheetTag: "CHARGE SHEET",
-
-    sheetAsk: "Who has to drink?",
-
-    challengeLabel: "Challenge: {t}",
 
     caseNo: "Case no. 0042",
 
@@ -339,10 +334,6 @@ const en: Dictionary = {
       "Broke a rule? Tap Violation. The table keeps watch; the count is only here to help.",
     rulesTab: "Rules",
     houseRules: "House rules",
-    violation: "Violation",
-    violationFlash: "Cheers +1",
-    sip: "{n} sip",
-    sips: "{n} sips",
     eliminated: "Out",
     active: "In play",
 

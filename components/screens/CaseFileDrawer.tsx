@@ -28,8 +28,6 @@ type Props = {
   rules: number[];
   drink: boolean;
   onChallengeDone: (index: number) => void;
-  /** The design builds the charge sheet but never wires a way in; this is it. */
-  onOpenSheet: () => void;
   onQuit: () => void;
   onClose: () => void;
 };
@@ -48,7 +46,6 @@ export default function CaseFileDrawer({
   rules,
   drink,
   onChallengeDone,
-  onOpenSheet,
   onQuit,
   onClose,
 }: Props) {
@@ -98,6 +95,7 @@ export default function CaseFileDrawer({
         <div
           style={{
             display: "flex",
+            flexWrap: "wrap",
             alignItems: "flex-end",
             gap: 6,
             paddingLeft: 14,
@@ -123,30 +121,7 @@ export default function CaseFileDrawer({
           )}
           <FolderTab label={t.quit} colour="#FF3D3D" onClick={onQuit} />
 
-          <Press
-            title={t.close}
-            onClick={onClose}
-            style={{
-              marginLeft: "auto",
-              marginBottom: 8,
-              width: 44,
-              height: 44,
-              flex: "none",
-              fontFamily: ARCHIVO,
-              fontSize: 20,
-              background: "#F3F0E8",
-              color: "#0d0d0d",
-              border: "3px solid #0d0d0d",
-              boxShadow: "3px 3px 0 #FFD23F",
-              cursor: "pointer",
-            }}
-            press={{
-              transform: "translate(2px,2px)",
-              boxShadow: "1px 1px 0 #FFD23F",
-            }}
-          >
-            ×
-          </Press>
+          <FolderTab label={t.sheetClose} onClick={onClose} atRight />
         </div>
 
         <div
@@ -298,40 +273,7 @@ export default function CaseFileDrawer({
               <div
                 style={{ display: "flex", flexDirection: "column", gap: 18 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    alignItems: "flex-end",
-                    justifyContent: "space-between",
-                    gap: 12,
-                  }}
-                >
-                  <Heading text={t.agents} />
-                  {drink && (
-                    <Press
-                      onClick={onOpenSheet}
-                      style={{
-                        fontFamily: ARCHIVO,
-                        fontSize: 12,
-                        letterSpacing: ".1em",
-                        textTransform: "uppercase",
-                        background: "#FF3D3D",
-                        color: "#0d0d0d",
-                        border: "2px solid #0d0d0d",
-                        padding: "9px 12px",
-                        boxShadow: "3px 3px 0 #0d0d0d",
-                        cursor: "pointer",
-                      }}
-                      press={{
-                        transform: "translate(2px,2px)",
-                        boxShadow: "1px 1px 0 #0d0d0d",
-                      }}
-                    >
-                      {t.sheetTag}
-                    </Press>
-                  )}
-                </div>
+                <Heading text={t.agents} />
                 {drink && (
                   <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
                     {t.challengeCheck}
@@ -352,7 +294,6 @@ export default function CaseFileDrawer({
                       dict={dict}
                       player={player}
                       number={index + 1}
-                      drink={drink}
                       onOpen={() => showFile(index)}
                     />
                   ))}
@@ -388,11 +329,14 @@ function FolderTab({
   label,
   active,
   colour,
+  atRight,
   onClick,
 }: {
   label: string;
   active?: boolean;
   colour?: string;
+  /** Pins the tab to the right-hand end of the row. */
+  atRight?: boolean;
   onClick: () => void;
 }) {
   return (
@@ -401,6 +345,7 @@ function FolderTab({
       style={{
         position: "relative",
         top: 3,
+        ...(atRight ? { marginLeft: "auto" } : null),
         fontFamily: ARCHIVO,
         fontSize: 13,
         letterSpacing: ".1em",
@@ -424,21 +369,15 @@ function Folder({
   dict,
   player,
   number,
-  drink,
   onOpen,
 }: {
   dict: Dictionary;
   player: Player;
   number: number;
-  drink: boolean;
   onOpen: () => void;
 }) {
   const t = dict.drink;
-  const background = player.challengeDone
-    ? "#E4F8FF"
-    : player.alive
-    ? "#F3F0E8"
-    : "#d9d5ca";
+  const background = player.alive ? "#F1E6C4" : "#D6CCAE";
 
   return (
     <Press
@@ -502,11 +441,6 @@ function Folder({
         }}
       >
         {player.alive ? t.active : t.eliminated}
-        {drink
-          ? ` · ${format(player.sips === 1 ? t.sip : t.sips, {
-              n: player.sips,
-            })}`
-          : ""}
       </span>
 
       {player.challengeDone && (
@@ -671,10 +605,7 @@ function FileView({
           }}
         >
           <span style={LABEL}>{t.status}</span>
-          <span>
-            {player.alive ? t.active : t.eliminated} ·{" "}
-            {format(player.sips === 1 ? t.sip : t.sips, { n: player.sips })}
-          </span>
+          <span>{player.alive ? t.active : t.eliminated}</span>
           <span style={LABEL}>{t.role}</span>
           {/* Blacked out: the role is the one thing this drawer must not leak. */}
           <span

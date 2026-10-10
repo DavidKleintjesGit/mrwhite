@@ -50,7 +50,6 @@ const roundOf = (roles: Role[]): Player[] =>
     word: role === "white" ? null : role === "undercover" ? "pasta" : "pizza",
     seen: false,
     alive: true,
-    sips: 0,
     challenge: null,
     challengeDone: false,
   }));
@@ -307,36 +306,23 @@ test("both modes still end the moment the infiltrators are gone", () => {
   assert.equal(outcomeOf(clean, "klassiek"), "burgers");
 });
 
-test("voting out a civilian makes everyone who voted for them drink", () => {
+test("the app names who drinks without keeping any count", () => {
   const players = roundOf(["burger", "burger", "undercover", "white"]);
   // Players 2 and 3 voted for player 0, a civilian; player 1 voted elsewhere.
   const votes = { 1: 2, 2: 0, 3: 0 };
-
   assert.deepEqual(drinkersFor(players, 0, votes).sort(), [2, 3]);
-
-  const after = eliminate(players, 0, votes);
-  assert.equal(after[0].alive, false);
-  assert.equal(after[1].sips, 0);
-  assert.equal(after[2].sips, 1);
-  assert.equal(after[3].sips, 1);
 });
 
 test("voting out an infiltrator costs nobody a sip", () => {
   const players = roundOf(["burger", "burger", "undercover"]);
-  const votes = { 0: 2, 1: 2 };
-
-  assert.deepEqual(drinkersFor(players, 2, votes), []);
-
-  const after = eliminate(players, 2, votes);
-  assert.equal(after[2].alive, false);
-  assert.ok(after.every((player) => player.sips === 0));
+  assert.deepEqual(drinkersFor(players, 2, { 0: 2, 1: 2 }), []);
 });
 
-test("eliminating without votes leaves the table dry", () => {
+test("eliminating only takes the one player out", () => {
   const players = roundOf(["burger", "burger", "undercover"]);
   const after = eliminate(players, 0);
   assert.equal(after[0].alive, false);
-  assert.ok(after.every((player) => player.sips === 0));
+  assert.ok(after.slice(1).every((player) => player.alive));
 });
 
 // --- Counting a secret vote ------------------------------------------------

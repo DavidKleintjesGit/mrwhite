@@ -37,8 +37,6 @@ export type Player = {
   word: string | null;
   seen: boolean;
   alive: boolean;
-  /** Sips taken. Drinking Edition only; the group keeps itself honest. */
-  sips: number;
   /** The player's secret challenge, by id. Null outside the Drinking Edition. */
   challenge: number | null;
   challengeDone: boolean;
@@ -182,7 +180,6 @@ export function deal(options: DealOptions): {
         : null,
     seen: false,
     alive: true,
-    sips: 0,
     challenge: options.challenges?.[index] ?? null,
     challengeDone: false,
   }));
@@ -216,28 +213,13 @@ export function openingOrder(
   return [...alive.slice(at), ...alive.slice(0, at)];
 }
 
-/**
- * Votes someone out, and in the Drinking Edition makes whoever got it wrong
- * drink: if the table eliminated a civilian, everyone who voted for them
- * takes a sip. Getting an infiltrator out costs nobody anything.
- */
 export function eliminate(
   players: readonly Player[],
-  index: number,
-  votes: Readonly<Record<number, number>> = {}
+  index: number
 ): Player[] {
-  const wrong = players[index]?.role === "burger";
-  const drinkers = wrong
-    ? Object.keys(votes)
-        .map(Number)
-        .filter((voter) => votes[voter] === index)
-    : [];
-
-  return players.map((player, i) => {
-    if (i === index) return { ...player, alive: false };
-    if (drinkers.includes(i)) return { ...player, sips: player.sips + 1 };
-    return player;
-  });
+  return players.map((player, i) =>
+    i === index ? { ...player, alive: false } : player
+  );
 }
 
 /**
@@ -266,7 +248,13 @@ export function tallyVotes(
   return top.length > 1 ? { tie: top } : { out: top[0] };
 }
 
-/** Who has to drink for the vote that just happened, by player index. */
+/**
+ * Who has to drink for the vote that just happened, by player index.
+ *
+ * Nothing is counted anywhere. The app names who drinks and the table takes
+ * it from there — a running total would make it a scorekeeper for something
+ * it cannot see.
+ */
 export function drinkersFor(
   players: readonly Player[],
   index: number,

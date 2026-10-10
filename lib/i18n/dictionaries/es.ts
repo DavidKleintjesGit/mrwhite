@@ -172,6 +172,10 @@ const es: Dictionary = {
     cancel: "Cancelar",
     yes: "Sí, repartir de nuevo",
     waiting: "Léelo primero… {n}",
+    quitTitle: "¿Parar la partida?",
+    quitBody:
+      "La ronda termina y vuelves al menú. Los roles y los votos se borran.",
+    quitYes: "Sí, parar",
   },
 
   card: {
@@ -303,17 +307,8 @@ const es: Dictionary = {
     challengeHandOut: "Reparte {n} tragos",
     challengeSecret: "secreto",
     challengeLapsed: "anulado",
-    challengeBusy: "Reto en marcha",
-    challengeWon: "Reto conseguido · repartió {n} tragos",
-    challengeLost: "Eliminado · reto anulado",
     challengesTitle: "Los retos de esta partida",
     challengeCheck: "Abre el expediente de alguien para comprobar su reto.",
-
-    sheetTag: "ANTECEDENTES",
-
-    sheetAsk: "¿Quién bebe?",
-
-    challengeLabel: "Reto: {t}",
 
     caseNo: "Caso n.º 0042",
 
@@ -344,10 +339,6 @@ const es: Dictionary = {
       "¿Regla rota? Toca Infracción. El grupo vigila, la cuenta solo es una ayuda.",
     rulesTab: "Reglas",
     houseRules: "Reglas de la casa",
-    violation: "Infracción",
-    violationFlash: "Salud +1",
-    sip: "{n} trago",
-    sips: "{n} tragos",
     eliminated: "Eliminado",
     active: "En juego",
 

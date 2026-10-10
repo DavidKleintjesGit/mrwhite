@@ -171,6 +171,10 @@ const nl = {
     cancel: "Annuleren",
     yes: "Ja, opnieuw delen",
     waiting: "Lees eerst… {n}",
+    quitTitle: "Spel stoppen?",
+    quitBody:
+      "Het potje stopt en je gaat terug naar het menu. Rollen en stemmen worden gewist.",
+    quitYes: "Ja, stoppen",
   },
 
   card: {
@@ -305,17 +309,8 @@ const nl = {
     challengeHandOut: "Deel {n} slokken uit",
     challengeSecret: "geheim",
     challengeLapsed: "vervallen",
-    challengeBusy: "Challenge nog bezig",
-    challengeWon: "Challenge gehaald · mocht {n} slokken uitdelen",
-    challengeLost: "Ligt eruit · challenge vervallen",
     challengesTitle: "Challenges van dit potje",
     challengeCheck: "Open iemands dossier om zijn challenge te controleren.",
-
-    sheetTag: "STRAFBLAD",
-
-    sheetAsk: "Wie moet drinken?",
-
-    challengeLabel: "Challenge: {t}",
 
     caseNo: "Zaak Nr. 0042",
 
@@ -346,10 +341,6 @@ const nl = {
       "Regel overtreden? Tik op Overtreding. De groep let zelf op, en de telling is alleen een hulpmiddel.",
     rulesTab: "Regels",
     houseRules: "Huisregels",
-    violation: "Overtreding",
-    violationFlash: "Proost +1",
-    sip: "{n} slok",
-    sips: "{n} slokken",
     eliminated: "Uitgeschakeld",
     active: "Actief",
 
