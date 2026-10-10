@@ -17,6 +17,7 @@ import {
   openingOrder,
   outcomeOf,
   pickPair,
+  tallyVotes,
   type DealOptions,
   type Player,
   type Role,
@@ -336,4 +337,26 @@ test("eliminating without votes leaves the table dry", () => {
   const after = eliminate(players, 0);
   assert.equal(after[0].alive, false);
   assert.ok(after.every((player) => player.sips === 0));
+});
+
+// --- Counting a secret vote ------------------------------------------------
+
+test("a clear majority puts one player out", () => {
+  assert.deepEqual(tallyVotes({ 0: 2, 1: 2, 3: 0 }), { out: 2 });
+});
+
+test("a tie is handed back to the table rather than broken by the app", () => {
+  assert.deepEqual(tallyVotes({ 0: 1, 1: 0 }), { tie: [0, 1] });
+  // Three voters, three different targets, one vote each.
+  assert.deepEqual(tallyVotes({ 0: 1, 1: 2, 2: 3 }), { tie: [1, 2, 3] });
+  // And the near miss: one target ahead by a single vote is not a tie.
+  assert.deepEqual(tallyVotes({ 0: 1, 1: 2, 2: 3, 3: 1 }), { out: 1 });
+});
+
+test("counting nothing is nothing, not a crash", () => {
+  assert.equal(tallyVotes({}), null);
+});
+
+test("a tie comes back in a stable order", () => {
+  assert.deepEqual(tallyVotes({ 0: 3, 1: 1 }), tallyVotes({ 0: 1, 1: 3 }));
 });

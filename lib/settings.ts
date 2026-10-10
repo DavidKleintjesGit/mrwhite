@@ -1,4 +1,5 @@
-import type { CustomPair, Difficulty } from "./game.ts";
+import type { RuleCategory } from "./drink.ts";
+import type { CustomPair, Difficulty, Mode } from "./game.ts";
 import { isResumable, type Stage } from "./stage.ts";
 import { CATEGORY_IDS } from "./words.ts";
 
@@ -23,6 +24,8 @@ export type Settings = {
   mrNotFirst: boolean;
   diff: Difficulty;
   theme: Theme;
+  /** Which kinds of house rule the Drinking Edition may draw from. */
+  drinkCats: Record<RuleCategory, boolean>;
 };
 
 export type Stored = {
@@ -31,6 +34,14 @@ export type Stored = {
   nPlayers: number;
   nUnder: number;
   nWhite: number;
+  /**
+   * Which edition is being played. Game-wide rather than per-stage: every
+   * screen from the setup onwards reads it, and threading it through each
+   * stage would mean every transition could get it wrong.
+   */
+  mode: Mode;
+  /** The three house rules this game runs under; empty outside the Drinking Edition. */
+  rules: number[];
   /** The screen the group was on, so a reload does not lose the round. */
   stage: Stage;
   /** When the stage was last written, used to drop a stale game. */
@@ -48,6 +59,7 @@ export function defaultSettings(): Settings {
     mrNotFirst: true,
     diff: "mix",
     theme: "donker",
+    drinkCats: { A: true, B: true, C: true, D: true },
   };
 }
 
@@ -58,6 +70,8 @@ export function defaultStored(): Stored {
     nPlayers: 6,
     nUnder: 1,
     nWhite: 1,
+    mode: "klassiek",
+    rules: [],
     stage: { name: "home" },
     stageAt: 0,
   };
@@ -93,11 +107,23 @@ export function parseStored(raw: string | null): Stored {
     fresh && isResumable(saved.stage) ? saved.stage : fallback.stage;
 
   return {
-    settings: { ...fallback.settings, ...(saved.settings ?? {}) },
+    settings: {
+      ...fallback.settings,
+      ...(saved.settings ?? {}),
+      // Nested, so a saved object from before this setting existed would
+      // otherwise arrive with categories missing rather than defaulted.
+      drinkCats: {
+        ...fallback.settings.drinkCats,
+        ...(saved.settings?.drinkCats ?? {}),
+      },
+    },
     names: Array.isArray(saved.names) ? saved.names : [],
     nPlayers: saved.nPlayers ?? fallback.nPlayers,
     nUnder: saved.nUnder ?? fallback.nUnder,
     nWhite: saved.nWhite ?? fallback.nWhite,
+    // The mode and its rules only mean anything alongside a resumed game.
+    mode: fresh && saved.mode === "drink" ? "drink" : fallback.mode,
+    rules: fresh && Array.isArray(saved.rules) ? saved.rules.slice(0, 3) : [],
     stage,
     stageAt: saved.stageAt ?? 0,
   };

@@ -7,7 +7,9 @@ import {
   type CSSProperties,
 } from "react";
 import CardScreen from "@/components/screens/CardScreen";
+import ChargeSheet from "@/components/screens/ChargeSheet";
 import DealScreen from "@/components/screens/DealScreen";
+import DrinkRulesScreen from "@/components/screens/DrinkRulesScreen";
 import {
   CategoryDialog,
   ConfirmDialog,
@@ -17,12 +19,16 @@ import EndScreen from "@/components/screens/EndScreen";
 import GuessScreen from "@/components/screens/GuessScreen";
 import HintScreen from "@/components/screens/HintScreen";
 import HomeScreen from "@/components/screens/HomeScreen";
+import ModesScreen from "@/components/screens/ModesScreen";
 import NamesScreen from "@/components/screens/NamesScreen";
 import RulesScreen from "@/components/screens/RulesScreen";
+import SecretVoteScreen from "@/components/screens/SecretVoteScreen";
 import SettingsScreen from "@/components/screens/SettingsScreen";
+import Press from "@/components/ui/Press";
 import SetupScreen from "@/components/screens/SetupScreen";
 import UnmaskScreen from "@/components/screens/UnmaskScreen";
 import VoteScreen from "@/components/screens/VoteScreen";
+import { dealChallenges, drawRules } from "@/lib/drink";
 import {
   clampPlayers,
   deal,
@@ -30,6 +36,8 @@ import {
   fitRoles,
   openingOrder,
   outcomeOf,
+  tallyVotes,
+  type Mode,
   type Player,
   type WordPair,
 } from "@/lib/game";
@@ -73,6 +81,11 @@ export default function App({ dict, lang }: Props) {
   const { stage } = stored;
   const [dialog, setDialog] = useState<Dialog>("none");
   const [selected, setSelected] = useState<number | null>(null);
+  /** The rule cards reshuffling; a flourish, so it stays out of storage. */
+  const [rolling, setRolling] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+
+  const drink = stored.mode === "drink";
 
   function save(change: Partial<Stored>) {
     const next = { ...stored, ...change };
@@ -80,17 +93,23 @@ export default function App({ dict, lang }: Props) {
     writeStored(next);
   }
 
-  /** Every screen change is written, so a reload lands where you left off. */
-  function setStage(next: Stage) {
-    save({ stage: next, stageAt: Date.now() });
+  /**
+   * Every screen change is written, so a reload lands where you left off.
+   *
+   * Anything that has to change along with the screen goes in the same call.
+   * `save` builds from the `stored` of this render, so two calls in a row
+   * would have the second quietly undo the first.
+   */
+  function setStage(next: Stage, also: Partial<Stored> = {}) {
+    save({ ...also, stage: next, stageAt: Date.now() });
   }
 
   function updateSettings(change: Partial<Settings>) {
     save({ settings: { ...settings, ...change } });
   }
 
-  function go(next: Stage) {
-    setStage(next);
+  function go(next: Stage, also: Partial<Stored> = {}) {
+    setStage(next, also);
     setSelected(null);
     try {
       window.scrollTo(0, 0);
@@ -102,6 +121,7 @@ export default function App({ dict, lang }: Props) {
   // --- Moves ---------------------------------------------------------------
 
   function startDeal() {
+    const rules = drink ? drawRules(settings.drinkCats) : [];
     const { players, pair } = deal({
       players: stored.nPlayers,
       undercovers: stored.nUnder,
@@ -112,9 +132,52 @@ export default function App({ dict, lang }: Props) {
       difficulty: settings.diff,
       custom: settings.custom,
       fallbackName: (index) => format(dict.names.placeholder, { n: index + 1 }),
+      challenges: drink ? dealChallenges(stored.nPlayers) : undefined,
     });
     setDialog("none");
-    go({ name: "deal", players, pair });
+    // The Drinking Edition reads its house rules before anyone gets a role:
+    // the rules change how you phrase a clue, so seeing them afterwards
+    // would mean rethinking a clue you had already settled on.
+    go(
+      drink
+        ? { name: "drules", players, pair, rules }
+        : { name: "deal", players, pair },
+      { rules }
+    );
+  }
+
+  function pickMode(mode: Mode) {
+    const players = clampPlayers(stored.nPlayers, mode);
+    const { undercovers, whites } = fitRoles(
+      players,
+      stored.nUnder,
+      stored.nWhite,
+      mode
+    );
+    go(
+      { name: "setup" },
+      { mode, nPlayers: players, nUnder: undercovers, nWhite: whites }
+    );
+  }
+
+  function reroll() {
+    setRolling(true);
+    setTimeout(() => {
+      const rules = drawRules(settings.drinkCats);
+      setRolling(false);
+      if (stored.stage.name === "drules") {
+        setStage({ ...stored.stage, rules }, { rules });
+      } else {
+        save({ rules });
+      }
+    }, 650);
+  }
+
+  /** The table says a rule was broken; the app only writes it down. */
+  function recordOnPlayers(change: (players: Player[]) => Player[]) {
+    const current = stored.stage;
+    if (!("players" in current)) return;
+    setStage({ ...current, players: change(current.players) });
   }
 
   function startRound(players: Player[], pair: WordPair, round: number) {
@@ -128,19 +191,71 @@ export default function App({ dict, lang }: Props) {
     });
   }
 
+  /** Classic votes out loud in one tap; the Drinking Edition votes alone. */
+  function toVote(from: Extract<Stage, { name: "hint" }>): Stage {
+    if (!drink) return { ...from, name: "vote" };
+    return {
+      name: "pvote",
+      players: from.players,
+      pair: from.pair,
+      order: from.order,
+      round: from.round,
+      votes: {},
+      voter: null,
+      pick: null,
+      phase: "grid",
+      candidates: from.players.flatMap((player, i) =>
+        player.alive ? [i] : []
+      ),
+      tie: null,
+      revote: false,
+    };
+  }
+
+  /**
+   * Counts the secret vote. A tie sends the table back for a second round
+   * between whoever was level, and nobody drinks for it — losing a sip to an
+   * outcome that did not happen would be the one unfair thing in a game
+   * built on the group policing itself.
+   */
+  function tally(from: Extract<Stage, { name: "pvote" }>) {
+    const result = tallyVotes(from.votes);
+    if (!result) return;
+
+    if ("tie" in result) {
+      setStage({
+        ...from,
+        phase: "tie",
+        tie: result.tie,
+        voter: null,
+        pick: null,
+      });
+      return;
+    }
+
+    go({
+      name: "unmask",
+      players: eliminate(from.players, result.out, from.votes),
+      pair: from.pair,
+      index: result.out,
+      round: from.round,
+    });
+  }
+
   /** Either the case is closed, or the next clue round begins. */
   function resolve(players: Player[], pair: WordPair, round: number) {
-    const winner = outcomeOf(players);
+    const winner = outcomeOf(players, stored.mode);
     if (winner) go({ name: "end", players, pair, winner });
     else startRound(players, pair, round + 1);
   }
 
   function setPlayerCount(delta: number) {
-    const players = clampPlayers(stored.nPlayers + delta);
+    const players = clampPlayers(stored.nPlayers + delta, stored.mode);
     const { undercovers, whites } = fitRoles(
       players,
       stored.nUnder,
-      stored.nWhite
+      stored.nWhite,
+      stored.mode
     );
     save({ nPlayers: players, nUnder: undercovers, nWhite: whites });
   }
@@ -208,6 +323,61 @@ export default function App({ dict, lang }: Props) {
 
       {renderStage()}
 
+      {/*
+        The tally is reachable from every screen of a round, because a rule
+        gets broken mid-sentence and the moment passes if you have to
+        navigate for it.
+      */}
+      {drink && "players" in stage && stage.name !== "card" && (
+        <Press
+          onClick={() => setSheetOpen(true)}
+          style={{
+            position: "fixed",
+            right: "calc(16px + env(safe-area-inset-right))",
+            bottom: "calc(16px + env(safe-area-inset-bottom))",
+            zIndex: 30,
+            fontFamily: "var(--font-archivo-black), sans-serif",
+            fontSize: 12,
+            textTransform: "uppercase",
+            background: "#FF3D3D",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            padding: "12px 14px",
+            boxShadow: "4px 4px 0 var(--fg)",
+            cursor: "pointer",
+          }}
+          press={{
+            transform: "translate(3px,3px)",
+            boxShadow: "1px 1px 0 var(--fg)",
+          }}
+        >
+          {dict.drink.sheetOpen}
+        </Press>
+      )}
+
+      {sheetOpen && drink && "players" in stage && (
+        <ChargeSheet
+          dict={dict}
+          players={stage.players}
+          rules={stored.rules}
+          onViolation={(index) =>
+            recordOnPlayers((players) =>
+              players.map((player, i) =>
+                i === index ? { ...player, sips: player.sips + 1 } : player
+              )
+            )
+          }
+          onChallengeDone={(index) =>
+            recordOnPlayers((players) =>
+              players.map((player, i) =>
+                i === index ? { ...player, challengeDone: true } : player
+              )
+            )
+          }
+          onClose={() => setSheetOpen(false)}
+        />
+      )}
+
       {dialog === "categories" && (
         <CategoryDialog
           dict={dict}
@@ -255,7 +425,7 @@ export default function App({ dict, lang }: Props) {
                 theme: settings.theme === "licht" ? "donker" : "licht",
               })
             }
-            onPlay={() => go({ name: "setup" })}
+            onPlay={() => go({ name: "modes" })}
             onRules={() => go({ name: "rules" })}
             onSettings={() => go({ name: "settings" })}
           />
@@ -266,7 +436,16 @@ export default function App({ dict, lang }: Props) {
           <RulesScreen
             dict={dict}
             onBack={() => go({ name: "home" })}
-            onPlay={() => go({ name: "setup" })}
+            onPlay={() => go({ name: "modes" })}
+          />
+        );
+
+      case "modes":
+        return (
+          <ModesScreen
+            dict={dict}
+            onBack={() => go({ name: "home" })}
+            onPick={pickMode}
           />
         );
 
@@ -294,7 +473,7 @@ export default function App({ dict, lang }: Props) {
             onPlayers={setPlayerCount}
             onUndercovers={(delta) => save({ nUnder: stored.nUnder + delta })}
             onWhites={(delta) => save({ nWhite: stored.nWhite + delta })}
-            onBack={() => go({ name: "home" })}
+            onBack={() => go({ name: "modes" })}
             onNext={() => go({ name: "names" })}
           />
         );
@@ -311,12 +490,37 @@ export default function App({ dict, lang }: Props) {
           />
         );
 
+      case "drules":
+        return (
+          <DrinkRulesScreen
+            dict={dict}
+            rules={stage.rules}
+            rolling={rolling}
+            onBack={() => go({ name: "names" })}
+            onReroll={reroll}
+            onNext={() =>
+              go({ name: "deal", players: stage.players, pair: stage.pair })
+            }
+          />
+        );
+
       case "deal":
         return (
           <DealScreen
             dict={dict}
             players={stage.players}
-            onBack={() => go({ name: "names" })}
+            onBack={() =>
+              go(
+                drink
+                  ? {
+                      name: "drules",
+                      players: stage.players,
+                      pair: stage.pair,
+                      rules: stored.rules,
+                    }
+                  : { name: "names" }
+              )
+            }
             onOpen={(index) => go({ ...stage, name: "card", index })}
             onReshuffle={() => setDialog("confirm")}
             onStart={() => startRound(stage.players, stage.pair, 1)}
@@ -354,10 +558,10 @@ export default function App({ dict, lang }: Props) {
             dark={settings.theme === "donker"}
             onNext={() =>
               stage.turn >= stage.order.length - 1
-                ? go({ ...stage, name: "vote" })
+                ? go(toVote(stage))
                 : setStage({ ...stage, turn: stage.turn + 1 })
             }
-            onVote={() => go({ ...stage, name: "vote" })}
+            onVote={() => go(toVote(stage))}
           />
         );
 
@@ -382,6 +586,52 @@ export default function App({ dict, lang }: Props) {
                 round: stage.round,
               });
             }}
+          />
+        );
+
+      case "pvote":
+        return (
+          <SecretVoteScreen
+            dict={dict}
+            players={stage.players}
+            round={stage.round}
+            votes={stage.votes}
+            voter={stage.voter}
+            pick={stage.pick}
+            phase={stage.phase}
+            candidates={stage.candidates}
+            tie={stage.tie}
+            revote={stage.revote}
+            onOpen={(voter) =>
+              setStage({ ...stage, phase: "pick", voter, pick: null })
+            }
+            onPick={(pick) => setStage({ ...stage, pick })}
+            onConfirm={() => {
+              if (stage.voter === null || stage.pick === null) return;
+              setStage({
+                ...stage,
+                votes: { ...stage.votes, [stage.voter]: stage.pick },
+                phase: "grid",
+                voter: null,
+                pick: null,
+              });
+            }}
+            onBackToGrid={() =>
+              setStage({ ...stage, phase: "grid", voter: null, pick: null })
+            }
+            onTally={() => tally(stage)}
+            onRevote={() =>
+              go({
+                ...stage,
+                votes: {},
+                phase: "grid",
+                voter: null,
+                pick: null,
+                candidates: stage.tie ?? stage.candidates,
+                tie: null,
+                revote: true,
+              })
+            }
           />
         );
 

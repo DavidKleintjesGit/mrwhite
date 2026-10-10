@@ -12,8 +12,11 @@ export type Stage =
   | { name: "home" }
   | { name: "rules" }
   | { name: "settings" }
+  | { name: "modes" }
   | { name: "setup" }
   | { name: "names" }
+  /** The Drinking Edition's house rules, drawn before the roles go out. */
+  | { name: "drules"; players: Player[]; pair: WordPair; rules: number[] }
   | { name: "deal"; players: Player[]; pair: WordPair }
   | { name: "card"; players: Player[]; pair: WordPair; index: number }
   | {
@@ -30,6 +33,29 @@ export type Stage =
       pair: WordPair;
       order: number[];
       round: number;
+    }
+  /**
+   * The Drinking Edition's secret vote. Everything the screen needs is here
+   * rather than in component state, so passing the phone around survives a
+   * reload — which matters more here than anywhere else, since a lost vote
+   * means starting the round again.
+   */
+  | {
+      name: "pvote";
+      players: Player[];
+      pair: WordPair;
+      order: number[];
+      round: number;
+      /** Voter index to the index they voted for. */
+      votes: Record<number, number>;
+      /** Who has the phone open, or null while the grid is showing. */
+      voter: number | null;
+      pick: number | null;
+      phase: "grid" | "pick" | "tie";
+      /** Who may be voted for; narrows to the tied players on a re-vote. */
+      candidates: number[];
+      tie: number[] | null;
+      revote: boolean;
     }
   | {
       name: "unmask";
@@ -51,11 +77,14 @@ export const STAGE_NAMES = [
   "home",
   "rules",
   "settings",
+  "modes",
   "setup",
   "names",
+  "drules",
   "deal",
   "card",
   "hint",
+  "pvote",
   "vote",
   "unmask",
   "guess",
@@ -67,10 +96,12 @@ export const STAGE_NAMES = [
  * the settings panel would be odd; landing back mid-round is the point.
  */
 const RESUMABLE = new Set([
+  "drules",
   "deal",
   "card",
   "hint",
   "vote",
+  "pvote",
   "unmask",
   "guess",
   "end",

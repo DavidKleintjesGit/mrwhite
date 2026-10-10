@@ -240,6 +240,32 @@ export function eliminate(
   });
 }
 
+/**
+ * Counts a secret vote.
+ *
+ * A tie is not broken by the app. Picking one of two tied players at random
+ * would decide the game on a coin toss nobody watched, and in the Drinking
+ * Edition it would also make people drink for it. The table votes again
+ * instead, on a shortlist.
+ */
+export function tallyVotes(
+  votes: Readonly<Record<number, number>>
+): { out: number } | { tie: number[] } | null {
+  const count = new Map<number, number>();
+  for (const target of Object.values(votes)) {
+    count.set(target, (count.get(target) ?? 0) + 1);
+  }
+  if (!count.size) return null;
+
+  const most = Math.max(...count.values());
+  const top = [...count.entries()]
+    .filter(([, n]) => n === most)
+    .map(([index]) => index)
+    .sort((a, b) => a - b);
+
+  return top.length > 1 ? { tie: top } : { out: top[0] };
+}
+
 /** Who has to drink for the vote that just happened, by player index. */
 export function drinkersFor(
   players: readonly Player[],
