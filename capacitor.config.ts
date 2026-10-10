@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "nl.mtvtd.mrwhite",
+  appId: "online.misterwhite.game",
   appName: "Mister White",
 
   // The Next.js static export. Build with `npm run build` before syncing.

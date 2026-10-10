@@ -97,6 +97,11 @@ geschreven maar ongecontroleerd en staan niet in de kiezer. Reden: een
 onvertaalde interface is op élk scherm fout, en niemand in het team kan die
 vijf talen nalezen.
 
+**De app-id is `online.misterwhite.game`** — besloten op 2026-10-10. Een
+app-id is een omgedraaide domeinnaam, dus dit is `misterwhite.online`, het
+domein dat David zelf bezit. De oude `nl.mtvtd.mrwhite` wees naar een bedrijf
+dat niet van hem is. **Na publicatie ligt dit voorgoed vast.**
+
 **Geen merknamen in de inhoud.** Popcultuur was bijna volledig andermans merk
 en is generiek gemaakt; de schuilnamen voor lege naamvelden zijn verzonnen
 achternamen in plaats van Bond en Tintin.

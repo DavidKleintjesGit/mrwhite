@@ -22,10 +22,10 @@ android {
         }
     }
 
-    namespace = "nl.mtvtd.mrwhite"
+    namespace = "online.misterwhite.game"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "nl.mtvtd.mrwhite"
+        applicationId "online.misterwhite.game"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

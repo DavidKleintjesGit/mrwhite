@@ -1,4 +1,4 @@
-package nl.mtvtd.mrwhite;
+package online.misterwhite.game;
 
 import com.getcapacitor.BridgeActivity;
 
