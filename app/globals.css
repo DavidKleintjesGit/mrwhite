@@ -25,6 +25,27 @@ input::placeholder {
   color: #8a877f;
 }
 
+/*
+ * The case file's close tab. On a wide screen it sits at the right-hand end
+ * of the folder tabs; on a phone that row has no room left and pushes it off
+ * the edge, so there it hangs under the folder instead — which is where the
+ * design puts it anyway.
+ */
+.case-close-wide {
+  display: inline-flex;
+}
+.case-close-narrow {
+  display: none;
+}
+@media (max-width: 640px) {
+  .case-close-wide {
+    display: none;
+  }
+  .case-close-narrow {
+    display: inline-flex;
+  }
+}
+
 /* The case file sliding down from the top edge, as the design has it. */
 @keyframes drawerIn {
   0% {

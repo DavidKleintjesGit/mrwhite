@@ -339,7 +339,10 @@ export default function App({ dict, lang }: Props) {
         <Press
           onClick={() => setDrawerOpen(true)}
           style={{
-            position: "absolute",
+            // Fixed, not absolute: it has to stay reachable while the page
+            // scrolls, and the layered shadow is what makes it read as
+            // hanging over the content rather than sitting in it.
+            position: "fixed",
             top: 0,
             right: "max(16px, calc((100% - 1240px) / 2 + 20px))",
             zIndex: 40,
@@ -356,7 +359,7 @@ export default function App({ dict, lang }: Props) {
             borderTop: "none",
             borderRadius: "0 0 10px 10px",
             padding: "9px 14px 10px",
-            boxShadow: "3px 3px 0 #FFD23F",
+            boxShadow: "3px 3px 0 #FFD23F, 0 10px 22px rgba(0,0,0,.45)",
             cursor: "pointer",
             transition: "padding .15s",
           }}

@@ -50,9 +50,8 @@ export default function CaseFileDrawer({
   onClose,
 }: Props) {
   const t = dict.drink;
-  const [view, setView] = useState<"agents" | "rules">(
-    drink ? "rules" : "agents"
-  );
+  // Agents first: opening the file is usually about a person, not the rules.
+  const [view, setView] = useState<"agents" | "rules">("agents");
   const [openFile, setOpenFile] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
 
@@ -121,7 +120,12 @@ export default function CaseFileDrawer({
           )}
           <FolderTab label={t.quit} colour="#FF3D3D" onClick={onQuit} />
 
-          <FolderTab label={t.sheetClose} onClick={onClose} atRight />
+          <FolderTab
+            label={t.sheetClose}
+            onClick={onClose}
+            atRight
+            className="case-close-wide"
+          />
         </div>
 
         <div
@@ -302,6 +306,30 @@ export default function CaseFileDrawer({
             )}
           </div>
         </div>
+
+        <Press
+          className="case-close-narrow"
+          onClick={onClose}
+          style={{
+            alignSelf: "flex-end",
+            marginRight: 16,
+            position: "relative",
+            top: -3,
+            fontFamily: ARCHIVO,
+            fontSize: 12,
+            letterSpacing: ".14em",
+            textTransform: "uppercase",
+            background: "#E9DDB8",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            borderTop: "none",
+            borderRadius: "0 0 10px 10px",
+            padding: "10px 16px",
+            cursor: "pointer",
+          }}
+        >
+          {t.sheetClose}
+        </Press>
       </div>
     </div>
   );
@@ -330,6 +358,7 @@ function FolderTab({
   active,
   colour,
   atRight,
+  className,
   onClick,
 }: {
   label: string;
@@ -337,10 +366,12 @@ function FolderTab({
   colour?: string;
   /** Pins the tab to the right-hand end of the row. */
   atRight?: boolean;
+  className?: string;
   onClick: () => void;
 }) {
   return (
     <Press
+      className={className}
       onClick={onClick}
       style={{
         position: "relative",
@@ -377,7 +408,7 @@ function Folder({
   onOpen: () => void;
 }) {
   const t = dict.drink;
-  const background = player.alive ? "#F1E6C4" : "#D6CCAE";
+  const background = player.alive ? "#FFFFFF" : "#D6CCAE";
 
   return (
     <Press

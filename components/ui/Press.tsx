@@ -12,6 +12,8 @@ type Props = {
   onClick?: () => void;
   disabled?: boolean;
   title?: string;
+  /** For the few cases a media query has to reach the button. */
+  className?: string;
   children: ReactNode;
 };
 
@@ -28,6 +30,7 @@ export default function Press({
   onClick,
   disabled,
   title,
+  className,
   children,
 }: Props) {
   const [down, setDown] = useState(false);
@@ -36,6 +39,7 @@ export default function Press({
   return (
     <button
       type="button"
+      className={className}
       disabled={disabled}
       title={title}
       onClick={onClick}
