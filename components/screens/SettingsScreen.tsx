@@ -7,6 +7,7 @@ import {
   Segmented,
   ToggleRow,
 } from "@/components/ui/Controls";
+import DocLink from "@/components/ui/DocLink";
 import Press from "@/components/ui/Press";
 import Screen, { Header } from "@/components/ui/Screen";
 import { RULES_BY_CATEGORY } from "@/lib/drink";
@@ -499,7 +500,7 @@ export default function SettingsScreen({
         the game is written to storage on every move, so there is nothing to
         lose by going.
       */}
-      <a
+      <DocLink
         href={`/${lang}/privacy/`}
         style={{
           gridColumn: "1 / -1",
@@ -514,7 +515,7 @@ export default function SettingsScreen({
         }}
       >
         {t.privacy}
-      </a>
+      </DocLink>
 
       <Press
         onClick={onBack}

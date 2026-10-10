@@ -1,43 +1,12 @@
-"use client";
-
-import { useEffect } from "react";
-import {
-  LOCALE_NAMES,
-  LOCALE_STORAGE_KEY,
-  VERIFIED_LOCALES,
-  isLocale,
-  matchLocale,
-} from "@/lib/i18n";
+import DocLink from "@/components/ui/DocLink";
+import { LOCALE_NAMES, VERIFIED_LOCALES } from "@/lib/i18n";
 
 /**
- * There is no server to redirect for us — the app is a static export — so `/`
- * picks a language in the browser. A remembered choice wins, otherwise the
- * browser's own language preference decides.
- *
- * `/` and `/[lang]` have separate root layouts, which Next.js can only cross
- * with a full page load, so this replaces the document rather than using the
- * client router.
- *
- * The links below are the fallback: they keep the page usable without
- * JavaScript and give crawlers a way into both languages.
+ * What you see if the redirect in the layout did not take you away: a plain
+ * choice between the languages. No JavaScript involved, so it works even when
+ * nothing else does.
  */
 export default function EntryPage() {
-  useEffect(() => {
-    let stored: string | null = null;
-    try {
-      stored = localStorage.getItem(LOCALE_STORAGE_KEY);
-    } catch {
-      // Blocked storage is fine, we fall back to the browser language.
-    }
-
-    const locale =
-      stored && isLocale(stored)
-        ? stored
-        : matchLocale(navigator.languages ?? [navigator.language]);
-
-    window.location.replace(`/${locale}/`);
-  }, []);
-
   return (
     <main
       style={{
@@ -91,7 +60,7 @@ export default function EntryPage() {
         }}
       >
         {VERIFIED_LOCALES.map((locale) => (
-          <a
+          <DocLink
             key={locale}
             href={`/${locale}/`}
             lang={locale}
@@ -113,7 +82,7 @@ export default function EntryPage() {
             }}
           >
             {LOCALE_NAMES[locale]}
-          </a>
+          </DocLink>
         ))}
       </nav>
     </main>

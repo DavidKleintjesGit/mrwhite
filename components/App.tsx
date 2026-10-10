@@ -24,6 +24,7 @@ import NamesScreen from "@/components/screens/NamesScreen";
 import RulesScreen from "@/components/screens/RulesScreen";
 import SecretVoteScreen from "@/components/screens/SecretVoteScreen";
 import SettingsScreen from "@/components/screens/SettingsScreen";
+import { nativeHref } from "@/components/ui/DocLink";
 import Press from "@/components/ui/Press";
 import SetupScreen from "@/components/screens/SetupScreen";
 import UnmaskScreen from "@/components/screens/UnmaskScreen";
@@ -280,8 +281,9 @@ export default function App({ dict, lang }: Props) {
     } catch {
       // Not remembering the choice is a nuisance, not a failure.
     }
-    // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- each language is its own root layout, which the client router cannot cross
-    window.location.assign(`/${next}/`);
+    // Each language is its own root layout, which the client router cannot
+    // cross, so this is a full page load. Safe: the game is saved on every move.
+    window.location.assign(nativeHref(`/${next}/`));
   }
 
   const root: CSSProperties = {

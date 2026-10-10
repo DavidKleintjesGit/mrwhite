@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import DocLink from "@/components/ui/DocLink";
 import { VERIFIED_LOCALES, isLocale, isVerified } from "@/lib/i18n";
 import { getPrivacyDoc } from "@/lib/legal/privacy";
 
@@ -116,7 +117,7 @@ export default async function PrivacyPage({
           </section>
         ))}
 
-        <a
+        <DocLink
           href={`/${lang}/`}
           style={{
             fontFamily: "var(--font-archivo-black), sans-serif",
@@ -137,7 +138,7 @@ export default async function PrivacyPage({
           }}
         >
           {doc.back}
-        </a>
+        </DocLink>
       </article>
     </main>
   );
