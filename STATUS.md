@@ -1,6 +1,6 @@
 # Waar dit project staat
 
-**Bijgewerkt:** 2026-10-10 (avond) · **Doel:** App Store en Play Store
+**Bijgewerkt:** 2026-10-10 (laat) · **Doel:** App Store en Play Store
 
 Dit document is de waarheid over de huidige stand. [CONCEPT.md](CONCEPT.md) en
 [FASEN.md](FASEN.md) beschrijven het oorspronkelijke idee en zijn op onderdelen
@@ -30,6 +30,7 @@ zijn letterlijk overgenomen en alleen de herhaling zit in componenten
 
 | | |
 |---|---|
+| Ontwerp | **Volledig op v3**, scherm voor scherm tegen de opmaak gelegd |
 | Spelmodi | **Klassiek en Drinking Edition**, uit ontwerp v3 |
 | Spelloop | Compleet: modus → verdeling → namen → (drankregels) → dossiers → hints → stemmen → ontmaskering → gok → uitslag |
 | Drankregels | 45 regelkaarten in 4 soorten, 8 conflictparen, 6 geheime challenges |
@@ -231,6 +232,15 @@ Opgelost door het als lijst van één te renderen, zoals het ontwerp doet.
 van die render, dus een tweede aanroep maakt de eerste ongedaan. Zo ging de
 gekozen spelmodus verloren op weg naar het opzetscherm. Alles wat samen met
 het scherm verandert, gaat nu in dezelfde aanroep mee.
+
+**Een ontwerp nabouwen gaat per scherm, niet per mechaniek.** Bij v3 haalde
+ik de gegevens en de logica eruit, begreep ik de werking goed, en tekende ik
+de schermen vervolgens zelf. Het resultaat was herkenbaar een ánder ontwerp:
+het zaakdossier waren twee overlays en bij mij één, een lade vanaf de
+bovenrand werd een paneel van onderen. Splits de template op
+`data-screen-label` in `design/_schermen_v3/` en bouw elk scherm tegen zijn
+eigen bestand. Vergelijk ook de tellingen: `style-hover` tegen `hover=`, en
+de `@keyframes` op naam.
 
 **De mechanische woordcontrole heeft een grens.** `Bus driver / Taxi driver`
 wordt gepakt op het gedeelde woord, maar `Buschauffeur / Taxichauffeur` heeft

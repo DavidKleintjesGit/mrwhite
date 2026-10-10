@@ -39,7 +39,7 @@ export default async function PrivacyPage({
   return (
     <main
       style={{
-        minHeight: "100vh",
+        minHeight: "100dvh",
         boxSizing: "border-box",
         background: "#0d0d0d",
         backgroundImage:

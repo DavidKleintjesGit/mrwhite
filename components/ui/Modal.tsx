@@ -56,7 +56,7 @@ export default function Modal({
           display: "flex",
           flexDirection: "column",
           animation: "popIn .4s cubic-bezier(.2,1.3,.4,1) both",
-          ...(fill ? { maxHeight: "calc(100vh - 40px)" } : null),
+          ...(fill ? { maxHeight: "calc(100dvh - 40px)" } : null),
           ...style,
         }}
       >

@@ -285,7 +285,7 @@ export default function App({ dict, lang }: Props) {
   }
 
   const root: CSSProperties = {
-    minHeight: "100vh",
+    minHeight: "100dvh",
     position: "relative",
     overflow: "hidden",
     "--bg": theme.bg,
