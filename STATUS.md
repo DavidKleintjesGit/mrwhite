@@ -1,6 +1,6 @@
 # Waar dit project staat
 
-**Bijgewerkt:** 2026-10-09 · **Doel:** App Store en Play Store
+**Bijgewerkt:** 2026-10-10 · **Doel:** App Store en Play Store
 
 Dit document is de waarheid over de huidige stand. [CONCEPT.md](CONCEPT.md) en
 [FASEN.md](FASEN.md) beschrijven het oorspronkelijke idee en zijn op onderdelen
@@ -36,6 +36,7 @@ zijn letterlijk overgenomen en alleen de herhaling zit in componenten
 | Tests | 87, via `npm test`. Woorden apart met `npm run words:check` |
 | Opslag | Een lopend potje overleeft een herlaad. Sleutel `mrwhite-noir-v1`, vervalt na 6 uur |
 | Native | `android/` en `ios/` staan in de repo, iconen gegenereerd uit `assets/icon.svg` |
+| Android-build | **Ondertekende AAB gebouwd op 2026-10-10**, klaar voor de Play Console |
 | Uitrollen | `./deploy.sh` → roept de skill in `~/.claude/skills/staging-deploy/` aan |
 
 ---
@@ -102,9 +103,23 @@ Gradle is al ingericht om te ondertekenen; het leest
 `android/keystore.properties`, en dat bestand staat in `.gitignore`.
 Bestaat het niet, dan komt er gewoon een niet-ondertekende build uit.
 
-**1. Android Studio installeren.** Op deze machine staat geen Java, geen
-Android SDK en geen Android Studio — gecontroleerd op 2026-10-09. Dit is de
-enige reden dat er nog geen AAB ligt.
+**1. De gereedschapsketen staat en is bewezen.** Android Studio, de SDK
+(platform 37, build-tools 36) en een JDK 21 staan op de machine; een
+`assembleDebug` is doorgekomen, dus Java, SDK, Gradle, Capacitor en onze
+webbuild passen op elkaar.
+
+**Gradle moet op JDK 21 draaien, niet op die van Android Studio.** Android
+Studio brengt een JDK 25 mee, en Gradle 8.14 met AGP 8.13 breekt daarop af met
+`Unsupported class file major version 69`. Daarom staat er een losse JDK 21
+naast, en moet elke `./gradlew`-opdracht hiermee beginnen:
+
+```bash
+export JAVA_HOME="/c/Program Files/Microsoft/jdk-21.0.12.101-hotspot"
+export ANDROID_HOME="$LOCALAPPDATA/Android/Sdk"
+```
+
+Die paden staan bewust niet in `android/gradle.properties`: dat bestand wordt
+gecommit en ze gelden alleen voor deze machine.
 
 **2. Een upload key maken.** Kies zelf een wachtwoord; schrijf het nergens op
 waar het in de repo kan belanden.
@@ -114,9 +129,12 @@ keytool -genkey -v -keystore mrwhite-upload.jks -keyalg RSA -keysize 2048   -val
 ```
 
 Zet de `.jks` buiten de repo, bijvoorbeeld in je documenten, en maak er een
-back-up van. **Raak je 'm kwijt, dan kun je de app niet meer bijwerken** —
-tenzij je Play App Signing aanzet, wat ik zou doen, want dan kan Google een
-verloren uploadsleutel resetten.
+back-up van.
+
+**Play App Signing gaat aan** — besloten op 2026-10-10, en bij nieuwe apps is
+het inmiddels verplicht. Google bewaart dus de echte handtekening en deze
+sleutel is alleen een uploadsleutel. Raak je hem kwijt, dan reset Google hem;
+zonder Play App Signing was dat het einde van elke toekomstige update.
 
 **3. `android/keystore.properties` aanmaken** (wordt niet gecommit):
 
@@ -127,15 +145,22 @@ keyAlias=upload
 keyPassword=...
 ```
 
-**4. Bouwen en uploaden.**
+**4. Bouwen en uploaden.** Gedaan op 2026-10-10; herhaal dit bij elke
+versie, na `versionCode` in `android/app/build.gradle` te verhogen.
 
 ```bash
-npm run build && npx cap sync
+export JAVA_HOME="/c/Program Files/Microsoft/jdk-21.0.12.101-hotspot"
+export ANDROID_HOME="$LOCALAPPDATA/Android/Sdk"
+npm run build && npx cap sync android
 cd android && ./gradlew bundleRelease
 ```
 
-De AAB komt in `android/app/build/outputs/bundle/release/`. Play Console
-kost $25 eenmalig.
+De AAB komt in `android/app/build/outputs/bundle/release/app-release.aab`.
+Controleer de handtekening met `jarsigner -verify`; dat die zelfondertekend is
+en geen tijdstempel heeft, hoort zo bij een uploadsleutel.
+
+Wat nog rest aan Android-kant is de Play Console zelf: $25 eenmalig, de app
+aanmaken, en uploaden.
 
 ### iOS — kan niet op deze machine
 
