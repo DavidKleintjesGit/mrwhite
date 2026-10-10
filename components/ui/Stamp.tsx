@@ -25,12 +25,12 @@ const STACK: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: 4,
-  padding: "9px 14px 8px",
-  border: "4px solid #E8202A",
-  borderRadius: 10,
+  gap: ".28em",
+  padding: ".5em .8em .45em",
+  border: "3px solid #E8202A",
+  borderRadius: 9,
   outline: "2px solid #E8202A",
-  outlineOffset: -9,
+  outlineOffset: -7,
 };
 
 type Props = {

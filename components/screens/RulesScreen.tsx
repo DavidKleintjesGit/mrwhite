@@ -33,7 +33,11 @@ export default function RulesScreen({ dict, onBack, onPlay }: Props) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0,1fr))",
+          // The design stacks these rather than squeezing three across: at
+          // phone width three columns leave about 110px each, and
+          // "UNDERCOVER" does not fit in that.
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 200px), 1fr))",
           gap: 12,
         }}
       >
@@ -48,6 +52,7 @@ export default function RulesScreen({ dict, onBack, onPlay }: Props) {
               display: "flex",
               flexDirection: "column",
               gap: 6,
+              minWidth: 0,
             }}
           >
             <span

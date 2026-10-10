@@ -170,7 +170,7 @@ export default function HomeScreen({
       >
         <Stamp
           stacked
-          fontSize={18}
+          fontSize={14}
           rotate={9}
           delay={0.5}
           style={{ position: "absolute", right: 4, top: 0 }}
@@ -178,7 +178,7 @@ export default function HomeScreen({
           <span
             style={{
               fontFamily: ARCHIVO,
-              fontSize: 18,
+              fontSize: 14,
               letterSpacing: ".1em",
               textTransform: "uppercase",
               lineHeight: 1,
@@ -188,9 +188,9 @@ export default function HomeScreen({
           </span>
           <span
             style={{
-              fontSize: 9,
+              fontSize: 8,
               fontWeight: 700,
-              letterSpacing: ".16em",
+              letterSpacing: ".14em",
               textTransform: "uppercase",
               borderTop: "2px solid #E8202A",
               paddingTop: 3,
