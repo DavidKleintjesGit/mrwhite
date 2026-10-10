@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  CHALLENGES,
   CHALLENGE_IDS,
   CONFLICTS,
+  MAX_REWARD,
+  MIN_REWARD,
   RULES_BY_CATEGORY,
   RULES_PER_GAME,
   RULE_CATEGORIES,
   RULE_IDS,
   type RuleCategory,
+  challengeReward,
   dealChallenges,
   drawRules,
   ruleCategory,
@@ -143,4 +147,23 @@ test("every player gets a challenge", () => {
 test("challenges are spread before any of them repeats", () => {
   const dealt = dealChallenges(CHALLENGE_IDS.length);
   assert.equal(new Set(dealt).size, CHALLENGE_IDS.length);
+});
+
+test("every challenge pays out, and harder ones pay more", () => {
+  const rewards = CHALLENGES.map((challenge) => challenge.reward);
+  for (const reward of rewards) {
+    assert.ok(reward >= MIN_REWARD && reward <= MAX_REWARD, `${reward} is off the scale`);
+  }
+  // The payout is the only clue to how hard one is, so two challenges that
+  // pay the same would be telling the player something untrue.
+  assert.equal(new Set(rewards).size, rewards.length, "two challenges pay the same");
+  assert.equal(Math.min(...rewards), MIN_REWARD);
+  assert.equal(Math.max(...rewards), MAX_REWARD);
+});
+
+test("a reward can be looked up for every dealt challenge", () => {
+  for (const id of dealChallenges(20)) {
+    assert.ok(challengeReward(id) >= MIN_REWARD);
+  }
+  assert.throws(() => challengeReward(999));
 });

@@ -50,10 +50,35 @@ export const CONFLICTS: readonly (readonly [number, number])[] = [
 /** How many rules a game runs under. */
 export const RULES_PER_GAME = 3;
 
-export const CHALLENGE_IDS: readonly number[] = [1, 2, 3, 4, 5, 6];
+/**
+ * The secret challenges, and what finishing one is worth in sips to hand
+ * out. The reward is the difficulty: a challenge that only needs the table
+ * to behave normally pays three, one that needs two other players to turn on
+ * each other pays eight.
+ *
+ * Nobody picks their own — the whole point is that an easy one and a brutal
+ * one look identical until you read it. The payout is the only hint, and the
+ * player sees it alone.
+ */
+export const CHALLENGES: readonly { id: number; reward: number }[] = [
+  { id: 1, reward: 5 }, // De Uitlokker — steer someone into a forbidden word
+  { id: 2, reward: 4 }, // De Papegaai — get your hint repeated
+  { id: 3, reward: 3 }, // De Beschermer — get defended, which happens anyway
+  { id: 4, reward: 6 }, // De Manipulator — visibly turn someone's suspicion
+  { id: 5, reward: 7 }, // De Lokvogel — be accused and survive the vote
+  { id: 6, reward: 8 }, // De Stoorzender — make two others accuse each other
+];
 
-/** What finishing a secret challenge is worth, in sips to hand out. */
-export const CHALLENGE_REWARD = 3;
+export const CHALLENGE_IDS: readonly number[] = CHALLENGES.map((c) => c.id);
+
+export const MIN_REWARD = 3;
+export const MAX_REWARD = 8;
+
+export function challengeReward(id: number): number {
+  const found = CHALLENGES.find((challenge) => challenge.id === id);
+  if (!found) throw new Error(`unknown challenge id: ${id}`);
+  return found.reward;
+}
 
 export const MIN_DRINK_PLAYERS = 4;
 
