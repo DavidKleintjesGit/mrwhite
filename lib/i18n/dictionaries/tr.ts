@@ -6,7 +6,7 @@ import type { Dictionary } from "./nl";
  */
 const tr: Dictionary = {
   meta: {
-    title: "Mr. White",
+    title: "Mister White",
     description:
       "3 ila 20 oyuncu için kelime oyunu. Herkes aynı gizli kelimeyi alır — sızanlar hariç.",
   },

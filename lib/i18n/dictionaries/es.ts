@@ -6,7 +6,7 @@ import type { Dictionary } from "./nl";
  */
 const es: Dictionary = {
   meta: {
-    title: "Mr. White",
+    title: "Mister White",
     description:
       "Juego de palabras para 3 a 20 jugadores. Todos reciben la misma palabra secreta — salvo los impostores.",
   },

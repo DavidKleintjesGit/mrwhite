@@ -15,7 +15,7 @@ const courierPrime = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  title: "Mr. White",
+  title: "Mister White",
   description:
     "Word game for 3 to 20 players. Everyone gets the same secret word — except the infiltrators.",
 };

@@ -2,7 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "nl.mtvtd.mrwhite",
-  appName: "Mr. White",
+  appName: "Mister White",
 
   // The Next.js static export. Build with `npm run build` before syncing.
   webDir: "out",

@@ -5,7 +5,7 @@
  */
 const nl = {
   meta: {
-    title: "Mr. White",
+    title: "Mister White",
     description:
       "Woordspel voor 3 tot 20 spelers. Iedereen krijgt hetzelfde geheime woord — behalve de infiltranten.",
   },

@@ -1,4 +1,4 @@
-# Mr. White
+# Mister White
 
 A social deduction word game for 3 to 20 people in the same room. One phone gets
 passed around — no account, no sign-up, no internet connection needed.

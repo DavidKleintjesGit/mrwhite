@@ -29,7 +29,7 @@ const nl: PrivacyDoc = {
   title: "Privacybeleid",
   updated: "Laatst bijgewerkt: 10 oktober 2026",
   lead:
-    "Mr. White verzamelt niets over je. Geen account, geen advertenties, geen " +
+    "Mister White verzamelt niets over je. Geen account, geen advertenties, geen " +
     "statistieken, geen trackers. Hieronder staat precies wat dat betekent.",
   sections: [
     {
@@ -121,7 +121,7 @@ const en: PrivacyDoc = {
   title: "Privacy policy",
   updated: "Last updated: 10 October 2026",
   lead:
-    "Mr. White collects nothing about you. No account, no adverts, no " +
+    "Mister White collects nothing about you. No account, no adverts, no " +
     "analytics, no trackers. Here is exactly what that means.",
   sections: [
     {

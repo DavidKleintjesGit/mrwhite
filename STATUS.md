@@ -91,11 +91,15 @@ In volgorde van wachttijd, niet van werk.
 
 ### Nu beginnen, want het is pure doorlooptijd
 
-1. **Apple Developer Program**, €99/jaar. Als bedrijf heb je een D-U-N-S-nummer
-   nodig; reken op één tot twee weken.
-2. **De naam.** "Mr. White" wordt al door meerdere apps gebruikt. Dit is het
-   grootste afwijzingsrisico (richtlijn 4.3, duplicaat/spam) in een genre dat
-   vol klonen zit. Het eigen ontwerp helpt daartegen, de naam niet.
+1. **Apple Developer Program**, €99/jaar, **als persoon** — besloten op
+   2026-10-10. Scheelt het D-U-N-S-nummer en daarmee weken wachten; de prijs
+   is dat "David Kleintjes" als verkoper bij de app staat in plaats van
+   Logicly. Omzetten naar een bedrijfsaccount kan later nog.
+2. **De naam is `Mister White`** — besloten op 2026-10-10. "Mr. White" is in
+   beide winkels bezet en dat is in dit genre het grootste afwijzingsrisico
+   (richtlijn 4.3, duplicaat). "Mister White" is veel vrijer en sluit aan op
+   het domein. De rol in het spel heet nog gewoon Mr. White; alleen de
+   productnaam veranderde, dus het ontwerp bleef zoals het was.
 
 ### Android — alles staat klaar behalve de gereedschapsketen
 
@@ -171,8 +175,9 @@ Mac, of een cloud-build (Codemagic, EAS, Bitrise).
 
 - Schermafbeeldingen in de vereiste maten
 - Beschrijving, ondertitel, trefwoorden
-- **Privacybeleid op een URL.** De app verzamelt niets, dus de tekst is kort.
-  Kan op de eigen server
+- ~~Privacybeleid op een URL~~ — klaar. Staat op `/nl/privacy/` en
+  `/en/privacy/`, tekst in `lib/legal/privacy.ts`. Nog te regelen: het adres
+  `privacy@misterwhite.online` moet bestaan en doorsturen
 - Leeftijdsclassificatie
 
 ### Losse einden
@@ -183,10 +188,6 @@ Mac, of een cloud-build (Codemagic, EAS, Bitrise).
   Wachtend op DNS: A-record `@` → 178.105.197.213 en A-record `www` →
   hetzelfde. Zodra dat propageert haalt Caddy vanzelf een certificaat.
   Daarna kan het privacybeleid daar en kan het server-IP helemaal uit beeld.
-- **Overweging bij de naam:** het domein heet *misterwhite*, de app heet nu
-  *Mr. White*. "Mr. White" is in beide winkels bezet; "Mister White" is dat
-  veel minder. Het domein lost het naamprobleem dus half op als je de app
-  meeverandert.
 - `public/manifest.webmanifest` is door `capacitor-assets` gemaakt maar nog
   nergens aan gekoppeld. Voor PWA-installatie moet die nog in de `<head>`.
 - Bij het stemmen zit geen gelijkspel-afhandeling en een stem is niet terug te

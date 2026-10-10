@@ -25,7 +25,7 @@ export async function generateMetadata({
   if (!isLocale(lang) || !isVerified(lang)) notFound();
 
   const doc = getPrivacyDoc(lang);
-  return { title: `${doc.title} — Mr. White`, description: doc.lead };
+  return { title: `${doc.title} — Mister White`, description: doc.lead };
 }
 
 export default async function PrivacyPage({
