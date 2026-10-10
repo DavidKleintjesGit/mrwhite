@@ -21,7 +21,10 @@ type Props = {
   dict: Dictionary;
   settings: Settings;
   update: (change: Partial<Settings>) => void;
+  /** The two letters on the language button, uppercase. */
   langCode: string;
+  /** The locale as it appears in the URL; not the same thing. */
+  lang: string;
   langName: string;
   onBack: () => void;
   onOpenCategories: () => void;
@@ -33,6 +36,7 @@ export default function SettingsScreen({
   settings,
   update,
   langCode,
+  lang,
   langName,
   onBack,
   onOpenCategories,
@@ -469,7 +473,7 @@ export default function SettingsScreen({
         lose by going.
       */}
       <a
-        href={`/${langCode}/privacy/`}
+        href={`/${lang}/privacy/`}
         style={{
           gridColumn: "1 / -1",
           justifySelf: "end",

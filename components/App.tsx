@@ -479,6 +479,7 @@ export default function App({ dict, lang }: Props) {
             settings={settings}
             update={updateSettings}
             langCode={lang.toUpperCase()}
+            lang={lang}
             langName={LOCALE_NAMES[lang]}
             onBack={() => go({ name: "home" })}
             onOpenCategories={() => setDialog("categories")}
