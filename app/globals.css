@@ -31,6 +31,31 @@ input::placeholder {
  * the edge, so there it hangs under the folder instead — which is where the
  * design puts it anyway.
  */
+/*
+ * The folder tabs. On a phone the row has no room for three at full size:
+ * it wrapped onto a second line and the spare tab landed on top of the
+ * content behind it. They shrink instead, and the row scrolls rather than
+ * wraps if a translation still runs long.
+ */
+.case-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.case-tabs::-webkit-scrollbar {
+  display: none;
+}
+.case-tab {
+  flex: none;
+}
+@media (max-width: 640px) {
+  .case-tab {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    padding: 9px 11px 10px;
+  }
+}
+
 .case-close-wide {
   display: inline-flex;
 }

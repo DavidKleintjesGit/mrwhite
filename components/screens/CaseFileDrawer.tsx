@@ -92,9 +92,9 @@ export default function CaseFileDrawer({
       >
         {/* The folder tabs along the top edge. */}
         <div
+          className="case-tabs"
           style={{
             display: "flex",
-            flexWrap: "wrap",
             alignItems: "flex-end",
             gap: 6,
             paddingLeft: 14,
@@ -371,7 +371,7 @@ function FolderTab({
 }) {
   return (
     <Press
-      className={className}
+      className={["case-tab", className].filter(Boolean).join(" ")}
       onClick={onClick}
       style={{
         position: "relative",
