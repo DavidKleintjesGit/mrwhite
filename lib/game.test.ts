@@ -62,11 +62,14 @@ test("the cap leaves the civilians in the majority at every table size", () => {
     const civilians = players - infiltrators;
     assert.ok(
       civilians > 1,
-      `${players} players would start with ${civilians} civilians`,
+      `${players} players would start with ${civilians} civilians`
     );
     // Infiltrators win once one civilian is left, so the game has to have
     // room for at least one vote before that happens.
-    assert.ok(civilians > infiltrators, `${players} players: ${civilians} vs ${infiltrators}`);
+    assert.ok(
+      civilians > infiltrators,
+      `${players} players: ${civilians} vs ${infiltrators}`
+    );
   }
 });
 
@@ -94,7 +97,7 @@ test("trimming always lands on a playable line-up", () => {
         const fitted = fitRoles(players, u, w);
         assert.ok(
           fitted.undercovers + fitted.whites <= cap(players),
-          `${players}/${u}/${w} came out over the cap`,
+          `${players}/${u}/${w} came out over the cap`
         );
         assert.ok(fitted.undercovers >= 0 && fitted.whites >= 0);
       }
@@ -128,7 +131,9 @@ test("an alias is never handed out twice, nor stolen from a typed name", () => {
 
 test("dealing hands out exactly the requested roles with the right words", () => {
   for (let i = 0; i < 400; i++) {
-    const { players, pair } = deal(options({ players: 7, undercovers: 2, whites: 1 }));
+    const { players, pair } = deal(
+      options({ players: 7, undercovers: 2, whites: 1 })
+    );
 
     const counts: Record<Role, number> = { burger: 0, undercover: 0, white: 0 };
     for (const player of players) counts[player.role]++;
@@ -164,8 +169,10 @@ test("a custom pair can come up, and only when its bucket is on", () => {
   const seen = new Set<string>();
   for (let i = 0; i < 50; i++) seen.add(pickPair(only).join("/"));
   assert.ok(
-    [...seen].every((p) => p === "Zeppelin/Luchtballon" || p === "Luchtballon/Zeppelin"),
-    `unexpected pairs: ${[...seen].join(", ")}`,
+    [...seen].every(
+      (p) => p === "Zeppelin/Luchtballon" || p === "Luchtballon/Zeppelin"
+    ),
+    `unexpected pairs: ${[...seen].join(", ")}`
   );
 });
 
@@ -180,7 +187,13 @@ test("turning every category off still deals a word", () => {
 
 test("a Mr. White never opens the round", () => {
   const opened = new Set<Role>();
-  const players = roundOf(["burger", "burger", "burger", "undercover", "white"]);
+  const players = roundOf([
+    "burger",
+    "burger",
+    "burger",
+    "undercover",
+    "white",
+  ]);
 
   for (let i = 0; i < 500; i++) {
     const order = openingOrder(players, true);
@@ -220,7 +233,7 @@ test("the order runs from the opener and skips whoever is out", () => {
 test("the round runs on while both sides still have a chance", () => {
   assert.equal(
     outcomeOf(roundOf(["burger", "burger", "burger", "undercover", "white"])),
-    null,
+    null
   );
 });
 

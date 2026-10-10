@@ -86,8 +86,7 @@ const tr: Dictionary = {
     diffHelpEasy:
       "Kelimeler birbirinden uzak. Gizli ajanlar daha çabuk belli olur.",
     diffHelpMix: "Kolay ve çetrefilli kelime çiftlerinin karışımı.",
-    diffHelpHard:
-      "Kelimeler birbirine çok benziyor. Şüphe garanti.",
+    diffHelpHard: "Kelimeler birbirine çok benziyor. Şüphe garanti.",
     language: "Dil",
     timer: "İpucu süresi",
     timerOff: "Kapalı",
@@ -125,7 +124,7 @@ const tr: Dictionary = {
   },
 
   setup: {
-    kicker: "Adım 1 / 3",
+    kicker: "Adım 1 / {total}",
     title: "Yeni oyun",
     players: "Oyuncular",
     playersDesc: "3 ile 20 ajan arası",
@@ -141,7 +140,7 @@ const tr: Dictionary = {
   },
 
   names: {
-    kicker: "Adım 2 / 3",
+    kicker: "Adım 2 / {total}",
     title: "Kimler oynuyor?",
     hint: "Bir alanı boş bırakırsan sana kod adı veririz.",
     placeholder: "Ajan {n}",
@@ -150,7 +149,7 @@ const tr: Dictionary = {
   },
 
   deal: {
-    kicker: "Adım 3 / 3",
+    kicker: "Adım {n} / {total}",
     title: "Herkesin dosyası",
     instruction:
       "Telefonu elden ele dolaştırın. Kendi dosyana dokun, kelimeni okumak için basılı tut ve bırak. Başkasınınkine bakmak yok!",
@@ -177,8 +176,7 @@ const tr: Dictionary = {
   card: {
     kicker: "Gizli dosya:",
     hold: "Basılı tut",
-    holdSub:
-      "Yalnızca {name} görebilir. Dosyayı kapatmak için bırak.",
+    holdSub: "Yalnızca {name} görebilir. Dosyayı kapatmak için bırak.",
     topSecret: "Top secret",
     youAre: "Sen",
     whiteTop: "Mr.",
@@ -245,6 +243,282 @@ const tr: Dictionary = {
     out: "elendi",
     menu: "Menü",
     again: "Yeni bir dosya",
+  },
+  modes: {
+    kicker: "Davanı seç",
+    title: "Oyun modu",
+    caseLabel: "Dava",
+    open: "Dosyayı aç →",
+    soon: "Yakında",
+    classicTitle: "Klasik",
+    classicDesc:
+      "Vatandaşlar, gizli ajanlar ve Mr. White. İpucu ver, oy ver, maskeyi düşür.",
+    classicMeta: "3–20 oyuncu",
+    drinkTitle: "Drinking Edition",
+    drinkDesc:
+      "Rastgele üç ev kuralı, gizli görevler ve gizli oylama. Vatandaşı eleyen içer.",
+    drinkMeta: "4–20 · 18+",
+    soonCases: [
+      {
+        title: "White Lies",
+        desc: "Yeni bir dava hazırlanıyor. Ayrıntılar yakında.",
+      },
+      {
+        title: "Trust Issues",
+        desc: "Kimseye güvenilmez. Sana da.",
+      },
+      {
+        title: "Double Agent",
+        desc: "Bir oyuncu aynı anda iki taraf için çalışıyor.",
+      },
+    ],
+  },
+
+  drink: {
+    stepKicker: "Adım 3 / {total}",
+    rulesTitle: "Bu oyunun kuralları",
+    rulesIntro:
+      "Bu üç kural tüm oyun boyunca geçerli. Grup kendi kendini denetler: birini çiğnersen küçük bir yudum alırsın. Alkolsüz her zaman serbest.",
+    rolling: "Karıştırılıyor…",
+    reroll: "Yeni kurallar",
+    deal: "Rolleri dağıt",
+    namesCta: "Kurallara geç",
+
+    catsTitle: "Drinking Edition · kural türleri",
+    catALabel: "Yasak kelimeler",
+    catAShort: "Kelime",
+    catBLabel: "Yasak davranışlar",
+    catBShort: "Davranış",
+    catCLabel: "Konuşma kuralları",
+    catCShort: "Konuşma",
+    catDLabel: "Sosyal kaos",
+    catDShort: "Sosyal",
+
+    challengeKicker: "Gizli görev",
+    challengeReward: "Ödül: {n} yudum dağıt.",
+    challengeHint: "Başardın mı? O zaman {n} yudum dağıtırsın.",
+    challengeDone: "Görev tamam",
+    challengeHandOut: "{n} yudum dağıt",
+    challengeSecret: "gizli",
+    challengeLapsed: "iptal",
+    challengeBusy: "Görev sürüyor",
+    challengeWon: "Görev tamam · {n} yudum dağıttı",
+    challengeLost: "Elendi · görev iptal",
+    challengesTitle: "Bu oyunun görevleri",
+    challengeCheck: "Görevini kontrol etmek için birinin dosyasını aç.",
+
+    sheetOpen: "Dava dosyası ▾",
+    sheetClose: "Kapat ▴",
+    sheetTitle: "Sabıka kaydı",
+    sheetIntro:
+      "Kural mı çiğnendi? İhlal'e dokun. Grup denetler, sayaç sadece yardımcıdır.",
+    rulesTab: "Kurallar",
+    houseRules: "Ev kuralları",
+    violation: "İhlal",
+    violationFlash: "Şerefe +1",
+    sip: "{n} yudum",
+    sips: "{n} yudum",
+    eliminated: "Elendi",
+    active: "Oyunda",
+
+    resultDrink: "İçme vakti!",
+    resultDry: "Kimse içmiyor",
+    resultBurger: "Bu vatandaşa oy verenler bir yudum alır.",
+    resultNobody: "Garip ama bu vatandaşa kimse oy vermemiş.",
+    resultInfiltrant: "Bu gizli ajana oy verenler doğru bilmiş.",
+
+    rules: {
+      "1": { t: "BEN yok", d: "'Ben' kelimesini söyleyemezsin." },
+      "2": { t: "EVET yok", d: "'Evet' kelimesini söyleyemezsin." },
+      "3": { t: "HAYIR yok", d: "'Hayır' kelimesini söyleyemezsin." },
+      "4": { t: "EEE yok", d: "'Eee', 'ıııh' veya 'şey' diyemezsin." },
+      "5": { t: "İsim yok", d: "Kimseye adıyla seslenemezsin." },
+      "6": {
+        t: "Şüpheli yok",
+        d: "'Şüpheli' kelimesini söyleyemezsin.",
+      },
+      "7": {
+        t: "Özür yok",
+        d: "'Pardon' veya 'özür dilerim' diyemezsin.",
+      },
+      "8": {
+        t: "Belki yok",
+        d: "'Belki', 'galiba' veya 'muhtemelen' yok.",
+      },
+      "9": { t: "Neden yok", d: "'Neden' kelimesini söyleyemezsin." },
+      "10": { t: "Cidden yok", d: "'Cidden' veya 'gerçekten' yok." },
+      "11": { t: "Bilmek yok", d: "'Biliyorum', 'bilmek' veya 'bildim' yok." },
+      "12": { t: "Sen yok", d: "'Sen', 'sana' veya 'senin' yok." },
+      "13": {
+        t: "Düşünmek yok",
+        d: "'Sanırım', 'düşünmek' veya 'düşündüm' yok.",
+      },
+      "14": { t: "Sadece yok", d: "'Sadece' kelimesini söyleyemezsin." },
+      "15": { t: "Ama yok", d: "'Ama' kelimesini söyleyemezsin." },
+      "16": {
+        t: "Parmakla gösterme",
+        d: "Kimseyi parmağınla gösteremezsin.",
+      },
+      "17": {
+        t: "Gülme",
+        d: "İpucu sırasında veya tartışmada gülemezsin.",
+      },
+      "18": {
+        t: "Göz teması yok",
+        d: "Kendi ipucunu verirken kimsenin gözüne bakma.",
+      },
+      "19": {
+        t: "Eller dursun",
+        d: "Konuşurken yüzüne dokunamazsın.",
+      },
+      "20": {
+        t: "Başını sallama",
+        d: "Onaylamak için başını sallayamazsın.",
+      },
+      "21": {
+        t: "Hayır anlamında sallama",
+        d: "Reddetmek için başını iki yana sallayamazsın.",
+      },
+      "22": { t: "Kollar serbest", d: "Kollarını kavuşturamazsın." },
+      "23": {
+        t: "Telefona dokunma",
+        d: "Sıra sende değilken telefona dokunma.",
+      },
+      "24": {
+        t: "Sözünü kesme",
+        d: "Konuşan birinin sözünü kesemezsin.",
+      },
+      "25": {
+        t: "Ağzın açık",
+        d: "Konuşurken ağzını kapatamazsın.",
+      },
+      "26": {
+        t: "Sadece soru",
+        d: "Tartışmada yalnızca soru sorabilirsin.",
+      },
+      "27": { t: "Soru yasak", d: "Hiç soru soramazsın." },
+      "28": {
+        t: "En fazla beş kelime",
+        d: "Tartışmadaki her sıran en fazla beş kelimedir.",
+      },
+      "29": {
+        t: "Tekrar yok",
+        d: "Daha önce söylediğini tekrarlayamazsın.",
+      },
+      "30": {
+        t: "Yabancı kelime yok",
+        d: "Başka bir dilden kelime kullanamazsın.",
+      },
+      "31": {
+        t: "Yavaş konuş",
+        d: "Acele etme. Çok hızlı mıydın, buna grup karar verir.",
+      },
+      "32": {
+        t: "Savunma yok",
+        d: "Masum olduğunu söyleyemezsin.",
+      },
+      "33": {
+        t: "Kesinlik yok",
+        d: "Bir şeyden %100 emin olduğunu söyleyemezsin.",
+      },
+      "34": {
+        t: "Benzersiz ipucu",
+        d: "İpucun daha önce başkası tarafından verilmiş olamaz.",
+      },
+      "35": {
+        t: "Tek cümle",
+        d: "Tartışmada her sırada tek bir cümle söylersin.",
+      },
+      "36": {
+        t: "Yasak müttefik",
+        d: "Aynı kişiyi üst üste iki kez savunma.",
+      },
+      "37": {
+        t: "Oy tavsiyesi yok",
+        d: "Kimseye kime oy vereceğini söyleyemezsin.",
+      },
+      "38": {
+        t: "Rol adı yok",
+        d: "Asla 'vatandaş', 'gizli ajan' veya 'Mr. White' deme.",
+      },
+      "39": {
+        t: "Suçlama yok",
+        d: "Kimseyi doğrudan suçlayamazsın, yalnızca dolaylı olarak.",
+      },
+      "40": {
+        t: "Kendini savunma yok",
+        d: "Sana yöneltilen bir suçlamaya cevap veremezsin.",
+      },
+      "41": {
+        t: "İlk sen olma",
+        d: "Tartışma açıldığında ilk konuşan sen olamazsın.",
+      },
+      "42": {
+        t: "Katılmak yok",
+        d: "Birine katıldığını açıkça söyleyemezsin.",
+      },
+      "43": {
+        t: "Oy sorusu yok",
+        d: "Kimseye kime oy vereceğini soramazsın.",
+      },
+      "44": {
+        t: "İpucu açıklaması yok",
+        d: "İpucunu sonradan açıklayamazsın.",
+      },
+      "45": {
+        t: "Alıntı yok",
+        d: "Önceki ipuçlarını kelimesi kelimesine aktaramazsın.",
+      },
+    },
+
+    challenges: {
+      "1": {
+        t: "Oltacı",
+        d: "Kendin söylemeden birine yasak bir kelime söylet.",
+      },
+      "2": {
+        t: "Papağan",
+        d: "Başka bir oyuncunun ipucunu kelimesi kelimesine tekrarlamasını sağla.",
+      },
+      "3": {
+        t: "Korunan",
+        d: "Birinin seni kendiliğinden savunmasını sağla.",
+      },
+      "4": {
+        t: "Manipülatör",
+        d: "Birinin senin yüzünden şüphelisini yüksek sesle değiştirmesini sağla.",
+      },
+      "5": {
+        t: "Yem",
+        d: "Suçlanmayı başar ve oylamadan sağ çık.",
+      },
+      "6": {
+        t: "Karıştırıcı",
+        d: "İki oyuncunun aynı tartışmada birbirini suçlamasını sağla.",
+      },
+    },
+  },
+
+  pvote: {
+    kicker: "Tur {n} · Gizli oylama",
+    title: "Gizli oylama",
+    revoteTitle: "Yeniden oylama",
+    resultTitle: "Sonuç",
+    instruction:
+      "Rolündeki gibi: kendi dosyana dokun, gizlice oy ver ve telefonu devret. Sıra önemli değil.",
+    number: "No. {n}",
+    voted: "Oy verdi",
+    waiting: "Henüz yok",
+    tally: "Oyları say",
+    progress: "{n} / {total} oy verdi",
+    ask: "{name}, kime oy veriyorsun?",
+    myVote: "Oyum",
+    confirm: "{name} için oyu onayla",
+    pickFirst: "Bir şüpheli seç",
+    tieTitle: "Beraberlik",
+    tieBody:
+      "Kimse elenmiyor ve kimse içmiyor. Herkes yeniden oy veriyor, yalnızca şunlar arasında:",
+    revote: "Yeniden oylamayı başlat",
   },
 };
 

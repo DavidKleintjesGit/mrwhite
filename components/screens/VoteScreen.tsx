@@ -29,7 +29,7 @@ export default function VoteScreen({
 }: Props) {
   const t = dict.vote;
   const alive = players.flatMap((player, index) =>
-    player.alive ? [{ player, index }] : [],
+    player.alive ? [{ player, index }] : []
   );
 
   return (

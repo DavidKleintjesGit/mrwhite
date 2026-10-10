@@ -110,7 +110,11 @@ export default function HomeScreen({
             }}
           >
             <span
-              style={{ background: "#3DD6FF", color: "#0d0d0d", padding: "1px 5px" }}
+              style={{
+                background: "#3DD6FF",
+                color: "#0d0d0d",
+                padding: "1px 5px",
+              }}
             >
               {langCode}
             </span>

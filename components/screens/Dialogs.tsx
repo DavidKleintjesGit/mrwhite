@@ -167,7 +167,8 @@ export function CategoryDialog({
       <div
         style={{
           ...MODAL_BODY,
-          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
         }}
       >
         {rows.map((id) => {
@@ -242,7 +243,9 @@ export function CategoryDialog({
         })}
 
         {rows.length === 0 && (
-          <div style={{ gridColumn: "1 / -1", fontSize: 15, padding: "10px 0" }}>
+          <div
+            style={{ gridColumn: "1 / -1", fontSize: 15, padding: "10px 0" }}
+          >
             {format(t.noResults, { query })}
           </div>
         )}
@@ -306,7 +309,8 @@ export function LanguageDialog({
       <div
         style={{
           ...MODAL_BODY,
-          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
         }}
       >
         {VERIFIED_LOCALES.map((language) => {

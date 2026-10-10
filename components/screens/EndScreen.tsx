@@ -101,9 +101,7 @@ export default function EndScreen({
         </p>
       </div>
 
-      <div
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}
-      >
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
         <div style={{ border: "3px solid var(--fg)", padding: "10px 12px" }}>
           <div
             style={{
@@ -151,7 +149,8 @@ export default function EndScreen({
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
           gap: 10,
         }}
       >
@@ -189,9 +188,7 @@ export default function EndScreen({
             >
               {player.name}
             </span>
-            <span
-              style={{ fontSize: 14, fontWeight: 700, textAlign: "right" }}
-            >
+            <span style={{ fontSize: 14, fontWeight: 700, textAlign: "right" }}>
               {dict.roles[player.role]}
               {player.alive ? "" : ` · ${t.out}`}
             </span>

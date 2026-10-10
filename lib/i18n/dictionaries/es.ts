@@ -86,8 +86,7 @@ const es: Dictionary = {
     diffHelpEasy:
       "Las palabras son muy distintas. Los infiltrados cantan antes.",
     diffHelpMix: "Una mezcla de parejas fáciles y traicioneras.",
-    diffHelpHard:
-      "Las palabras se parecen muchísimo. Dudas garantizadas.",
+    diffHelpHard: "Las palabras se parecen muchísimo. Dudas garantizadas.",
     language: "Idioma",
     timer: "Cronómetro de pistas",
     timerOff: "Off",
@@ -125,7 +124,7 @@ const es: Dictionary = {
   },
 
   setup: {
-    kicker: "Paso 1 de 3",
+    kicker: "Paso 1 de {total}",
     title: "Partida nueva",
     players: "Jugadores",
     playersDesc: "De 3 a 20 agentes",
@@ -141,7 +140,7 @@ const es: Dictionary = {
   },
 
   names: {
-    kicker: "Paso 2 de 3",
+    kicker: "Paso 2 de {total}",
     title: "¿Quién juega?",
     hint: "Deja un campo vacío y te daremos un nombre en clave.",
     placeholder: "Agente {n}",
@@ -150,7 +149,7 @@ const es: Dictionary = {
   },
 
   deal: {
-    kicker: "Paso 3 de 3",
+    kicker: "Paso {n} de {total}",
     title: "El expediente de cada uno",
     instruction:
       "Id pasando el móvil. Toca tu propio expediente, mantén pulsado para leer tu palabra y suelta. ¡Sin mirar los demás!",
@@ -177,8 +176,7 @@ const es: Dictionary = {
   card: {
     kicker: "Expediente confidencial de",
     hold: "Mantén pulsado",
-    holdSub:
-      "Solo para los ojos de {name}. Suelta para cerrar el expediente.",
+    holdSub: "Solo para los ojos de {name}. Suelta para cerrar el expediente.",
     topSecret: "Top secret",
     youAre: "Tú eres",
     whiteTop: "Mr.",
@@ -203,8 +201,7 @@ const es: Dictionary = {
   vote: {
     kicker: "Ronda {n} · La rueda de reconocimiento",
     title: "¿Quién es sospechoso?",
-    instruction:
-      "Hablad, señalad y votad. Toca al sospechoso que se va.",
+    instruction: "Hablad, señalad y votad. Toca al sospechoso que se va.",
     stamp: "Sospechoso",
     anotherRound: "Otra ronda más",
     unmask: "Desenmascarar a {name}",
@@ -245,6 +242,270 @@ const es: Dictionary = {
     out: "fuera",
     menu: "Menú",
     again: "Otro caso",
+  },
+  modes: {
+    kicker: "Elige tu caso",
+    title: "Modo de juego",
+    caseLabel: "Caso",
+    open: "Abrir expediente →",
+    soon: "Próximamente",
+    classicTitle: "Clásico",
+    classicDesc:
+      "Civiles, infiltrados y Mr. White. Dar pistas, votar, desenmascarar.",
+    classicMeta: "3–20 jugadores",
+    drinkTitle: "Drinking Edition",
+    drinkDesc:
+      "Tres reglas de la casa al azar, retos secretos y voto privado. Quien expulsa a un civil, bebe.",
+    drinkMeta: "4–20 · 18+",
+    soonCases: [
+      {
+        title: "White Lies",
+        desc: "Un caso nuevo en preparación. Detalles por llegar.",
+      },
+      {
+        title: "Trust Issues",
+        desc: "Nadie es de fiar. Tú tampoco.",
+      },
+      {
+        title: "Double Agent",
+        desc: "Un jugador trabaja para los dos bandos a la vez.",
+      },
+    ],
+  },
+
+  drink: {
+    stepKicker: "Paso 3 de {total}",
+    rulesTitle: "Las reglas de esta partida",
+    rulesIntro:
+      "Estas tres reglas valen toda la partida. El grupo se vigila solo: si rompes una, das un trago corto. Sin alcohol siempre vale.",
+    rolling: "Barajando…",
+    reroll: "Reglas nuevas",
+    deal: "Repartir roles",
+    namesCta: "A las reglas",
+
+    catsTitle: "Drinking Edition · tipos de regla",
+    catALabel: "Palabras prohibidas",
+    catAShort: "Palabras",
+    catBLabel: "Gestos prohibidos",
+    catBShort: "Gestos",
+    catCLabel: "Reglas del habla",
+    catCShort: "Hablar",
+    catDLabel: "Caos social",
+    catDShort: "Social",
+
+    challengeKicker: "Reto secreto",
+    challengeReward: "Recompensa: repartir {n} tragos.",
+    challengeHint: "¿Conseguido? Entonces repartes {n} tragos.",
+    challengeDone: "Reto conseguido",
+    challengeHandOut: "Reparte {n} tragos",
+    challengeSecret: "secreto",
+    challengeLapsed: "anulado",
+    challengeBusy: "Reto en marcha",
+    challengeWon: "Reto conseguido · repartió {n} tragos",
+    challengeLost: "Eliminado · reto anulado",
+    challengesTitle: "Los retos de esta partida",
+    challengeCheck: "Abre el expediente de alguien para comprobar su reto.",
+
+    sheetOpen: "Expediente del caso ▾",
+    sheetClose: "Cerrar ▴",
+    sheetTitle: "Antecedentes",
+    sheetIntro:
+      "¿Regla rota? Toca Infracción. El grupo vigila, la cuenta solo es una ayuda.",
+    rulesTab: "Reglas",
+    houseRules: "Reglas de la casa",
+    violation: "Infracción",
+    violationFlash: "Salud +1",
+    sip: "{n} trago",
+    sips: "{n} tragos",
+    eliminated: "Eliminado",
+    active: "En juego",
+
+    resultDrink: "¡A beber!",
+    resultDry: "Nadie bebe",
+    resultBurger: "Quien votó a este civil da un trago.",
+    resultNobody: "Curiosamente, nadie votó a este civil.",
+    resultInfiltrant: "Quien votó a este infiltrado acertó.",
+
+    rules: {
+      "1": { t: "Sin YO", d: "No puedes decir la palabra 'yo'." },
+      "2": { t: "Sin SÍ", d: "No puedes decir la palabra 'sí'." },
+      "3": { t: "Sin NO", d: "No puedes decir la palabra 'no'." },
+      "4": { t: "Sin EH", d: "No puedes decir 'eh', 'em' ni 'mmm'." },
+      "5": { t: "Sin nombres", d: "No puedes llamar a nadie por su nombre." },
+      "6": {
+        t: "Sin sospechoso",
+        d: "No puedes decir la palabra 'sospechoso'.",
+      },
+      "7": {
+        t: "Sin perdón",
+        d: "No puedes decir 'perdón' ni 'lo siento'.",
+      },
+      "8": {
+        t: "Sin quizá",
+        d: "Ni 'quizá', ni 'tal vez', ni 'posiblemente'.",
+      },
+      "9": { t: "Sin por qué", d: "No puedes decir 'por qué'." },
+      "10": { t: "Sin en serio", d: "Ni 'en serio' ni 'de verdad'." },
+      "11": { t: "Sin saber", d: "Ni 'sé', ni 'saber', ni 'sabía'." },
+      "12": { t: "Sin tú", d: "Ni 'tú', ni 'ti', ni 'tu'." },
+      "13": { t: "Sin pensar", d: "Ni 'creo', ni 'pensar', ni 'pensaba'." },
+      "14": { t: "Sin simplemente", d: "No puedes decir 'simplemente'." },
+      "15": { t: "Sin pero", d: "No puedes decir la palabra 'pero'." },
+      "16": { t: "No señalar", d: "No puedes señalar a nadie con el dedo." },
+      "17": {
+        t: "No reír",
+        d: "No puedes reírte durante una pista o la discusión.",
+      },
+      "18": {
+        t: "Sin contacto visual",
+        d: "No mires a nadie a los ojos durante tu propia pista.",
+      },
+      "19": {
+        t: "Manos quietas",
+        d: "No puedes tocarte la cara mientras hablas.",
+      },
+      "20": { t: "No asentir", d: "No puedes asentir para mostrar acuerdo." },
+      "21": {
+        t: "No negar con la cabeza",
+        d: "No puedes negar con la cabeza.",
+      },
+      "22": { t: "Brazos sueltos", d: "No puedes cruzar los brazos." },
+      "23": {
+        t: "Deja el móvil",
+        d: "No toques el móvil cuando no es tu turno.",
+      },
+      "24": {
+        t: "No interrumpir",
+        d: "No puedes interrumpir a nadie mientras habla.",
+      },
+      "25": {
+        t: "Boca libre",
+        d: "No puedes taparte la boca mientras hablas.",
+      },
+      "26": {
+        t: "Solo preguntas",
+        d: "En la discusión solo puedes hacer preguntas.",
+      },
+      "27": { t: "Sin preguntas", d: "No puedes hacer ninguna pregunta." },
+      "28": {
+        t: "Máximo cinco palabras",
+        d: "Cada turno en la discusión son cinco palabras como mucho.",
+      },
+      "29": {
+        t: "Sin repetir",
+        d: "No puedes repetir lo que ya has dicho.",
+      },
+      "30": {
+        t: "Sin anglicismos",
+        d: "No puedes usar palabras en inglés.",
+      },
+      "31": {
+        t: "Habla despacio",
+        d: "Nada de prisas. El grupo decide si ibas demasiado rápido.",
+      },
+      "32": { t: "Sin defensa", d: "No puedes decir que eres inocente." },
+      "33": {
+        t: "Sin certezas",
+        d: "No puedes decir que estás seguro al 100%.",
+      },
+      "34": {
+        t: "Pista única",
+        d: "Tu pista no puede haberla dado ya otra persona.",
+      },
+      "35": {
+        t: "Una frase",
+        d: "En la discusión dices solo una frase por turno.",
+      },
+      "36": {
+        t: "Aliado prohibido",
+        d: "No defiendas dos veces seguidas a la misma persona.",
+      },
+      "37": {
+        t: "Sin consejos de voto",
+        d: "No puedes decirle a nadie a quién votar.",
+      },
+      "38": {
+        t: "Sin nombres de rol",
+        d: "Nunca digas 'civil', 'infiltrado' ni 'Mr. White'.",
+      },
+      "39": {
+        t: "Sin acusaciones",
+        d: "No puedes acusar a nadie directamente, solo de forma indirecta.",
+      },
+      "40": {
+        t: "Sin autodefensa",
+        d: "No puedes responder a una acusación contra ti.",
+      },
+      "41": {
+        t: "Nunca el primero",
+        d: "No puedes ser el primero en hablar cuando empieza la discusión.",
+      },
+      "42": {
+        t: "Sin estar de acuerdo",
+        d: "No puedes decir literalmente que estás de acuerdo con alguien.",
+      },
+      "43": {
+        t: "Sin preguntar el voto",
+        d: "No puedes preguntarle a nadie a quién va a votar.",
+      },
+      "44": {
+        t: "Sin explicar la pista",
+        d: "No puedes explicar tu pista después.",
+      },
+      "45": {
+        t: "Sin citas",
+        d: "No puedes citar pistas anteriores palabra por palabra.",
+      },
+    },
+
+    challenges: {
+      "1": {
+        t: "El Cebo",
+        d: "Haz que alguien diga una palabra prohibida sin decirla tú.",
+      },
+      "2": {
+        t: "El Loro",
+        d: "Haz que otro jugador repita tu pista palabra por palabra.",
+      },
+      "3": {
+        t: "El Protegido",
+        d: "Haz que alguien te defienda por iniciativa propia.",
+      },
+      "4": {
+        t: "El Manipulador",
+        d: "Haz que alguien cambie de sospechoso en voz alta por tu argumento.",
+      },
+      "5": {
+        t: "El Señuelo",
+        d: "Haz que te acusen, y sobrevive a la votación.",
+      },
+      "6": {
+        t: "El Perturbador",
+        d: "Haz que dos jugadores se acusen entre sí en la misma discusión.",
+      },
+    },
+  },
+
+  pvote: {
+    kicker: "Ronda {n} · Voto secreto",
+    title: "Voto secreto",
+    revoteTitle: "Segunda vuelta",
+    resultTitle: "Resultado",
+    instruction:
+      "Igual que con tu rol: toca tu propio expediente, vota en secreto y pasa el móvil. El orden da igual.",
+    number: "N.º {n}",
+    voted: "Ha votado",
+    waiting: "Todavía no",
+    tally: "Contar los votos",
+    progress: "{n} / {total} han votado",
+    ask: "{name}, ¿a quién votas?",
+    myVote: "Mi voto",
+    confirm: "Confirmar voto a {name}",
+    pickFirst: "Elige un sospechoso",
+    tieTitle: "Empate",
+    tieBody:
+      "Nadie queda eliminado y nadie bebe. Todos votan otra vez, solo entre:",
+    revote: "Empezar la segunda vuelta",
   },
 };
 

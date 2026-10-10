@@ -1,10 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import {
-  LOCALES,
-  LOCALE_NAMES,
-  VERIFIED_LOCALES,
-} from "./i18n/config.ts";
+import { LOCALES, LOCALE_NAMES, VERIFIED_LOCALES } from "./i18n/config.ts";
 import {
   CATEGORY_IDS,
   MIN_VERIFIED_PAIRS,
@@ -29,12 +25,13 @@ const MAX_WORD_LENGTH = 18;
 const MAX_REPEATS = 3;
 
 const everyPair = (lang: keyof typeof WORDS) =>
-  CATEGORY_IDS.flatMap((id) =>
-    WORDS[lang][id].map((pair) => ({ id, pair })),
-  );
+  CATEGORY_IDS.flatMap((id) => WORDS[lang][id].map((pair) => ({ id, pair })));
 
 const key = (pair: Pair) =>
-  [pair[0], pair[1]].map((w) => w.toLowerCase()).sort().join("|");
+  [pair[0], pair[1]]
+    .map((w) => w.toLowerCase())
+    .sort()
+    .join("|");
 
 const words = (pair: Pair) => [pair[0], pair[1]];
 
@@ -54,10 +51,13 @@ for (const lang of LOCALES) {
         assert.equal(word, word.trim(), `${id}: "${word}" has stray spaces`);
         assert.ok(
           word.length <= MAX_WORD_LENGTH,
-          `${id}: "${word}" is ${word.length} characters, too long for the card`,
+          `${id}: "${word}" is ${word.length} characters, too long for the card`
         );
       }
-      assert.ok([1, 2].includes(pair[2]), `${id}: ${key(pair)} has level ${pair[2]}`);
+      assert.ok(
+        [1, 2].includes(pair[2]),
+        `${id}: ${key(pair)} has level ${pair[2]}`
+      );
     }
   });
 
@@ -70,7 +70,7 @@ for (const lang of LOCALES) {
       // undercover can never be caught. Golf/Minigolf fails here.
       assert.ok(
         !a.includes(b) && !b.includes(a),
-        `${id}: "${pair[0]}" and "${pair[1]}" contain one another`,
+        `${id}: "${pair[0]}" and "${pair[1]}" contain one another`
       );
 
       // Sharing a whole word is the same problem one step up:
@@ -79,7 +79,7 @@ for (const lang of LOCALES) {
       assert.deepEqual(
         shared,
         [],
-        `${id}: "${pair[0]}" and "${pair[1]}" share "${shared.join(", ")}"`,
+        `${id}: "${pair[0]}" and "${pair[1]}" share "${shared.join(", ")}"`
       );
     }
   });
@@ -89,11 +89,7 @@ for (const lang of LOCALES) {
     for (const { id, pair } of everyPair(lang)) {
       const k = key(pair);
       const earlier = seen.get(k);
-      assert.equal(
-        earlier,
-        undefined,
-        `${k} is in both ${earlier} and ${id}`,
-      );
+      assert.equal(earlier, undefined, `${k} is in both ${earlier} and ${id}`);
       seen.set(k, id);
     }
   });
@@ -109,7 +105,7 @@ for (const lang of LOCALES) {
     for (const [word, count] of counts) {
       assert.ok(
         count <= MAX_REPEATS,
-        `"${word}" is used ${count} times, more than ${MAX_REPEATS}`,
+        `"${word}" is used ${count} times, more than ${MAX_REPEATS}`
       );
     }
   });
@@ -126,7 +122,7 @@ test("a language only goes in the picker once it carries enough pairs", () => {
     const total = totalPairs(lang);
     assert.ok(
       total >= MIN_VERIFIED_PAIRS,
-      `${lang} has ${total} pairs, under the ${MIN_VERIFIED_PAIRS} needed`,
+      `${lang} has ${total} pairs, under the ${MIN_VERIFIED_PAIRS} needed`
     );
   }
 });

@@ -80,7 +80,7 @@ export function fitRoles(
   players: number,
   undercovers: number,
   whites: number,
-  mode: Mode = "klassiek",
+  mode: Mode = "klassiek"
 ): { undercovers: number; whites: number } {
   const limit = cap(players, mode);
   let u = undercovers;
@@ -124,9 +124,7 @@ export function pickPair(options: DealOptions): WordPair {
   if (options.difficulty === "moeilijk") pool = pool.filter((p) => p[2] === 2);
 
   if (options.buckets.eigen) {
-    pool = pool.concat(
-      options.custom.map((c): Pair => [c.a, c.b, 0]),
-    );
+    pool = pool.concat(options.custom.map((c): Pair => [c.a, c.b, 0]));
   }
 
   // Switching everything off should not leave the game with nothing to deal.
@@ -142,19 +140,19 @@ export function pickPair(options: DealOptions): WordPair {
 export function fillNames(
   names: readonly string[],
   players: number,
-  fallbackName: (index: number) => string,
+  fallbackName: (index: number) => string
 ): string[] {
   const taken = new Set(
     names
       .slice(0, players)
       .map((name) => (name || "").trim())
-      .filter(Boolean),
+      .filter(Boolean)
   );
   const free = shuffle(ALIASES.filter((alias) => !taken.has(alias)));
   return Array.from(
     { length: players },
     (_, index) =>
-      (names[index] || "").trim() || free.shift() || fallbackName(index),
+      (names[index] || "").trim() || free.shift() || fallbackName(index)
   );
 }
 
@@ -168,9 +166,9 @@ export function deal(options: DealOptions): {
   const roles = shuffle<Role>([
     ...Array<Role>(options.whites).fill("white"),
     ...Array<Role>(options.undercovers).fill("undercover"),
-    ...Array<Role>(
-      options.players - options.whites - options.undercovers,
-    ).fill("burger"),
+    ...Array<Role>(options.players - options.whites - options.undercovers).fill(
+      "burger"
+    ),
   ]);
 
   const players = names.map((name, index) => ({
@@ -180,8 +178,8 @@ export function deal(options: DealOptions): {
       roles[index] === "burger"
         ? pair[0]
         : roles[index] === "undercover"
-          ? pair[1]
-          : null,
+        ? pair[1]
+        : null,
     seen: false,
     alive: true,
     sips: 0,
@@ -203,9 +201,11 @@ export function deal(options: DealOptions): {
  */
 export function openingOrder(
   players: readonly Player[],
-  mrNotFirst: boolean,
+  mrNotFirst: boolean
 ): number[] {
-  const alive = players.flatMap((player, index) => (player.alive ? [index] : []));
+  const alive = players.flatMap((player, index) =>
+    player.alive ? [index] : []
+  );
   const eligible = mrNotFirst
     ? alive.filter((index) => players[index].role !== "white")
     : alive;
@@ -224,7 +224,7 @@ export function openingOrder(
 export function eliminate(
   players: readonly Player[],
   index: number,
-  votes: Readonly<Record<number, number>> = {},
+  votes: Readonly<Record<number, number>> = {}
 ): Player[] {
   const wrong = players[index]?.role === "burger";
   const drinkers = wrong
@@ -244,7 +244,7 @@ export function eliminate(
 export function drinkersFor(
   players: readonly Player[],
   index: number,
-  votes: Readonly<Record<number, number>>,
+  votes: Readonly<Record<number, number>>
 ): number[] {
   if (players[index]?.role !== "burger") return [];
   return Object.keys(votes)
@@ -261,13 +261,13 @@ export function drinkersFor(
  */
 export function outcomeOf(
   players: readonly Player[],
-  mode: Mode = "klassiek",
+  mode: Mode = "klassiek"
 ): Winner | null {
   const infiltrators = players.filter(
-    (player) => player.alive && player.role !== "burger",
+    (player) => player.alive && player.role !== "burger"
   ).length;
   const civilians = players.filter(
-    (player) => player.alive && player.role === "burger",
+    (player) => player.alive && player.role === "burger"
   ).length;
 
   if (infiltrators === 0) return "burgers";

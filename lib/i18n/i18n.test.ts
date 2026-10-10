@@ -27,15 +27,14 @@ function entries(value: unknown, path = ""): Entry[] {
   }
   if (value && typeof value === "object") {
     return Object.entries(value).flatMap(([key, child]) =>
-      entries(child, path ? `${path}.${key}` : key),
+      entries(child, path ? `${path}.${key}` : key)
     );
   }
   return [];
 }
 
 /** The `{name}` slots a string expects the app to fill in. */
-const placeholders = (text: string) =>
-  (text.match(/\{(\w+)\}/g) ?? []).sort();
+const placeholders = (text: string) => (text.match(/\{(\w+)\}/g) ?? []).sort();
 
 const reference = entries(nl);
 
@@ -62,19 +61,19 @@ for (const locale of LOCALES) {
     assert.deepEqual(
       paths.sort(),
       reference.map((e) => e.path).sort(),
-      `${locale} does not line up with the Dutch original`,
+      `${locale} does not line up with the Dutch original`
     );
   });
 
   test(`${locale}: no placeholder was lost in translation`, () => {
     const translated = new Map(
-      entries(DICTIONARIES[locale]).map((e) => [e.path, e.value]),
+      entries(DICTIONARIES[locale]).map((e) => [e.path, e.value])
     );
     for (const { path, value } of reference) {
       assert.deepEqual(
         placeholders(translated.get(path) ?? ""),
         placeholders(value),
-        `${locale}.${path} does not carry the same {placeholders}`,
+        `${locale}.${path} does not carry the same {placeholders}`
       );
     }
   });
@@ -95,7 +94,7 @@ for (const locale of LOCALES) {
     const share = same.length / translated.length;
     assert.ok(
       share < 0.15,
-      `${Math.round(share * 100)}% of ${locale} is still identical to Dutch`,
+      `${Math.round(share * 100)}% of ${locale} is still identical to Dutch`
     );
   });
 }
@@ -106,7 +105,7 @@ test("a language is only offered once its interface is translated", () => {
     assert.equal(
       paths,
       reference.length,
-      `${locale} is in the picker but incomplete`,
+      `${locale} is in the picker but incomplete`
     );
   }
 });

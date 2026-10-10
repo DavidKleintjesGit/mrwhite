@@ -153,7 +153,9 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
             position: "absolute",
             inset: 0,
             clipPath: `circle(${holding ? 1100 : 0}px at ${at.x}px ${at.y}px)`,
-            transition: `clip-path ${holding ? ".55s" : ".18s"} cubic-bezier(.3,.9,.4,1)`,
+            transition: `clip-path ${
+              holding ? ".55s" : ".18s"
+            } cubic-bezier(.3,.9,.4,1)`,
             background: player.role === "white" ? "#FF3D3D" : "#FFD23F",
             display: "flex",
             flexDirection: "column",

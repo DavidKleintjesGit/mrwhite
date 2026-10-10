@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Field, FieldLabel, Segmented, ToggleRow } from "@/components/ui/Controls";
+import {
+  Field,
+  FieldLabel,
+  Segmented,
+  ToggleRow,
+} from "@/components/ui/Controls";
 import Press from "@/components/ui/Press";
 import Screen, { Header } from "@/components/ui/Screen";
 import type { Difficulty } from "@/lib/game";
@@ -35,14 +40,19 @@ export default function SettingsScreen({
   const t = dict.settings;
   const [draft, setDraft] = useState({ a: "", b: "" });
 
-  const buckets = [...CATEGORY_IDS, ...(settings.custom.length ? ["eigen"] : [])];
+  const buckets = [
+    ...CATEGORY_IDS,
+    ...(settings.custom.length ? ["eigen"] : []),
+  ];
   const on = buckets.filter((id) => settings.cats[id]);
   const summaryTitle =
     on.length === buckets.length
       ? format(t.allCategories, { total: buckets.length })
       : format(t.someCategories, { on: on.length, total: buckets.length });
   const summaryList = on.length
-    ? on.map((id) => dict.categories[id as keyof typeof dict.categories]).join(", ")
+    ? on
+        .map((id) => dict.categories[id as keyof typeof dict.categories])
+        .join(", ")
     : t.noneChosen;
 
   const help = {

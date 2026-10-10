@@ -43,8 +43,8 @@ export default function UnmaskScreen({
     player.role === "burger"
       ? t.lineBurger
       : player.role === "undercover"
-        ? t.lineUndercover
-        : t.lineWhite;
+      ? t.lineUndercover
+      : t.lineWhite;
 
   return (
     <Screen

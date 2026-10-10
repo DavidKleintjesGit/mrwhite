@@ -54,9 +54,9 @@ export function matchLocale(languages: readonly string[]): Locale {
 /** Replaces `{name}` placeholders, so translators keep control of word order. */
 export function format(
   template: string,
-  values: Record<string, string | number>,
+  values: Record<string, string | number>
 ): string {
   return template.replace(/\{(\w+)\}/g, (match, key: string) =>
-    key in values ? String(values[key]) : match,
+    key in values ? String(values[key]) : match
   );
 }

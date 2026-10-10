@@ -67,7 +67,8 @@ export default function RulesScreen({ dict, onBack, onPlay }: Props) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
           gap: "18px 32px",
         }}
       >

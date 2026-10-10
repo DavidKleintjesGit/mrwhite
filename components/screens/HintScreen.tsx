@@ -80,67 +80,67 @@ export default function HintScreen({
       {/* A one-item list keyed on the turn, so each speaker pops in afresh.
           A bare key on a static child leaves the previous card in the DOM. */}
       {[turn].map((current) => (
-      <div
-        key={current}
-        style={{
-          position: "relative",
-          background: "var(--card)",
-          color: "#0d0d0d",
-          border: "3px solid #0d0d0d",
-          boxShadow: "8px 8px 0 #FFD23F",
-          padding: "30px 20px",
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "column",
-          gap: 12,
-          alignItems: "center",
-          animation: "popIn .45s both",
-        }}
-      >
         <div
+          key={current}
           style={{
-            fontSize: 13,
-            letterSpacing: ".2em",
-            textTransform: "uppercase",
-            fontWeight: 700,
+            position: "relative",
+            background: "var(--card)",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            boxShadow: "8px 8px 0 #FFD23F",
+            padding: "30px 20px",
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            alignItems: "center",
+            animation: "popIn .45s both",
           }}
         >
-          {t.speaking}
-        </div>
-        <div
-          style={{
-            fontFamily: ARCHIVO,
-            fontSize: "clamp(32px, 13vw, 64px)",
-            lineHeight: 1,
-            textTransform: "uppercase",
-            wordBreak: "break-word",
-            maxWidth: "100%",
-          }}
-        >
-          {speaker.name}
-        </div>
-        <div style={{ fontSize: 16, maxWidth: 280, lineHeight: 1.4 }}>
-          {t.instruction}
-        </div>
-        {current === 0 && (
           <div
             style={{
-              position: "absolute",
-              top: -16,
-              right: -8,
-              fontFamily: "var(--font-permanent-marker), cursive",
-              background: "#FF3D3D",
-              color: "#0d0d0d",
-              border: "3px solid #0d0d0d",
-              padding: "2px 10px",
-              transform: "rotate(8deg)",
-              fontSize: 16,
+              fontSize: 13,
+              letterSpacing: ".2em",
+              textTransform: "uppercase",
+              fontWeight: 700,
             }}
           >
-            {t.begins}
+            {t.speaking}
           </div>
-        )}
-      </div>
+          <div
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: "clamp(32px, 13vw, 64px)",
+              lineHeight: 1,
+              textTransform: "uppercase",
+              wordBreak: "break-word",
+              maxWidth: "100%",
+            }}
+          >
+            {speaker.name}
+          </div>
+          <div style={{ fontSize: 16, maxWidth: 280, lineHeight: 1.4 }}>
+            {t.instruction}
+          </div>
+          {current === 0 && (
+            <div
+              style={{
+                position: "absolute",
+                top: -16,
+                right: -8,
+                fontFamily: "var(--font-permanent-marker), cursive",
+                background: "#FF3D3D",
+                color: "#0d0d0d",
+                border: "3px solid #0d0d0d",
+                padding: "2px 10px",
+                transform: "rotate(8deg)",
+                fontSize: 16,
+              }}
+            >
+              {t.begins}
+            </div>
+          )}
+        </div>
       ))}
 
       {timer > 0 && <ClueTimer key={turn} seconds={timer} dark={dark} />}
@@ -157,7 +157,11 @@ export default function HintScreen({
                 border: "2px solid var(--fg)",
                 fontSize: 14,
                 fontWeight: 700,
-                background: now ? "#FFD23F" : done ? "transparent" : "var(--bg)",
+                background: now
+                  ? "#FFD23F"
+                  : done
+                  ? "transparent"
+                  : "var(--bg)",
                 color: now ? "#0d0d0d" : done ? "var(--muted)" : "var(--fg)",
                 textDecoration: done ? "line-through" : "none",
               }}

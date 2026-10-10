@@ -64,7 +64,7 @@ test("a draw never pairs two rules that contradict each other", () => {
     for (const [a, b] of CONFLICTS) {
       assert.ok(
         !(drawn.includes(a) && drawn.includes(b)),
-        `drew the conflicting pair ${a} and ${b}`,
+        `drew the conflicting pair ${a} and ${b}`
       );
     }
   }
@@ -76,7 +76,7 @@ test("with every category on, the three rules come from three categories", () =>
     assert.equal(
       new Set(categories).size,
       RULES_PER_GAME,
-      "two rules came from the same category",
+      "two rules came from the same category"
     );
   }
 });
@@ -113,7 +113,10 @@ test("no category can be painted into a corner by its own conflicts", () => {
 
   for (const category of RULE_CATEGORIES) {
     const ids = RULES_BY_CATEGORY[category];
-    assert.ok(ids.length >= RULES_PER_GAME, `category ${category} is too small`);
+    assert.ok(
+      ids.length >= RULES_PER_GAME,
+      `category ${category} is too small`
+    );
 
     for (const first of ids) {
       for (const second of ids) {
@@ -123,11 +126,11 @@ test("no category can be painted into a corner by its own conflicts", () => {
             id !== first &&
             id !== second &&
             !clashes(id, first) &&
-            !clashes(id, second),
+            !clashes(id, second)
         );
         assert.ok(
           third,
-          `${category}: rules ${first} and ${second} leave no third option`,
+          `${category}: rules ${first} and ${second} leave no third option`
         );
       }
     }
@@ -152,11 +155,18 @@ test("challenges are spread before any of them repeats", () => {
 test("every challenge pays out, and harder ones pay more", () => {
   const rewards = CHALLENGES.map((challenge) => challenge.reward);
   for (const reward of rewards) {
-    assert.ok(reward >= MIN_REWARD && reward <= MAX_REWARD, `${reward} is off the scale`);
+    assert.ok(
+      reward >= MIN_REWARD && reward <= MAX_REWARD,
+      `${reward} is off the scale`
+    );
   }
   // The payout is the only clue to how hard one is, so two challenges that
   // pay the same would be telling the player something untrue.
-  assert.equal(new Set(rewards).size, rewards.length, "two challenges pay the same");
+  assert.equal(
+    new Set(rewards).size,
+    rewards.length,
+    "two challenges pay the same"
+  );
   assert.equal(Math.min(...rewards), MIN_REWARD);
   assert.equal(Math.max(...rewards), MAX_REWARD);
 });

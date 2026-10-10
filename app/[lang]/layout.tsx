@@ -1,7 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo_Black, Courier_Prime, Permanent_Marker } from "next/font/google";
+import {
+  Archivo_Black,
+  Courier_Prime,
+  Permanent_Marker,
+} from "next/font/google";
 import { notFound } from "next/navigation";
-import { VERIFIED_LOCALES, getDictionary, isLocale, isVerified } from "@/lib/i18n";
+import {
+  VERIFIED_LOCALES,
+  getDictionary,
+  isLocale,
+  isVerified,
+} from "@/lib/i18n";
 import "../globals.css";
 
 const archivoBlack = Archivo_Black({

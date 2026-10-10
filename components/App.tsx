@@ -111,8 +111,7 @@ export default function App({ dict, lang }: Props) {
       buckets: settings.cats,
       difficulty: settings.diff,
       custom: settings.custom,
-      fallbackName: (index) =>
-        format(dict.names.placeholder, { n: index + 1 }),
+      fallbackName: (index) => format(dict.names.placeholder, { n: index + 1 }),
     });
     setDialog("none");
     go({ name: "deal", players, pair });
@@ -141,7 +140,7 @@ export default function App({ dict, lang }: Props) {
     const { undercovers, whites } = fitRoles(
       players,
       stored.nUnder,
-      stored.nWhite,
+      stored.nWhite
     );
     save({ nPlayers: players, nUnder: undercovers, nWhite: whites });
   }
@@ -333,7 +332,7 @@ export default function App({ dict, lang }: Props) {
               setStage({
                 ...stage,
                 players: stage.players.map((player, i) =>
-                  i === stage.index ? { ...player, seen: true } : player,
+                  i === stage.index ? { ...player, seen: true } : player
                 ),
               })
             }

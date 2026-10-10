@@ -28,7 +28,7 @@ export const RULES_BY_CATEGORY: Record<RuleCategory, readonly number[]> = {
 };
 
 export const RULE_IDS: readonly number[] = RULE_CATEGORIES.flatMap(
-  (category) => RULES_BY_CATEGORY[category],
+  (category) => RULES_BY_CATEGORY[category]
 );
 
 /**
@@ -84,7 +84,7 @@ export const MIN_DRINK_PLAYERS = 4;
 
 export function ruleCategory(id: number): RuleCategory {
   const found = RULE_CATEGORIES.find((category) =>
-    RULES_BY_CATEGORY[category].includes(id),
+    RULES_BY_CATEGORY[category].includes(id)
   );
   if (!found) throw new Error(`unknown rule id: ${id}`);
   return found;
@@ -93,7 +93,7 @@ export function ruleCategory(id: number): RuleCategory {
 function conflicts(id: number, chosen: readonly number[]): boolean {
   return CONFLICTS.some(
     ([a, b]) =>
-      (a === id && chosen.includes(b)) || (b === id && chosen.includes(a)),
+      (a === id && chosen.includes(b)) || (b === id && chosen.includes(a))
   );
 }
 
@@ -107,10 +107,10 @@ function conflicts(id: number, chosen: readonly number[]): boolean {
  * category rather than dealing fewer than three.
  */
 export function drawRules(
-  enabled: Partial<Record<RuleCategory, boolean>> = {},
+  enabled: Partial<Record<RuleCategory, boolean>> = {}
 ): number[] {
   let categories = shuffle(
-    RULE_CATEGORIES.filter((category) => enabled[category] !== false),
+    RULE_CATEGORIES.filter((category) => enabled[category] !== false)
   );
   if (!categories.length) categories = [...RULE_CATEGORIES];
 
@@ -123,7 +123,7 @@ export function drawRules(
     let pool = RULES_BY_CATEGORY[category].filter(allowed);
     if (!pool.length) {
       pool = RULE_IDS.filter(
-        (id) => categories.includes(ruleCategory(id)) && allowed(id),
+        (id) => categories.includes(ruleCategory(id)) && allowed(id)
       );
     }
     if (!pool.length) break;
