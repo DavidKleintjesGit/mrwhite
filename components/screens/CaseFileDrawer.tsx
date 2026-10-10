@@ -381,10 +381,14 @@ function FolderTab({
         fontSize: 13,
         letterSpacing: ".1em",
         textTransform: "uppercase",
-        background: colour ?? (active ? "#E9DDB8" : "#D6CCAE"),
+        background: colour ?? (active ? "#E9DDB8" : "#C9B987"),
         color: "#0d0d0d",
         border: "3px solid #0d0d0d",
-        borderBottom: "none",
+        // Only the open tab loses its bottom edge, so it runs into the folder
+        // and reads as the page you are standing on. The others keep theirs,
+        // and so do the ones that are not pages at all — closing and leaving
+        // take you somewhere else rather than opening a section.
+        borderBottom: active ? "none" : "3px solid #0d0d0d",
         borderRadius: "10px 10px 0 0",
         padding: "11px 18px 12px",
         cursor: "pointer",

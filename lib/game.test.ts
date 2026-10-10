@@ -52,6 +52,7 @@ const roundOf = (roles: Role[]): Player[] =>
     alive: true,
     challenge: null,
     challengeDone: false,
+    outRound: null,
   }));
 
 // --- Line-up ---------------------------------------------------------------
@@ -217,7 +218,7 @@ test("turning the rule off lets Mr. White open", () => {
 
 test("the order runs from the opener and skips whoever is out", () => {
   let players = roundOf(["burger", "undercover", "burger", "burger"]);
-  players = eliminate(players, 2);
+  players = eliminate(players, 2, 1);
 
   for (let i = 0; i < 100; i++) {
     const order = openingOrder(players, true);
@@ -239,7 +240,7 @@ test("the round runs on while both sides still have a chance", () => {
 
 test("civilians win once the last infiltrator is out", () => {
   let players = roundOf(["burger", "burger", "burger", "undercover"]);
-  players = eliminate(players, 3);
+  players = eliminate(players, 3, 1);
   assert.equal(outcomeOf(players), "burgers");
 });
 
@@ -247,11 +248,11 @@ test("infiltrators win when one civilian is left, not on equal numbers", () => {
   // 3 civilians against 2 infiltrators.
   let players = roundOf(["burger", "burger", "burger", "undercover", "white"]);
 
-  players = eliminate(players, 0);
+  players = eliminate(players, 0, 2);
   // 2 against 2 — even numbers, but the round is not over yet.
   assert.equal(outcomeOf(players), null);
 
-  players = eliminate(players, 1);
+  players = eliminate(players, 1, 3);
   assert.equal(outcomeOf(players), "infiltranten");
 });
 
@@ -320,7 +321,7 @@ test("voting out an infiltrator costs nobody a sip", () => {
 
 test("eliminating only takes the one player out", () => {
   const players = roundOf(["burger", "burger", "undercover"]);
-  const after = eliminate(players, 0);
+  const after = eliminate(players, 0, 2);
   assert.equal(after[0].alive, false);
   assert.ok(after.slice(1).every((player) => player.alive));
 });
@@ -345,4 +346,14 @@ test("counting nothing is nothing, not a crash", () => {
 
 test("a tie comes back in a stable order", () => {
   assert.deepEqual(tallyVotes({ 0: 3, 1: 1 }), tallyVotes({ 0: 1, 1: 3 }));
+});
+
+test("a player carries the round they went out in", () => {
+  const players = roundOf(["burger", "burger", "undercover"]);
+  assert.equal(players[0].outRound, null);
+
+  const after = eliminate(players, 0, 3);
+  assert.equal(after[0].outRound, 3);
+  // Everyone still in stays unmarked, so the report cannot invent a round.
+  assert.ok(after.slice(1).every((player) => player.outRound === null));
 });

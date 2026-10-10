@@ -78,7 +78,14 @@ export type Stage =
       index: number;
       round: number;
     }
-  | { name: "end"; players: Player[]; pair: WordPair; winner: Winner };
+  | {
+      name: "end";
+      players: Player[];
+      pair: WordPair;
+      winner: Winner;
+      /** How many rounds were played, for the end report. */
+      round: number;
+    };
 
 export const STAGE_NAMES = [
   "home",

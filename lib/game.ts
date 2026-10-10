@@ -40,6 +40,8 @@ export type Player = {
   /** The player's secret challenge, by id. Null outside the Drinking Edition. */
   challenge: number | null;
   challengeDone: boolean;
+  /** The round they were voted out in; null while they are still in. */
+  outRound: number | null;
 };
 
 /** [civilian word, undercover word] */
@@ -182,6 +184,7 @@ export function deal(options: DealOptions): {
     alive: true,
     challenge: options.challenges?.[index] ?? null,
     challengeDone: false,
+    outRound: null,
   }));
 
   return { players, pair };
@@ -213,12 +216,17 @@ export function openingOrder(
   return [...alive.slice(at), ...alive.slice(0, at)];
 }
 
+/**
+ * Votes someone out. The round is recorded with them: the end report says
+ * when each player went, and by then the counter has moved on.
+ */
 export function eliminate(
   players: readonly Player[],
-  index: number
+  index: number,
+  round: number
 ): Player[] {
   return players.map((player, i) =>
-    i === index ? { ...player, alive: false } : player
+    i === index ? { ...player, alive: false, outRound: round } : player
   );
 }
 

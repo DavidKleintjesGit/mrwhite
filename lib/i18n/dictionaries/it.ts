@@ -240,6 +240,16 @@ const it: Dictionary = {
   end: {
     stamp: "Caso chiuso",
     burgersTitle: "Vincono i cittadini",
+    report: "Rapporto finale",
+    caseLine: "Caso n. 0042 · {mode}",
+    stampSub: "N. 0042 · chiuso",
+    verdict: "Verdetto",
+    rounds: "Round",
+    houseRulesTitle: "Regole della casa di questa partita",
+    involved: "Coinvolti",
+    survived: "Sopravvissuto",
+    votedOut: "Eliminato · round {n}",
+    challengeMet: "sfida ✓",
     burgersLine:
       "Tutti gli impostori sono stati smascherati. Bel lavoro, agenti.",
     infiltrantenTitle: "Vincono gli impostori",

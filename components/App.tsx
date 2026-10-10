@@ -238,7 +238,7 @@ export default function App({ dict, lang }: Props) {
 
     go({
       name: "unmask",
-      players: eliminate(from.players, result.out),
+      players: eliminate(from.players, result.out, from.round),
       pair: from.pair,
       index: result.out,
       round: from.round,
@@ -249,7 +249,7 @@ export default function App({ dict, lang }: Props) {
   /** Either the case is closed, or the next clue round begins. */
   function resolve(players: Player[], pair: WordPair, round: number) {
     const winner = outcomeOf(players, stored.mode);
-    if (winner) go({ name: "end", players, pair, winner });
+    if (winner) go({ name: "end", players, pair, winner, round });
     else startRound(players, pair, round + 1);
   }
 
@@ -611,7 +611,7 @@ export default function App({ dict, lang }: Props) {
               if (selected == null) return;
               go({
                 name: "unmask",
-                players: eliminate(stage.players, selected),
+                players: eliminate(stage.players, selected, stage.round),
                 pair: stage.pair,
                 index: selected,
                 round: stage.round,
@@ -699,6 +699,7 @@ export default function App({ dict, lang }: Props) {
                 players: stage.players,
                 pair: stage.pair,
                 winner: "white",
+                round: stage.round,
               })
             }
             onMiss={() => resolve(stage.players, stage.pair, stage.round)}
@@ -709,10 +710,12 @@ export default function App({ dict, lang }: Props) {
         return (
           <EndScreen
             dict={dict}
-            drink={drink}
             players={stage.players}
             pair={stage.pair}
             winner={stage.winner}
+            round={stage.round}
+            drink={drink}
+            rules={stored.rules}
             onMenu={() => go({ name: "home" })}
             onAgain={startDeal}
           />
