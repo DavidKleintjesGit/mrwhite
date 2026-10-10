@@ -533,6 +533,7 @@ const it: Dictionary = {
       "Come per il tuo ruolo: tocca il tuo fascicolo, vota in segreto e passa il telefono. L'ordine non conta.",
     number: "N. {n}",
     voted: "Ha votato",
+    tapToVote: "Tocca per votare",
     waiting: "Non ancora",
     tally: "Conta i voti",
     progress: "{n} / {total} hanno votato",

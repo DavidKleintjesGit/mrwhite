@@ -528,6 +528,7 @@ const es: Dictionary = {
       "Igual que con tu rol: toca tu propio expediente, vota en secreto y pasa el móvil. El orden da igual.",
     number: "N.º {n}",
     voted: "Ha votado",
+    tapToVote: "Toca para votar",
     waiting: "Todavía no",
     tally: "Contar los votos",
     progress: "{n} / {total} han votado",

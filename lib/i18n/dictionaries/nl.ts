@@ -533,6 +533,7 @@ const nl = {
       "Net als bij je rol: tik op je eigen dossier, stem in het geheim en geef de telefoon door. Volgorde maakt niet uit.",
     number: "Nr. {n}",
     voted: "Gestemd",
+    tapToVote: "Tik om te stemmen",
     waiting: "Nog niet",
     tally: "Stemmen tellen",
     progress: "{n} / {total} gestemd",

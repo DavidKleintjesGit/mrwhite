@@ -517,6 +517,7 @@ const en: Dictionary = {
       "Same as your role: tap your own file, vote in secret and pass the phone on. The order does not matter.",
     number: "No. {n}",
     voted: "Voted",
+    tapToVote: "Tap to vote",
     waiting: "Not yet",
     tally: "Count the votes",
     progress: "{n} / {total} voted",

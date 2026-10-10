@@ -545,6 +545,7 @@ const de: Dictionary = {
       "Wie bei deiner Rolle: Tippe auf deine eigene Akte, stimme geheim ab und gib das Handy weiter. Die Reihenfolge ist egal.",
     number: "Nr. {n}",
     voted: "Abgestimmt",
+    tapToVote: "Zum Abstimmen tippen",
     waiting: "Noch nicht",
     tally: "Stimmen zählen",
     progress: "{n} / {total} abgestimmt",

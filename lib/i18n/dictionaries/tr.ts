@@ -541,6 +541,7 @@ const tr: Dictionary = {
       "Rolündeki gibi: kendi dosyana dokun, gizlice oy ver ve telefonu devret. Sıra önemli değil.",
     number: "No. {n}",
     voted: "Oy verdi",
+    tapToVote: "Oy vermek için dokun",
     waiting: "Henüz yok",
     tally: "Oyları say",
     progress: "{n} / {total} oy verdi",

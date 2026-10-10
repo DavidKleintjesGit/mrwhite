@@ -2,13 +2,20 @@
 
 import Press from "@/components/ui/Press";
 import Screen, { Header } from "@/components/ui/Screen";
-import { ruleCategory } from "@/lib/drink";
+import { RULES_PER_GAME, ruleCategory } from "@/lib/drink";
 import { format, type Dictionary } from "@/lib/i18n";
 
 const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 /** The design tilts each card a different way so the three read as a stack. */
 const TILT = ["-1.2deg", ".8deg", "-.4deg"];
+
+const COLOUR: Record<string, string> = {
+  A: "#FFD23F",
+  B: "#3DD6FF",
+  C: "#FF3D3D",
+  D: "#B6F03C",
+};
 
 type Props = {
   dict: Dictionary;
@@ -29,18 +36,18 @@ export default function DrinkRulesScreen({
 }: Props) {
   const t = dict.drink;
 
-  const colour: Record<string, string> = {
-    A: "#FFD23F",
-    B: "#3DD6FF",
-    C: "#FF3D3D",
-    D: "#B6F03C",
-  };
   const short: Record<string, string> = {
     A: t.catAShort,
     B: t.catBShort,
     C: t.catCShort,
     D: t.catDShort,
   };
+
+  const grid = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
+    gap: 22,
+  } as const;
 
   return (
     <Screen
@@ -61,114 +68,122 @@ export default function DrinkRulesScreen({
           margin: 0,
           maxWidth: 620,
           fontSize: 16,
-          lineHeight: 1.55,
-          color: "var(--muted)",
+          lineHeight: 1.5,
+          textWrap: "pretty",
         }}
       >
         {t.rulesIntro}
       </p>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-          gap: 18,
-        }}
-      >
-        {rolling
-          ? rules.map((_, index) => (
+      {rolling ? (
+        <div style={grid}>
+          {Array.from({ length: RULES_PER_GAME }, (_, index) => (
+            <div
+              key={index}
+              style={{
+                minHeight: 200,
+                border: "3px dashed var(--fg)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: ARCHIVO,
+                fontSize: 20,
+                textTransform: "uppercase",
+                animation: "wobble .35s ease-in-out infinite",
+              }}
+            >
+              {t.rolling}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={grid}>
+          {rules.map((id, index) => {
+            const category = ruleCategory(id);
+            const rule = t.rules[String(id) as keyof typeof t.rules];
+            return (
               <div
-                key={index}
+                key={id}
                 style={{
-                  background: "var(--off)",
-                  color: "var(--offfg)",
-                  border: "3px dashed var(--offfg)",
-                  padding: 18,
-                  minHeight: 148,
+                  position: "relative",
+                  minHeight: 200,
+                  background: "var(--card)",
+                  color: "#0d0d0d",
+                  border: "3px solid #0d0d0d",
+                  boxShadow: `7px 7px 0 ${COLOUR[category]}`,
+                  padding: "20px 18px",
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: ARCHIVO,
-                  fontSize: 15,
-                  textTransform: "uppercase",
+                  flexDirection: "column",
+                  gap: 12,
+                  transform: `rotate(${TILT[index % TILT.length]})`,
+                  animation: `popIn .45s ${index * 0.12}s both`,
                 }}
               >
-                {t.rolling}
-              </div>
-            ))
-          : rules.map((id, index) => {
-              const category = ruleCategory(id);
-              const rule = t.rules[String(id) as keyof typeof t.rules];
-              return (
                 <div
-                  key={id}
                   style={{
-                    background: "var(--card)",
-                    color: "#0d0d0d",
-                    border: "3px solid #0d0d0d",
-                    padding: 18,
-                    minHeight: 148,
                     display: "flex",
-                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                     gap: 10,
-                    boxShadow: `6px 6px 0 ${colour[category]}`,
-                    transform: `rotate(${TILT[index % TILT.length]})`,
                   }}
                 >
                   <span
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      gap: 10,
-                      fontSize: 12,
-                      letterSpacing: ".18em",
-                      textTransform: "uppercase",
-                    }}
+                    style={{ fontFamily: ARCHIVO, fontSize: 44, lineHeight: 1 }}
                   >
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <span
-                      style={{
-                        background: colour[category],
-                        padding: "4px 8px",
-                        border: "2px solid #0d0d0d",
-                      }}
-                    >
-                      {short[category]}
-                    </span>
+                    {index + 1}
                   </span>
-
                   <span
                     style={{
                       fontFamily: ARCHIVO,
-                      fontSize: "clamp(17px,3.4vw,21px)",
+                      fontSize: 12,
+                      letterSpacing: ".12em",
                       textTransform: "uppercase",
-                      lineHeight: 1.15,
-                      maxWidth: "100%",
-                      overflowWrap: "break-word",
+                      background: COLOUR[category],
+                      border: "2px solid #0d0d0d",
+                      padding: "5px 9px",
                     }}
                   >
-                    {rule.t}
-                  </span>
-
-                  <span style={{ fontSize: 15, lineHeight: 1.45 }}>
-                    {rule.d}
+                    {short[category]}
                   </span>
                 </div>
-              );
-            })}
-      </div>
+
+                <span
+                  style={{
+                    fontFamily: ARCHIVO,
+                    fontSize: 24,
+                    textTransform: "uppercase",
+                    lineHeight: 1.05,
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {rule.t}
+                </span>
+
+                <span
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 1.45,
+                    textWrap: "pretty",
+                  }}
+                >
+                  {rule.d}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <div
         style={{
           marginTop: "auto",
-          display: "grid",
-          gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)",
-          gap: 14,
           width: "100%",
           maxWidth: 620,
           alignSelf: "flex-end",
+          display: "grid",
+          gridTemplateColumns: "minmax(0,1fr) minmax(0,1.4fr)",
+          gap: 18,
+          paddingTop: 12,
         }}
       >
         <Press
@@ -176,16 +191,20 @@ export default function DrinkRulesScreen({
           disabled={rolling}
           style={{
             fontFamily: ARCHIVO,
-            fontSize: 16,
+            fontSize: 15,
             textTransform: "uppercase",
             background: "var(--bg)",
             color: "var(--fg)",
             border: "3px solid var(--fg)",
-            padding: 16,
+            padding: "16px 8px",
+            boxShadow: "5px 5px 0 var(--line)",
             cursor: rolling ? "default" : "pointer",
             opacity: rolling ? 0.5 : 1,
           }}
-          press={{ transform: "translate(3px,3px)" }}
+          press={{
+            transform: "translate(4px,4px)",
+            boxShadow: "1px 1px 0 var(--line)",
+          }}
         >
           {t.reroll}
         </Press>
@@ -194,12 +213,12 @@ export default function DrinkRulesScreen({
           onClick={onNext}
           style={{
             fontFamily: ARCHIVO,
-            fontSize: 18,
+            fontSize: 17,
             textTransform: "uppercase",
             background: "#FFD23F",
             color: "#0d0d0d",
             border: "3px solid #0d0d0d",
-            padding: 16,
+            padding: "16px 8px",
             boxShadow: "6px 6px 0 var(--fg)",
             cursor: "pointer",
           }}

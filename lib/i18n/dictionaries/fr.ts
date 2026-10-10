@@ -545,6 +545,7 @@ const fr: Dictionary = {
       "Comme pour ton rôle : touche ton propre dossier, vote en secret et passe le téléphone. L'ordre n'a pas d'importance.",
     number: "N° {n}",
     voted: "A voté",
+    tapToVote: "Touche pour voter",
     waiting: "Pas encore",
     tally: "Compter les voix",
     progress: "{n} / {total} ont voté",
