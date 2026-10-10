@@ -1,6 +1,6 @@
 # Waar dit project staat
 
-**Bijgewerkt:** 2026-10-10 · **Doel:** App Store en Play Store
+**Bijgewerkt:** 2026-10-10 (avond) · **Doel:** App Store en Play Store
 
 Dit document is de waarheid over de huidige stand. [CONCEPT.md](CONCEPT.md) en
 [FASEN.md](FASEN.md) beschrijven het oorspronkelijke idee en zijn op onderdelen
@@ -30,10 +30,12 @@ zijn letterlijk overgenomen en alleen de herhaling zit in componenten
 
 | | |
 |---|---|
-| Spelloop | Compleet: verdeling → namen → dossiers → hints → stemmen → ontmaskering → gok → uitslag |
+| Spelmodi | **Klassiek en Drinking Edition**, uit ontwerp v3 |
+| Spelloop | Compleet: modus → verdeling → namen → (drankregels) → dossiers → hints → stemmen → ontmaskering → gok → uitslag |
+| Drankregels | 45 regelkaarten in 4 soorten, 8 conflictparen, 6 geheime challenges |
 | Talen | Interface én woorden in 7 talen geschreven; **alleen NL en EN vrijgegeven** |
 | Woorden | 154 paren voor NL en EN, 28 voor de rest |
-| Tests | 87, via `npm test`. Woorden apart met `npm run words:check` |
+| Tests | 113, via `npm test`. Woorden apart met `npm run words:check` |
 | Opslag | Een lopend potje overleeft een herlaad. Sleutel `mrwhite-noir-v1`, vervalt na 6 uur |
 | Native | `android/` en `ios/` staan in de repo, iconen gegenereerd uit `assets/icon.svg` |
 | Android-build | **Ondertekende AAB gebouwd op 2026-10-10**, klaar voor de Play Console |
@@ -63,7 +65,25 @@ speelt.
 **Geen punten en geen scorebord.** Zat in een eerdere fase, het ontwerp kent
 het niet, dus eruit.
 
-**3 tot 20 spelers.**
+**3 tot 20 spelers**, en vier als minimum in de Drinking Edition.
+
+**De Drinking Edition is een volwaardige tweede modus**, niet een schakelaar.
+Eigen schermen (Spelmodus, Drankregels, Geheime stemming), een strafblad, en
+andere rekenkunde: infiltranten winnen daar bij gelijke stand en er passen
+meer infiltranten aan tafel. Besloten op 2026-10-10 om hem **precies zoals
+ontworpen** te bouwen, inclusief de slokken, en de leeftijdsclassificatie
+eerlijk op te geven. Verwachting 12+, mogelijk 17+; dat rolt uit de
+vragenlijst van de winkels.
+
+**Een gehaalde challenge levert slokken op, geen vrijstelling.** Het ontwerp
+beloofde allebei en gaf alleen het eerste; vrijstellingen waren onmogelijk te
+verdienen. Beloning schaalt nu met moeilijkheid, 3 tot 8 slokken, en wordt
+willekeurig toegewezen — de uitbetaling is het enige signaal hoe zwaar je
+opdracht is.
+
+**Een gelijkspel bij de stemming wordt niet door de app beslist.** Er volgt
+een herstemming tussen de gedeelden en niemand drinkt ervoor. Willekeurig
+kiezen zou het spel op een muntworp beslissen die niemand zag.
 
 **Eén taal stuurt alles aan** — interface én woorden. Taal zit in de URL
 (`/nl/`, `/en/`), wisselen is een volledige paginalading omdat elke taal zijn
@@ -190,8 +210,6 @@ Mac, of een cloud-build (Codemagic, EAS, Bitrise).
   Daarna kan het privacybeleid daar en kan het server-IP helemaal uit beeld.
 - `public/manifest.webmanifest` is door `capacitor-assets` gemaakt maar nog
   nergens aan gekoppeld. Voor PWA-installatie moet die nog in de `<head>`.
-- Bij het stemmen zit geen gelijkspel-afhandeling en een stem is niet terug te
-  draaien. Het ontwerp kent het ook niet; bewust zo gelaten.
 
 ---
 
@@ -208,6 +226,11 @@ controleren dat de geserveerde stylesheet de nieuwe tokens echt bevat.
 **`key` op een statisch kind vervangt dat kind niet.** Op het hintscherm bleef
 de vorige spelerskaart in de DOM staan, waardoor de naam een beurt achterliep.
 Opgelost door het als lijst van één te renderen, zoals het ontwerp doet.
+
+**Twee keer `save` in één handeling werkt niet.** `save` bouwt op de `stored`
+van die render, dus een tweede aanroep maakt de eerste ongedaan. Zo ging de
+gekozen spelmodus verloren op weg naar het opzetscherm. Alles wat samen met
+het scherm verandert, gaat nu in dezelfde aanroep mee.
 
 **De mechanische woordcontrole heeft een grens.** `Bus driver / Taxi driver`
 wordt gepakt op het gedeelde woord, maar `Buschauffeur / Taxichauffeur` heeft
