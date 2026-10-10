@@ -512,7 +512,7 @@ export default function App({ dict, lang }: Props) {
             dealLabel={drink ? dict.drink.namesCta : dict.names.deal}
             players={stored.nPlayers}
             names={stored.names}
-            onChange={(names) => save({ names })}
+            onChange={(names) => save({ names, namesAt: Date.now() })}
             onBack={() => go({ name: "setup" })}
             onDeal={startDeal}
           />

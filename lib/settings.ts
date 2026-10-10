@@ -12,6 +12,14 @@ const STORAGE_KEY = "mrwhite-noir-v1";
  */
 const MAX_GAME_AGE_MS = 6 * 60 * 60 * 1000;
 
+/**
+ * Names are worth keeping for longer than a round — the same group plays
+ * again next week and should not have to retype itself — but not forever.
+ * A phone that was lent out once should not still be carrying a guest list
+ * months later.
+ */
+const MAX_NAMES_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
 export type Theme = "donker" | "licht";
 
 export type Settings = {
@@ -46,6 +54,8 @@ export type Stored = {
   stage: Stage;
   /** When the stage was last written, used to drop a stale game. */
   stageAt: number;
+  /** When the names were last touched, used to let them lapse. */
+  namesAt: number;
 };
 
 export function defaultSettings(): Settings {
@@ -74,6 +84,7 @@ export function defaultStored(): Stored {
     rules: [],
     stage: { name: "home" },
     stageAt: 0,
+    namesAt: 0,
   };
 }
 
@@ -117,7 +128,7 @@ export function parseStored(raw: string | null): Stored {
         ...(saved.settings?.drinkCats ?? {}),
       },
     },
-    names: Array.isArray(saved.names) ? saved.names : [],
+    names: namesAreFresh(saved) ? (saved.names as string[]) : [],
     nPlayers: saved.nPlayers ?? fallback.nPlayers,
     nUnder: saved.nUnder ?? fallback.nUnder,
     nWhite: saved.nWhite ?? fallback.nWhite,
@@ -126,8 +137,24 @@ export function parseStored(raw: string | null): Stored {
     rules: fresh && Array.isArray(saved.rules) ? saved.rules.slice(0, 3) : [],
     stage,
     stageAt: saved.stageAt ?? 0,
+    namesAt: namesAreFresh(saved) ? saved.namesAt ?? 0 : 0,
   };
 }
+
+/**
+ * Whether the stored names are recent enough to offer back.
+ *
+ * Anything written before this field existed has no date, so it lapses on
+ * first read rather than being treated as brand new — which is the safer way
+ * round for a list of people's names.
+ */
+function namesAreFresh(saved: Partial<Stored>): boolean {
+  if (!Array.isArray(saved.names) || saved.names.length === 0) return false;
+  if (typeof saved.namesAt !== "number" || saved.namesAt <= 0) return false;
+  return Date.now() - saved.namesAt < MAX_NAMES_AGE_MS;
+}
+
+export { MAX_NAMES_AGE_MS };
 
 export function writeStored(stored: Stored): void {
   try {
