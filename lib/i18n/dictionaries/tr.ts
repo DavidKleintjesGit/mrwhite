@@ -104,6 +104,7 @@ const tr: Dictionary = {
       '"Kendi kelimelerin" kategorisine düşecek bir kelime çifti uydur.',
     save: "Kaydet",
     privacy: "Gizlilik politikası",
+    clear: "Her şeyi sil",
   },
 
   archive: {
@@ -172,6 +173,9 @@ const tr: Dictionary = {
     cancel: "Vazgeç",
     yes: "Evet, yeniden dağıt",
     waiting: "Önce oku… {n}",
+    clearTitle: "Her şey silinsin mi?",
+    clearBody: "İsimler, ayarlar ve devam eden oyun bu cihazdan kaldırılır.",
+    clearYes: "Evet, sil",
     quitTitle: "Oyun dursun mu?",
     quitBody: "Tur biter ve menüye dönersin. Roller ve oylar silinir.",
     quitYes: "Evet, durdur",

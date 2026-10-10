@@ -98,6 +98,7 @@ const en: Dictionary = {
     customEmpty: 'Make up a word pair. It lands in the "Own" category.',
     save: "Save",
     privacy: "Privacy policy",
+    clear: "Erase everything",
   },
 
   archive: {
@@ -166,6 +167,9 @@ const en: Dictionary = {
     cancel: "Cancel",
     yes: "Yes, deal again",
     waiting: "Read it first… {n}",
+    clearTitle: "Erase everything?",
+    clearBody: "Names, settings and any game in progress are removed from this device.",
+    clearYes: "Yes, erase",
     quitTitle: "Stop the game?",
     quitBody:
       "The round ends and you go back to the menu. Roles and votes are wiped.",

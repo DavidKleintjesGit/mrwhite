@@ -29,6 +29,7 @@ type Props = {
   onBack: () => void;
   onOpenCategories: () => void;
   onOpenLanguage: () => void;
+  onClear: () => void;
 };
 
 export default function SettingsScreen({
@@ -41,6 +42,7 @@ export default function SettingsScreen({
   onBack,
   onOpenCategories,
   onOpenLanguage,
+  onClear,
 }: Props) {
   const t = dict.settings;
   const [draft, setDraft] = useState({ a: "", b: "" });
@@ -467,6 +469,31 @@ export default function SettingsScreen({
       </Field>
 
       {/*
+        Everything this app put on the device, gone in one tap. Worth having
+        before lending the phone on, and the only way to get rid of a stored
+        group before it lapses by itself.
+      */}
+      <Press
+        onClick={onClear}
+        style={{
+          gridColumn: "1 / -1",
+          justifySelf: "end",
+          marginTop: "auto",
+          fontFamily: ARCHIVO,
+          fontSize: 14,
+          textTransform: "uppercase",
+          background: "var(--bg)",
+          color: "#FF3D3D",
+          border: "3px solid #FF3D3D",
+          padding: "12px 16px",
+          cursor: "pointer",
+        }}
+        press={{ transform: "translate(2px,2px)" }}
+      >
+        {t.clear}
+      </Press>
+
+      {/*
         Both stores want the policy reachable from inside the app, not only
         from the website. A plain link is deliberate: it leaves the game, and
         the game is written to storage on every move, so there is nothing to
@@ -477,7 +504,7 @@ export default function SettingsScreen({
         style={{
           gridColumn: "1 / -1",
           justifySelf: "end",
-          marginTop: "auto",
+          marginTop: 12,
           fontSize: 14,
           letterSpacing: ".08em",
           textTransform: "uppercase",

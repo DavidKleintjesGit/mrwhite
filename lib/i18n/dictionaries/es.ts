@@ -104,6 +104,7 @@ const es: Dictionary = {
       'Inventa una pareja de palabras. Irá a la categoría "Tus palabras".',
     save: "Guardar",
     privacy: "Política de privacidad",
+    clear: "Borrar todo",
   },
 
   archive: {
@@ -172,6 +173,9 @@ const es: Dictionary = {
     cancel: "Cancelar",
     yes: "Sí, repartir de nuevo",
     waiting: "Léelo primero… {n}",
+    clearTitle: "¿Borrar todo?",
+    clearBody: "Los nombres, los ajustes y una partida en curso se eliminan de este dispositivo.",
+    clearYes: "Sí, borrar",
     quitTitle: "¿Parar la partida?",
     quitBody:
       "La ronda termina y vuelves al menú. Los roles y los votos se borran.",

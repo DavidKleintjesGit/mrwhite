@@ -51,6 +51,8 @@ import {
 } from "@/lib/i18n";
 import {
   THEMES,
+  clearStored,
+  defaultStored,
   parseStored,
   readStored,
   writeStored,
@@ -64,7 +66,7 @@ type Props = {
   lang: Locale;
 };
 
-type Dialog = "none" | "categories" | "language" | "confirm" | "quit";
+type Dialog = "none" | "categories" | "language" | "confirm" | "quit" | "clear";
 
 /** The stored settings do not change behind our back while a page is open. */
 const subscribe = () => () => {};
@@ -415,6 +417,19 @@ export default function App({ dict, lang }: Props) {
           onConfirm={startDeal}
         />
       )}
+      {dialog === "clear" && (
+        <ConfirmDialog
+          dict={dict}
+          kind="clear"
+          onCancel={() => setDialog("none")}
+          onConfirm={() => {
+            clearStored();
+            setDialog("none");
+            // Straight back to a blank slate, without reading storage again.
+            setEdited(defaultStored());
+          }}
+        />
+      )}
       {dialog === "quit" && (
         <ConfirmDialog
           dict={dict}
@@ -484,6 +499,7 @@ export default function App({ dict, lang }: Props) {
             onBack={() => go({ name: "home" })}
             onOpenCategories={() => setDialog("categories")}
             onOpenLanguage={() => setDialog("language")}
+            onClear={() => setDialog("clear")}
           />
         );
 

@@ -104,6 +104,7 @@ const it: Dictionary = {
       'Inventa una coppia di parole. Finirà nella categoria "Le tue parole".',
     save: "Salva",
     privacy: "Informativa sulla privacy",
+    clear: "Cancella tutto",
   },
 
   archive: {
@@ -172,6 +173,9 @@ const it: Dictionary = {
     cancel: "Annulla",
     yes: "Sì, ridistribuisci",
     waiting: "Leggi prima… {n}",
+    clearTitle: "Cancellare tutto?",
+    clearBody: "Nomi, impostazioni e una partita in corso vengono rimossi da questo dispositivo.",
+    clearYes: "Sì, cancella",
     quitTitle: "Fermare la partita?",
     quitBody:
       "La partita finisce e torni al menu. Ruoli e voti vengono cancellati.",

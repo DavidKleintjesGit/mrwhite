@@ -104,6 +104,7 @@ const de: Dictionary = {
       'Denk dir ein Wortpaar aus. Es landet in der Kategorie "Eigene".',
     save: "Speichern",
     privacy: "Datenschutz",
+    clear: "Alles löschen",
   },
 
   archive: {
@@ -172,6 +173,9 @@ const de: Dictionary = {
     cancel: "Abbrechen",
     yes: "Ja, neu austeilen",
     waiting: "Erst lesen… {n}",
+    clearTitle: "Alles löschen?",
+    clearBody: "Namen, Einstellungen und eine laufende Runde werden von diesem Gerät entfernt.",
+    clearYes: "Ja, löschen",
     quitTitle: "Spiel beenden?",
     quitBody:
       "Die Runde endet und ihr geht zurück ins Menü. Rollen und Stimmen werden gelöscht.",

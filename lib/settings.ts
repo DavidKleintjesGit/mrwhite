@@ -156,6 +156,19 @@ function namesAreFresh(saved: Partial<Stored>): boolean {
 
 export { MAX_NAMES_AGE_MS };
 
+/**
+ * Wipes everything this app put on the device: the names, the settings and
+ * any game in progress. Used by the clear button, which is the only way to
+ * get rid of it all at once — handy before lending the phone on.
+ */
+export function clearStored(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Nothing to clear if storage is blocked in the first place.
+  }
+}
+
 export function writeStored(stored: Stored): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));

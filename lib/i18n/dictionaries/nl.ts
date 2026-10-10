@@ -103,6 +103,7 @@ const nl = {
     customEmpty: 'Verzin een woordpaar. Het komt in de categorie "Eigen".',
     save: "Opslaan",
     privacy: "Privacybeleid",
+    clear: "Alles wissen",
   },
 
   archive: {
@@ -171,6 +172,9 @@ const nl = {
     cancel: "Annuleren",
     yes: "Ja, opnieuw delen",
     waiting: "Lees eerst… {n}",
+    clearTitle: "Alles wissen?",
+    clearBody: "Namen, instellingen en een lopend potje worden van dit toestel verwijderd.",
+    clearYes: "Ja, wissen",
     quitTitle: "Spel stoppen?",
     quitBody:
       "Het potje stopt en je gaat terug naar het menu. Rollen en stemmen worden gewist.",

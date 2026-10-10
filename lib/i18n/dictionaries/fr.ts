@@ -105,6 +105,7 @@ const fr: Dictionary = {
       'Inventez une paire de mots. Elle ira dans la catégorie "Vos mots".',
     save: "Enregistrer",
     privacy: "Politique de confidentialité",
+    clear: "Tout effacer",
   },
 
   archive: {
@@ -173,6 +174,9 @@ const fr: Dictionary = {
     cancel: "Annuler",
     yes: "Oui, redistribuer",
     waiting: "Lisez d'abord… {n}",
+    clearTitle: "Tout effacer ?",
+    clearBody: "Les noms, les réglages et une partie en cours sont supprimés de cet appareil.",
+    clearYes: "Oui, effacer",
     quitTitle: "Arrêter la partie ?",
     quitBody:
       "La manche s'arrête et tu reviens au menu. Les rôles et les votes sont effacés.",

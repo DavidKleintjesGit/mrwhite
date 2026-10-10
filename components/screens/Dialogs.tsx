@@ -410,12 +410,21 @@ export function ConfirmDialog({
   onConfirm,
 }: {
   dict: Dictionary;
-  kind?: "reshuffle" | "quit";
+  kind?: "reshuffle" | "quit" | "clear";
   onCancel: () => void;
   onConfirm: () => void;
 }) {
   const t = dict.confirm;
-  const quitting = kind === "quit";
+  const title =
+    kind === "quit" ? t.quitTitle : kind === "clear" ? t.clearTitle : t.title;
+  const body =
+    kind === "quit"
+      ? `${t.quitBody} `
+      : kind === "clear"
+      ? `${t.clearBody} `
+      : t.bodyStart;
+  const yes =
+    kind === "quit" ? t.quitYes : kind === "clear" ? t.clearYes : t.yes;
   const [left, setLeft] = useState(3);
 
   useEffect(() => {
@@ -450,7 +459,7 @@ export function ConfirmDialog({
           lineHeight: 1.05,
         }}
       >
-        {quitting ? t.quitTitle : t.title}
+        {title}
       </h3>
       <p
         style={{
@@ -460,7 +469,7 @@ export function ConfirmDialog({
           textWrap: "pretty",
         }}
       >
-        {quitting ? `${t.quitBody} ` : t.bodyStart}
+        {body}
         <strong>{t.bodyStrong}</strong>
       </p>
 
@@ -517,7 +526,7 @@ export function ConfirmDialog({
             }}
             press={CLOSE_PRESS}
           >
-            {quitting ? t.quitYes : t.yes}
+            {yes}
           </Press>
         ) : (
           <button
