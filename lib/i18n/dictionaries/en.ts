@@ -347,6 +347,8 @@ const en: Dictionary = {
     active: "In play",
 
     resultDrink: "Drink!",
+
+    cheers: "Cheers",
     resultDry: "Nobody drinks",
     resultBurger: "Everyone who voted for this civilian takes a sip.",
     resultNobody: "Oddly enough, nobody voted for this civilian.",

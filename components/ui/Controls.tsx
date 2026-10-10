@@ -178,7 +178,7 @@ export function Stepper({
   onInc: () => void;
 }) {
   const step: CSSProperties = {
-    width: 46,
+    width: 44,
     height: 46,
     flex: "none",
     background: "#0d0d0d",
@@ -193,21 +193,22 @@ export function Stepper({
     <div
       style={{
         display: "flex",
+        flexWrap: "wrap",
         alignItems: "center",
-        gap: 12,
+        gap: "12px 16px",
         background: "var(--card)",
         color: "#0d0d0d",
         border: "3px solid #0d0d0d",
-        padding: 14,
+        padding: 16,
         boxShadow: `6px 6px 0 ${accent}`,
       }}
     >
       <div
         style={{
-          flex: 1,
+          flex: "1 1 140px",
           display: "flex",
           flexDirection: "column",
-          gap: 3,
+          gap: 4,
           minWidth: 0,
         }}
       >
@@ -216,40 +217,52 @@ export function Stepper({
             fontFamily: "var(--font-archivo-black), sans-serif",
             fontSize: 18,
             textTransform: "uppercase",
+            whiteSpace: "nowrap",
           }}
         >
           {label}
         </span>
         <span style={{ fontSize: 14, lineHeight: 1.3 }}>{description}</span>
       </div>
-      <Press
-        title={`${label} −`}
-        onClick={onDec}
-        disabled={decDisabled}
-        style={{ ...step, opacity: decDisabled ? 0.3 : 1 }}
-        press={{ transform: "scale(.9)" }}
-      >
-        −
-      </Press>
-      <span
+      {/* v3 pushes the controls to the right and groups them. */}
+      <div
         style={{
-          width: 40,
-          textAlign: "center",
-          fontFamily: "var(--font-archivo-black), sans-serif",
-          fontSize: 30,
+          flex: "none",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          marginLeft: "auto",
         }}
       >
-        {value}
-      </span>
-      <Press
-        title={`${label} +`}
-        onClick={onInc}
-        disabled={incDisabled}
-        style={{ ...step, opacity: incDisabled ? 0.3 : 1 }}
-        press={{ transform: "scale(.9)" }}
-      >
-        +
-      </Press>
+        <Press
+          title={`${label} −`}
+          onClick={onDec}
+          disabled={decDisabled}
+          style={{ ...step, opacity: decDisabled ? 0.3 : 1 }}
+          press={{ transform: "scale(.9)" }}
+        >
+          −
+        </Press>
+        <span
+          style={{
+            width: 36,
+            textAlign: "center",
+            fontFamily: "var(--font-archivo-black), sans-serif",
+            fontSize: 28,
+          }}
+        >
+          {value}
+        </span>
+        <Press
+          title={`${label} +`}
+          onClick={onInc}
+          disabled={incDisabled}
+          style={{ ...step, opacity: incDisabled ? 0.3 : 1 }}
+          press={{ transform: "scale(.9)" }}
+        >
+          +
+        </Press>
+      </div>
     </div>
   );
 }

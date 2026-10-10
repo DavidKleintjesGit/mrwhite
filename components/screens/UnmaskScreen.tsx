@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Magnifier from "@/components/ui/Magnifier";
 import Press from "@/components/ui/Press";
 import Screen from "@/components/ui/Screen";
+import Stamp from "@/components/ui/Stamp";
 import type { Player, Role } from "@/lib/game";
 import type { Dictionary } from "@/lib/i18n";
 
@@ -96,27 +97,30 @@ export default function UnmaskScreen({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 22,
-            padding: "10px 0",
+            flex: 1,
+            gap: 28,
+            padding: "18px 0 0",
           }}
         >
           <div
             style={{
               fontFamily: ARCHIVO,
-              // "Mr. White" is half again as wide as "Burger", and the block
-              // ends up rotated, so it needs room to shrink on a phone or it
-              // bleeds off both edges.
-              fontSize: "clamp(26px, 9.5vw, 58px)",
+              // v3 shrank this itself: "Mr. White" is half again as wide as
+              // "Burger" and the block is rotated, so on a phone the old
+              // size bled off both edges.
+              fontSize: "clamp(24px, 7.5vw, 54px)",
               textTransform: "uppercase",
               lineHeight: 1,
               color: "#0d0d0d",
               background: ROLE_COLOUR[player.role],
               border: "4px solid #0d0d0d",
-              boxShadow: "8px 8px 0 var(--fg)",
-              padding: "14px 22px",
+              boxShadow: "6px 6px 0 var(--fg)",
+              padding: "clamp(10px,2.5vw,14px) clamp(14px,4vw,22px)",
+              overflowWrap: "anywhere",
               maxWidth: "100%",
               boxSizing: "border-box",
-              animation: "stampIn .55s both",
+              transform: "rotate(-3deg)",
+              animation: "stampSlam .55s cubic-bezier(.2,1.5,.35,1) both",
             }}
           >
             {dict.roles[player.role]}
@@ -137,31 +141,48 @@ export default function UnmaskScreen({
           {showDrinks && (
             <div
               style={{
+                width: "100%",
+                boxSizing: "border-box",
+                background: "var(--card)",
+                color: "#0d0d0d",
+                border: "3px solid #0d0d0d",
+                boxShadow: `6px 6px 0 ${
+                  drinkers.length ? "#FF3D3D" : "var(--line)"
+                }`,
+                padding: 18,
                 display: "flex",
                 flexDirection: "column",
-                gap: 6,
-                alignItems: "center",
-                background: drinkers.length ? "#FF3D3D" : "var(--off)",
-                color: drinkers.length ? "#0d0d0d" : "var(--offfg)",
-                border: `3px ${
-                  drinkers.length ? "solid #0d0d0d" : "dashed var(--offfg)"
-                }`,
-                padding: "14px 16px",
-                maxWidth: 360,
-                animation: "screenIn .4s .55s both",
+                gap: 14,
+                textAlign: "left",
+                animation: "popIn .4s .5s both",
               }}
             >
-              <span
+              <div
                 style={{
-                  fontFamily: ARCHIVO,
-                  fontSize: 18,
-                  textTransform: "uppercase",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
                 }}
               >
-                {drinkers.length
-                  ? dict.drink.resultDrink
-                  : dict.drink.resultDry}
-              </span>
+                <span
+                  style={{
+                    fontFamily: ARCHIVO,
+                    fontSize: 24,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {drinkers.length
+                    ? dict.drink.resultDrink
+                    : dict.drink.resultDry}
+                </span>
+                {drinkers.length > 0 && (
+                  <Stamp fontSize={14} rotate={-8} delay={null}>
+                    {dict.drink.cheers}
+                  </Stamp>
+                )}
+              </div>
+
               <span style={{ fontSize: 15, lineHeight: 1.4 }}>
                 {player.role !== "burger"
                   ? dict.drink.resultInfiltrant
@@ -169,13 +190,29 @@ export default function UnmaskScreen({
                   ? dict.drink.resultBurger
                   : dict.drink.resultNobody}
               </span>
+
               {drinkers.length > 0 && (
-                <span style={{ fontSize: 15, fontWeight: 700 }}>
-                  {drinkers.join(" · ")}
-                </span>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {drinkers.map((name) => (
+                    <span
+                      key={name}
+                      style={{
+                        fontFamily: ARCHIVO,
+                        fontSize: 15,
+                        textTransform: "uppercase",
+                        background: "#FF3D3D",
+                        border: "2px solid #0d0d0d",
+                        padding: "6px 10px",
+                      }}
+                    >
+                      {name} +1
+                    </span>
+                  ))}
+                </div>
               )}
             </div>
           )}
+
           <Press
             onClick={onContinue}
             style={{

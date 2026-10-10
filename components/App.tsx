@@ -505,6 +505,7 @@ export default function App({ dict, lang }: Props) {
           <SetupScreen
             dict={dict}
             steps={steps}
+            modeName={drink ? dict.modes.drinkTitle : dict.modes.classicTitle}
             players={stored.nPlayers}
             undercovers={stored.nUnder}
             whites={stored.nWhite}

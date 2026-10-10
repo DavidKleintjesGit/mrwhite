@@ -353,6 +353,8 @@ const tr: Dictionary = {
     active: "Oyunda",
 
     resultDrink: "İçme vakti!",
+
+    cheers: "Şerefe",
     resultDry: "Kimse içmiyor",
     resultBurger: "Bu vatandaşa oy verenler bir yudum alır.",
     resultNobody: "Garip ama bu vatandaşa kimse oy vermemiş.",

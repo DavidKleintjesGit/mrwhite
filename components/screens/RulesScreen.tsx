@@ -34,7 +34,7 @@ export default function RulesScreen({ dict, onBack, onPlay }: Props) {
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, minmax(0,1fr))",
-          gap: 10,
+          gap: 12,
         }}
       >
         {t.cards.map((card, index) => (
@@ -44,7 +44,7 @@ export default function RulesScreen({ dict, onBack, onPlay }: Props) {
               background: CARD_BACKGROUNDS[index],
               color: "#0d0d0d",
               border: "3px solid #0d0d0d",
-              padding: "12px 10px",
+              padding: "14px 16px",
               display: "flex",
               flexDirection: "column",
               gap: 6,
@@ -69,7 +69,7 @@ export default function RulesScreen({ dict, onBack, onPlay }: Props) {
           display: "grid",
           gridTemplateColumns:
             "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
-          gap: "18px 32px",
+          gap: "22px 36px",
         }}
       >
         {t.items.map((text, index) => (
@@ -80,7 +80,7 @@ export default function RulesScreen({ dict, onBack, onPlay }: Props) {
               gap: 14,
               alignItems: "flex-start",
               borderBottom: "2px dashed var(--line)",
-              paddingBottom: 12,
+              paddingBottom: 18,
             }}
           >
             <span

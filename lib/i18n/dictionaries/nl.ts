@@ -354,6 +354,8 @@ const nl = {
     active: "Actief",
 
     resultDrink: "Drinken!",
+
+    cheers: "Proost",
     resultDry: "Niemand drinkt",
     resultBurger: "Wie op deze burger stemde, neemt een slok.",
     resultNobody: "Gek genoeg stemde niemand op deze burger.",

@@ -12,6 +12,8 @@ type Props = {
   dict: Dictionary;
   /** 3 in the classic game, 4 when the house rules are dealt as well. */
   steps: number;
+  /** Named in the kicker, so you can see which edition you are setting up. */
+  modeName: string;
   players: number;
   undercovers: number;
   whites: number;
@@ -25,6 +27,7 @@ type Props = {
 export default function SetupScreen({
   dict,
   steps,
+  modeName,
   players,
   undercovers,
   whites,
@@ -54,11 +57,11 @@ export default function SetupScreen({
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
         alignContent: "start",
-        gap: "28px 36px",
+        gap: "40px 48px",
       }}
     >
       <Header
-        kicker={format(t.kicker, { total: steps })}
+        kicker={`${modeName} · ${format(t.kicker, { total: steps })}`}
         title={t.title}
         backLabel={dict.common.back}
         onBack={onBack}
@@ -98,10 +101,10 @@ export default function SetupScreen({
       <div
         style={{
           border: "3px dashed var(--fg)",
-          padding: 14,
+          padding: 18,
           display: "flex",
           flexDirection: "column",
-          gap: 12,
+          gap: 16,
         }}
       >
         <div

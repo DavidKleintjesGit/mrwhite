@@ -357,6 +357,8 @@ const it: Dictionary = {
     active: "In gioco",
 
     resultDrink: "Si beve!",
+
+    cheers: "Salute",
     resultDry: "Non beve nessuno",
     resultBurger: "Chi ha votato questo cittadino fa un sorso.",
     resultNobody: "Stranamente nessuno ha votato questo cittadino.",

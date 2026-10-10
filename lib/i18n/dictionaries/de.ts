@@ -354,6 +354,8 @@ const de: Dictionary = {
     active: "Im Spiel",
 
     resultDrink: "Trinken!",
+
+    cheers: "Prost",
     resultDry: "Niemand trinkt",
     resultBurger: "Wer für diesen Bürger gestimmt hat, nimmt einen Schluck.",
     resultNobody: "Komischerweise hat niemand für diesen Bürger gestimmt.",
