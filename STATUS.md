@@ -1,6 +1,6 @@
 # Waar dit project staat
 
-**Bijgewerkt:** 2026-10-10 (laat) · **Doel:** App Store en Play Store
+**Bijgewerkt:** 2026-10-10 (nacht) · **Doel:** App Store en Play Store
 
 Dit document is de waarheid over de huidige stand. [CONCEPT.md](CONCEPT.md) en
 [FASEN.md](FASEN.md) beschrijven het oorspronkelijke idee en zijn op onderdelen
@@ -36,8 +36,9 @@ zijn letterlijk overgenomen en alleen de herhaling zit in componenten
 | Drankregels | 45 regelkaarten in 4 soorten, 8 conflictparen, 6 geheime challenges |
 | Talen | Interface én woorden in 7 talen geschreven; **alleen NL en EN vrijgegeven** |
 | Woorden | 154 paren voor NL en EN, 28 voor de rest |
-| Tests | 113, via `npm test`. Woorden apart met `npm run words:check` |
-| Opslag | Een lopend potje overleeft een herlaad. Sleutel `mrwhite-noir-v1`, vervalt na 6 uur |
+| Tests | 118, via `npm test`. Woorden apart met `npm run words:check` |
+| Opslag | Alles per toestel in `localStorage`, sleutel `mrwhite-noir-v1`. Potje vervalt na 6 uur, namen na 7 dagen, en Instellingen heeft een wisknop |
+| Eindrapport | Gebouwd uit de losse handoff van 2026-10-10 |
 | Native | `android/` en `ios/` staan in de repo, iconen gegenereerd uit `assets/icon.svg` |
 | Android-build | **Ondertekende AAB gebouwd op 2026-10-10**, klaar voor de Play Console |
 | Uitrollen | `./deploy.sh` → roept de skill in `~/.claude/skills/staging-deploy/` aan |
