@@ -345,6 +345,8 @@ const es: Dictionary = {
     resultDrink: "¡A beber!",
 
     cheers: "Salud",
+
+    timeUp: "Se acabó · da un trago",
     resultDry: "Nadie bebe",
     resultBurger: "Quien votó a este civil da un trago.",
     resultNobody: "Curiosamente, nadie votó a este civil.",

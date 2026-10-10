@@ -347,6 +347,8 @@ const nl = {
     resultDrink: "Drinken!",
 
     cheers: "Proost",
+
+    timeUp: "Tijd om · neem een slok",
     resultDry: "Niemand drinkt",
     resultBurger: "Wie op deze burger stemde, neemt een slok.",
     resultNobody: "Gek genoeg stemde niemand op deze burger.",

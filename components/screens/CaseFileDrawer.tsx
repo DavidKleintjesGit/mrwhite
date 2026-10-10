@@ -657,7 +657,12 @@ function FileView({
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <span style={LABEL}>{t.challengeKicker}</span>
 
-            {revealed || player.challengeDone ? (
+            {/*
+              A player who is out has nothing left to steer, so their
+              challenge is no longer worth hiding — only a living one stays
+              behind the bar.
+            */}
+            {revealed || player.challengeDone || !player.alive ? (
               <div
                 style={{
                   borderLeft: "4px solid #0d0d0d",

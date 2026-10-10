@@ -345,6 +345,8 @@ const tr: Dictionary = {
     resultDrink: "İçme vakti!",
 
     cheers: "Şerefe",
+
+    timeUp: "Süre doldu · bir yudum al",
     resultDry: "Kimse içmiyor",
     resultBurger: "Bu vatandaşa oy verenler bir yudum alır.",
     resultNobody: "Garip ama bu vatandaşa kimse oy vermemiş.",

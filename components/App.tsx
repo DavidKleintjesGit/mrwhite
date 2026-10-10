@@ -584,6 +584,7 @@ export default function App({ dict, lang }: Props) {
             turn={stage.turn}
             round={stage.round}
             timer={settings.timer}
+            drink={drink}
             dark={settings.theme === "donker"}
             onNext={() =>
               stage.turn >= stage.order.length - 1

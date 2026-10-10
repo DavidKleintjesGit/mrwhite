@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Press from "@/components/ui/Press";
+import Stamp from "@/components/ui/Stamp";
 import Screen, { FooterPair } from "@/components/ui/Screen";
 import type { Player } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
@@ -16,6 +17,8 @@ type Props = {
   round: number;
   /** Seconds per clue, or 0 for no timer. */
   timer: number;
+  /** Running the timer out costs a sip in the Drinking Edition. */
+  drink: boolean;
   dark: boolean;
   onNext: () => void;
   onVote: () => void;
@@ -28,6 +31,7 @@ export default function HintScreen({
   turn,
   round,
   timer,
+  drink,
   dark,
   onNext,
   onVote,
@@ -143,7 +147,14 @@ export default function HintScreen({
         </div>
       ))}
 
-      {timer > 0 && <ClueTimer key={turn} seconds={timer} dark={dark} />}
+      {timer > 0 && (
+        <ClueTimer
+          key={turn}
+          seconds={timer}
+          dark={dark}
+          penalty={drink ? dict.drink.timeUp : null}
+        />
+      )}
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
         {order.map((playerIndex, position) => {
@@ -222,7 +233,22 @@ export default function HintScreen({
  * Counts one clue down. The parent gives it a fresh key per speaker, so the
  * clock resets by remounting rather than by writing state from an effect.
  */
-function ClueTimer({ seconds, dark }: { seconds: number; dark: boolean }) {
+/**
+ * The clue timer. In the Drinking Edition running out of it costs a sip, so
+ * the bar does not just empty quietly: it stamps the penalty across itself,
+ * which is the only moment in a round where the app tells someone to drink
+ * without a vote having happened.
+ */
+function ClueTimer({
+  seconds,
+  dark,
+  penalty,
+}: {
+  seconds: number;
+  dark: boolean;
+  /** The sip the Drinking Edition charges for running out; null in classic. */
+  penalty: string | null;
+}) {
   const [left, setLeft] = useState(seconds);
   const handle = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -243,10 +269,18 @@ function ClueTimer({ seconds, dark }: { seconds: number; dark: boolean }) {
   }, []);
 
   const colour = left <= 5 ? "#FF3D3D" : dark ? "#FFD23F" : "#0d0d0d";
+  const over = left === 0;
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-      <div style={{ flex: 1, height: 18, border: "3px solid var(--fg)" }}>
+      <div
+        style={{
+          position: "relative",
+          flex: 1,
+          height: 18,
+          border: "3px solid var(--fg)",
+        }}
+      >
         <div
           style={{
             height: "100%",
@@ -255,6 +289,24 @@ function ClueTimer({ seconds, dark }: { seconds: number; dark: boolean }) {
             transition: "width 1s linear, background .3s",
           }}
         />
+        {over && penalty && (
+          <span
+            aria-live="polite"
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: "50%",
+              display: "flex",
+              justifyContent: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <Stamp fontSize={15} rotate={-4}>
+              {penalty}
+            </Stamp>
+          </span>
+        )}
       </div>
       <div
         style={{

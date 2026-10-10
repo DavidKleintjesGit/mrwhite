@@ -347,6 +347,8 @@ const fr: Dictionary = {
     resultDrink: "On boit !",
 
     cheers: "Santé",
+
+    timeUp: "Temps écoulé · prends une gorgée",
     resultDry: "Personne ne boit",
     resultBurger: "Ceux qui ont voté pour ce citoyen prennent une gorgée.",
     resultNobody: "Curieusement, personne n'a voté pour ce citoyen.",

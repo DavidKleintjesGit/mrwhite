@@ -350,6 +350,8 @@ const it: Dictionary = {
     resultDrink: "Si beve!",
 
     cheers: "Salute",
+
+    timeUp: "Tempo scaduto · fai un sorso",
     resultDry: "Non beve nessuno",
     resultBurger: "Chi ha votato questo cittadino fa un sorso.",
     resultNobody: "Stranamente nessuno ha votato questo cittadino.",
