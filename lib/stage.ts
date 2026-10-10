@@ -63,6 +63,13 @@ export type Stage =
       pair: WordPair;
       index: number;
       round: number;
+      /**
+       * Who drank for this vote, by player index. Recorded here because the
+       * sips on a player accumulate all game: by the time this screen
+       * renders there is no way to tell a sip taken just now from one taken
+       * for breaking a rule two rounds ago.
+       */
+      drinkers?: number[];
     }
   | {
       name: "guess";

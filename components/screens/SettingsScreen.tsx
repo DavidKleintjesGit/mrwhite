@@ -388,6 +388,59 @@ export default function SettingsScreen({
       </Field>
 
       {/*
+        Which kinds of house rule the Drinking Edition may draw from. It sits
+        in the ordinary settings rather than behind the mode, because a group
+        that hates one category wants it gone before they start, not halfway
+        through a game.
+      */}
+      <Field>
+        <FieldLabel>{dict.drink.catsTitle}</FieldLabel>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          {(
+            [
+              ["A", dict.drink.catALabel, "#FFD23F"],
+              ["B", dict.drink.catBLabel, "#3DD6FF"],
+              ["C", dict.drink.catCLabel, "#FF3D3D"],
+              ["D", dict.drink.catDLabel, "#B6F03C"],
+            ] as const
+          ).map(([key, label, colour]) => {
+            const on = settings.drinkCats[key] !== false;
+            // Never let the last one go: with nothing enabled there would be
+            // no rules to deal, and the draw would silently fall back to all
+            // four anyway.
+            const last =
+              on &&
+              Object.values(settings.drinkCats).filter(Boolean).length === 1;
+            return (
+              <Press
+                key={key}
+                disabled={last}
+                onClick={() =>
+                  update({
+                    drinkCats: { ...settings.drinkCats, [key]: !on },
+                  })
+                }
+                style={{
+                  fontFamily: ARCHIVO,
+                  fontSize: 13,
+                  textTransform: "uppercase",
+                  background: on ? colour : "var(--off)",
+                  color: on ? "#0d0d0d" : "var(--offfg)",
+                  border: `3px ${on ? "solid #0d0d0d" : "dashed var(--offfg)"}`,
+                  padding: "10px 12px",
+                  cursor: last ? "default" : "pointer",
+                  opacity: last ? 0.7 : 1,
+                }}
+                press={last ? undefined : { transform: "translate(2px,2px)" }}
+              >
+                {label}
+              </Press>
+            );
+          })}
+        </div>
+      </Field>
+
+      {/*
         Both stores want the policy reachable from inside the app, not only
         from the website. A plain link is deliberate: it leaves the game, and
         the game is written to storage on every move, so there is nothing to

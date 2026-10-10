@@ -83,10 +83,12 @@ const nl: PrivacyDoc = {
       ],
     },
     {
-      heading: "Kinderen",
+      heading: "Leeftijd",
       body: [
-        "Het spel is geschikt voor kinderen. Omdat we van niemand gegevens " +
-          "verzamelen, verzamelen we ze ook niet van kinderen.",
+        "Het klassieke spel is voor alle leeftijden. De Drinking Edition is " +
+          "dat niet: die verwijst naar alcohol en is bedoeld voor volwassenen.",
+        "Dat verandert niets aan wat we verzamelen, want dat is nog steeds " +
+          "niets — ook niet van kinderen.",
       ],
     },
     {
@@ -174,10 +176,12 @@ const en: PrivacyDoc = {
       ],
     },
     {
-      heading: "Children",
+      heading: "Age",
       body: [
-        "The game is suitable for children. Since we collect no data from " +
-          "anyone, we collect none from children either.",
+        "The classic game suits any age. The Drinking Edition does not: it " +
+          "refers to alcohol and is meant for adults.",
+        "That changes nothing about what we collect, which is still " +
+          "nothing — from children least of all.",
       ],
     },
     {

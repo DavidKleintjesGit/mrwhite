@@ -5,6 +5,7 @@ import Magnifier from "@/components/ui/Magnifier";
 import Press from "@/components/ui/Press";
 import Screen from "@/components/ui/Screen";
 import Stamp from "@/components/ui/Stamp";
+import { challengeReward } from "@/lib/drink";
 import type { Player } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
 
@@ -254,6 +255,67 @@ export default function CardScreen({ dict, player, onSeen, onClose }: Props) {
                 }}
               >
                 {t.wordNote}
+              </div>
+            </div>
+          )}
+
+          {/*
+            The secret challenge sits inside the torchlight with the word,
+            not beside it. A challenge everyone can read is not a challenge:
+            the whole thing rests on nobody knowing what you are steering
+            towards.
+          */}
+          {player.challenge !== null && (
+            <div
+              style={{
+                borderTop: "3px dashed #0d0d0d",
+                paddingTop: 12,
+                marginTop: 4,
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+                maxWidth: 320,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: 11,
+                  letterSpacing: ".2em",
+                  textTransform: "uppercase",
+                  fontWeight: 700,
+                }}
+              >
+                {dict.drink.challengeKicker}
+              </div>
+              <div
+                style={{
+                  fontFamily: ARCHIVO,
+                  fontSize: "clamp(17px,4vw,21px)",
+                  textTransform: "uppercase",
+                  lineHeight: 1.1,
+                }}
+              >
+                {
+                  dict.drink.challenges[
+                    String(
+                      player.challenge
+                    ) as keyof typeof dict.drink.challenges
+                  ].t
+                }
+              </div>
+              <div style={{ fontSize: 14, lineHeight: 1.35 }}>
+                {
+                  dict.drink.challenges[
+                    String(
+                      player.challenge
+                    ) as keyof typeof dict.drink.challenges
+                  ].d
+                }
+              </div>
+              <div style={{ fontSize: 13, fontWeight: 700 }}>
+                {format(dict.drink.challengeReward, {
+                  n: challengeReward(player.challenge),
+                })}
               </div>
             </div>
           )}

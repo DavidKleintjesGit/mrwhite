@@ -22,6 +22,13 @@ type Props = {
   dict: Dictionary;
   player: Player;
   mrGuess: boolean;
+  /**
+   * Who drinks for this vote, by name. Empty in the classic game, and also
+   * empty when the table got it right — an infiltrator costs nobody a sip.
+   */
+  drinkers?: string[];
+  /** True only in the Drinking Edition, where the verdict is worth spelling out. */
+  showDrinks?: boolean;
   onContinue: () => void;
 };
 
@@ -29,6 +36,8 @@ export default function UnmaskScreen({
   dict,
   player,
   mrGuess,
+  drinkers = [],
+  showDrinks = false,
   onContinue,
 }: Props) {
   const t = dict.unmask;
@@ -124,6 +133,49 @@ export default function UnmaskScreen({
           >
             {line}
           </p>
+
+          {showDrinks && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+                alignItems: "center",
+                background: drinkers.length ? "#FF3D3D" : "var(--off)",
+                color: drinkers.length ? "#0d0d0d" : "var(--offfg)",
+                border: `3px ${
+                  drinkers.length ? "solid #0d0d0d" : "dashed var(--offfg)"
+                }`,
+                padding: "14px 16px",
+                maxWidth: 360,
+                animation: "screenIn .4s .55s both",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: ARCHIVO,
+                  fontSize: 18,
+                  textTransform: "uppercase",
+                }}
+              >
+                {drinkers.length
+                  ? dict.drink.resultDrink
+                  : dict.drink.resultDry}
+              </span>
+              <span style={{ fontSize: 15, lineHeight: 1.4 }}>
+                {player.role !== "burger"
+                  ? dict.drink.resultInfiltrant
+                  : drinkers.length
+                  ? dict.drink.resultBurger
+                  : dict.drink.resultNobody}
+              </span>
+              {drinkers.length > 0 && (
+                <span style={{ fontSize: 15, fontWeight: 700 }}>
+                  {drinkers.join(" · ")}
+                </span>
+              )}
+            </div>
+          )}
           <Press
             onClick={onContinue}
             style={{

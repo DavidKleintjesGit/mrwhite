@@ -32,6 +32,7 @@ import { dealChallenges, drawRules } from "@/lib/drink";
 import {
   clampPlayers,
   deal,
+  drinkersFor,
   eliminate,
   fitRoles,
   openingOrder,
@@ -239,6 +240,7 @@ export default function App({ dict, lang }: Props) {
       pair: from.pair,
       index: result.out,
       round: from.round,
+      drinkers: drinkersFor(from.players, result.out, from.votes),
     });
   }
 
@@ -641,6 +643,10 @@ export default function App({ dict, lang }: Props) {
             dict={dict}
             player={stage.players[stage.index]}
             mrGuess={settings.mrGuess}
+            showDrinks={drink}
+            drinkers={(stage.drinkers ?? []).map(
+              (index) => stage.players[index].name
+            )}
             onContinue={() => {
               const player = stage.players[stage.index];
               if (player.role === "white" && settings.mrGuess) {
