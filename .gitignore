@@ -45,3 +45,8 @@ next-env.d.ts
 android/keystore.properties
 *.jks
 *.keystore
+
+# The design bundles David supplies. Kept out of the public repo: they are
+# his files, they are large, and nothing in the build reads them. They live
+# here so each new version can be diffed against the one it replaces.
+design/

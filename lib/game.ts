@@ -12,8 +12,21 @@ import {
  * rule is in doubt. Nothing in this file touches React or the browser.
  */
 
+/**
+ * The two ways to play. Classic is the game on its own; the Drinking Edition
+ * adds rule cards, secret challenges and a secret vote on top of it, and
+ * changes the arithmetic below.
+ */
+export type Mode = "klassiek" | "drink";
+
 export const MIN_PLAYERS = 3;
+/** The Drinking Edition needs a fourth player for its secret vote to work. */
+export const MIN_DRINK_PLAYERS = 4;
 export const MAX_PLAYERS = 20;
+
+export function minPlayers(mode: Mode): number {
+  return mode === "drink" ? MIN_DRINK_PLAYERS : MIN_PLAYERS;
+}
 
 export type Role = "burger" | "undercover" | "white";
 
@@ -24,6 +37,11 @@ export type Player = {
   word: string | null;
   seen: boolean;
   alive: boolean;
+  /** Sips taken. Drinking Edition only; the group keeps itself honest. */
+  sips: number;
+  /** The player's secret challenge, by id. Null outside the Drinking Edition. */
+  challenge: number | null;
+  challengeDone: boolean;
 };
 
 /** [civilian word, undercover word] */
@@ -48,8 +66,10 @@ export function shuffle<T>(items: readonly T[]): T[] {
  * Most infiltrators a table of this size can take. Infiltrators win once a
  * single civilian is left, so they have to start well short of half.
  */
-export function cap(players: number): number {
-  return Math.max(1, Math.floor((players - 1) / 2));
+export function cap(players: number, mode: Mode = "klassiek"): number {
+  return mode === "drink"
+    ? Math.max(1, Math.floor(players / 2))
+    : Math.max(1, Math.floor((players - 1) / 2));
 }
 
 /**
@@ -60,8 +80,9 @@ export function fitRoles(
   players: number,
   undercovers: number,
   whites: number,
+  mode: Mode = "klassiek",
 ): { undercovers: number; whites: number } {
-  const limit = cap(players);
+  const limit = cap(players, mode);
   let u = undercovers;
   let w = whites;
   while (u + w > limit) {
@@ -71,8 +92,8 @@ export function fitRoles(
   return { undercovers: u, whites: w };
 }
 
-export function clampPlayers(players: number): number {
-  return Math.min(MAX_PLAYERS, Math.max(MIN_PLAYERS, players));
+export function clampPlayers(players: number, mode: Mode = "klassiek"): number {
+  return Math.min(MAX_PLAYERS, Math.max(minPlayers(mode), players));
 }
 
 // --- Dealing ---------------------------------------------------------------
@@ -88,6 +109,8 @@ export type DealOptions = {
   custom: readonly CustomPair[];
   /** Used when every name is blank and the aliases run out. */
   fallbackName: (index: number) => string;
+  /** One challenge id per player; left out outside the Drinking Edition. */
+  challenges?: readonly number[];
 };
 
 export function pickPair(options: DealOptions): WordPair {
@@ -161,6 +184,9 @@ export function deal(options: DealOptions): {
           : null,
     seen: false,
     alive: true,
+    sips: 0,
+    challenge: options.challenges?.[index] ?? null,
+    challengeDone: false,
   }));
 
   return { players, pair };
@@ -190,14 +216,53 @@ export function openingOrder(
   return [...alive.slice(at), ...alive.slice(0, at)];
 }
 
-export function eliminate(players: readonly Player[], index: number): Player[] {
-  return players.map((player, i) =>
-    i === index ? { ...player, alive: false } : player,
-  );
+/**
+ * Votes someone out, and in the Drinking Edition makes whoever got it wrong
+ * drink: if the table eliminated a civilian, everyone who voted for them
+ * takes a sip. Getting an infiltrator out costs nobody anything.
+ */
+export function eliminate(
+  players: readonly Player[],
+  index: number,
+  votes: Readonly<Record<number, number>> = {},
+): Player[] {
+  const wrong = players[index]?.role === "burger";
+  const drinkers = wrong
+    ? Object.keys(votes)
+        .map(Number)
+        .filter((voter) => votes[voter] === index)
+    : [];
+
+  return players.map((player, i) => {
+    if (i === index) return { ...player, alive: false };
+    if (drinkers.includes(i)) return { ...player, sips: player.sips + 1 };
+    return player;
+  });
 }
 
-/** Null while the game is still running. */
-export function outcomeOf(players: readonly Player[]): Winner | null {
+/** Who has to drink for the vote that just happened, by player index. */
+export function drinkersFor(
+  players: readonly Player[],
+  index: number,
+  votes: Readonly<Record<number, number>>,
+): number[] {
+  if (players[index]?.role !== "burger") return [];
+  return Object.keys(votes)
+    .map(Number)
+    .filter((voter) => votes[voter] === index);
+}
+
+/**
+ * Null while the game is still running.
+ *
+ * The Drinking Edition ends sooner: infiltrators win the moment they match
+ * the civilians rather than having to whittle them down to one. Rounds are
+ * slower there, and a long endgame with the rule cards running is a slog.
+ */
+export function outcomeOf(
+  players: readonly Player[],
+  mode: Mode = "klassiek",
+): Winner | null {
   const infiltrators = players.filter(
     (player) => player.alive && player.role !== "burger",
   ).length;
@@ -206,7 +271,9 @@ export function outcomeOf(players: readonly Player[]): Winner | null {
   ).length;
 
   if (infiltrators === 0) return "burgers";
-  if (civilians <= 1) return "infiltranten";
+  if (mode === "drink" ? civilians <= infiltrators : civilians <= 1) {
+    return "infiltranten";
+  }
   return null;
 }
 

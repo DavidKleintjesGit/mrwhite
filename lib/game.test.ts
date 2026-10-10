@@ -2,15 +2,18 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   MAX_PLAYERS,
+  MIN_DRINK_PLAYERS,
   MIN_PLAYERS,
   cap,
   clampPlayers,
   deal,
+  drinkersFor,
   eliminate,
   fillNames,
   fitRoles,
   isCivilianWord,
   normaliseGuess,
+  minPlayers,
   openingOrder,
   outcomeOf,
   pickPair,
@@ -46,6 +49,9 @@ const roundOf = (roles: Role[]): Player[] =>
     word: role === "white" ? null : role === "undercover" ? "pasta" : "pizza",
     seen: false,
     alive: true,
+    sips: 0,
+    challenge: null,
+    challengeDone: false,
   }));
 
 // --- Line-up ---------------------------------------------------------------
@@ -251,4 +257,70 @@ test("the guess is checked against the civilians' word, not the undercover's", (
   assert.equal(isCivilianWord(pair, " STROOPWAFEL "), true);
   assert.equal(isCivilianWord(pair, "Speculaas"), false);
   assert.equal(isCivilianWord(pair, ""), false);
+});
+
+// --- The Drinking Edition --------------------------------------------------
+
+test("the drinking edition needs a fourth player", () => {
+  assert.equal(minPlayers("klassiek"), MIN_PLAYERS);
+  assert.equal(minPlayers("drink"), MIN_DRINK_PLAYERS);
+  assert.equal(clampPlayers(3, "drink"), MIN_DRINK_PLAYERS);
+  assert.equal(clampPlayers(3, "klassiek"), 3);
+});
+
+test("the drinking edition allows more infiltrators at the same table", () => {
+  for (let players = MIN_DRINK_PLAYERS; players <= MAX_PLAYERS; players++) {
+    assert.ok(cap(players, "drink") >= cap(players, "klassiek"));
+    // Still short of the whole table, or there would be nobody to fool.
+    assert.ok(cap(players, "drink") < players);
+  }
+});
+
+test("fitting roles respects the mode's own cap", () => {
+  const fitted = fitRoles(6, 3, 0, "drink");
+  assert.ok(fitted.undercovers + fitted.whites <= cap(6, "drink"));
+});
+
+test("infiltrators win on level pegging in the drinking edition only", () => {
+  const level = roundOf(["burger", "burger", "undercover", "white"]);
+  assert.equal(outcomeOf(level, "drink"), "infiltranten");
+  assert.equal(outcomeOf(level, "klassiek"), null);
+});
+
+test("both modes still end the moment the infiltrators are gone", () => {
+  const clean = roundOf(["burger", "burger", "burger"]);
+  assert.equal(outcomeOf(clean, "drink"), "burgers");
+  assert.equal(outcomeOf(clean, "klassiek"), "burgers");
+});
+
+test("voting out a civilian makes everyone who voted for them drink", () => {
+  const players = roundOf(["burger", "burger", "undercover", "white"]);
+  // Players 2 and 3 voted for player 0, a civilian; player 1 voted elsewhere.
+  const votes = { 1: 2, 2: 0, 3: 0 };
+
+  assert.deepEqual(drinkersFor(players, 0, votes).sort(), [2, 3]);
+
+  const after = eliminate(players, 0, votes);
+  assert.equal(after[0].alive, false);
+  assert.equal(after[1].sips, 0);
+  assert.equal(after[2].sips, 1);
+  assert.equal(after[3].sips, 1);
+});
+
+test("voting out an infiltrator costs nobody a sip", () => {
+  const players = roundOf(["burger", "burger", "undercover"]);
+  const votes = { 0: 2, 1: 2 };
+
+  assert.deepEqual(drinkersFor(players, 2, votes), []);
+
+  const after = eliminate(players, 2, votes);
+  assert.equal(after[2].alive, false);
+  assert.ok(after.every((player) => player.sips === 0));
+});
+
+test("eliminating without votes leaves the table dry", () => {
+  const players = roundOf(["burger", "burger", "undercover"]);
+  const after = eliminate(players, 0);
+  assert.equal(after[0].alive, false);
+  assert.ok(after.every((player) => player.sips === 0));
 });
