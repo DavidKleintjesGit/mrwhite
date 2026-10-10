@@ -87,6 +87,8 @@ export default function App({ dict, lang }: Props) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const drink = stored.mode === "drink";
+  /** The Drinking Edition deals its house rules as a step of its own. */
+  const steps = drink ? 4 : 3;
 
   function save(change: Partial<Stored>) {
     const next = { ...stored, ...change };
@@ -469,6 +471,7 @@ export default function App({ dict, lang }: Props) {
         return (
           <SetupScreen
             dict={dict}
+            steps={steps}
             players={stored.nPlayers}
             undercovers={stored.nUnder}
             whites={stored.nWhite}
@@ -484,6 +487,8 @@ export default function App({ dict, lang }: Props) {
         return (
           <NamesScreen
             dict={dict}
+            steps={steps}
+            dealLabel={drink ? dict.drink.namesCta : dict.names.deal}
             players={stored.nPlayers}
             names={stored.names}
             onChange={(names) => save({ names })}
@@ -510,6 +515,8 @@ export default function App({ dict, lang }: Props) {
         return (
           <DealScreen
             dict={dict}
+            step={steps}
+            steps={steps}
             players={stage.players}
             onBack={() =>
               go(

@@ -10,6 +10,8 @@ const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
+  step: number;
+  steps: number;
   players: Player[];
   onBack: () => void;
   onOpen: (index: number) => void;
@@ -19,6 +21,8 @@ type Props = {
 
 export default function DealScreen({
   dict,
+  step,
+  steps,
   players,
   onBack,
   onOpen,
@@ -38,7 +42,7 @@ export default function DealScreen({
       style={{ display: "flex", flexDirection: "column", gap: 18 }}
     >
       <Header
-        kicker={t.kicker}
+        kicker={format(t.kicker, { n: step, total: steps })}
         title={t.title}
         backLabel={dict.common.back}
         onBack={onBack}

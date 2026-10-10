@@ -8,6 +8,9 @@ const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
+  steps: number;
+  /** The Drinking Edition goes to its house rules, not straight to the deal. */
+  dealLabel: string;
   players: number;
   names: string[];
   onChange: (names: string[]) => void;
@@ -17,6 +20,8 @@ type Props = {
 
 export default function NamesScreen({
   dict,
+  steps,
+  dealLabel,
   players,
   names,
   onChange,
@@ -32,7 +37,7 @@ export default function NamesScreen({
       style={{ display: "flex", flexDirection: "column", gap: 18 }}
     >
       <Header
-        kicker={t.kicker}
+        kicker={format(t.kicker, { total: steps })}
         title={t.title}
         backLabel={dict.common.back}
         onBack={onBack}
@@ -142,7 +147,7 @@ export default function NamesScreen({
             boxShadow: "1px 1px 0 var(--fg)",
           }}
         >
-          {t.deal}
+          {dealLabel}
         </Press>
       </FooterPair>
     </Screen>

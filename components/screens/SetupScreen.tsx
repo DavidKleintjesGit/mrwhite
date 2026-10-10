@@ -4,12 +4,14 @@ import { Stepper } from "@/components/ui/Controls";
 import Press from "@/components/ui/Press";
 import Screen, { Header } from "@/components/ui/Screen";
 import { MAX_PLAYERS, MIN_PLAYERS, cap } from "@/lib/game";
-import type { Dictionary } from "@/lib/i18n";
+import { format, type Dictionary } from "@/lib/i18n";
 
 const ARCHIVO = "var(--font-archivo-black), sans-serif";
 
 type Props = {
   dict: Dictionary;
+  /** 3 in the classic game, 4 when the house rules are dealt as well. */
+  steps: number;
   players: number;
   undercovers: number;
   whites: number;
@@ -22,6 +24,7 @@ type Props = {
 
 export default function SetupScreen({
   dict,
+  steps,
   players,
   undercovers,
   whites,
@@ -55,7 +58,7 @@ export default function SetupScreen({
       }}
     >
       <Header
-        kicker={t.kicker}
+        kicker={format(t.kicker, { total: steps })}
         title={t.title}
         backLabel={dict.common.back}
         onBack={onBack}
