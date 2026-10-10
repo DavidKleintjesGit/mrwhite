@@ -285,6 +285,8 @@ const es: Dictionary = {
     namesCta: "A las reglas",
 
     catsTitle: "Drinking Edition · tipos de regla",
+
+    catCount: "{n} reglas",
     catALabel: "Palabras prohibidas",
     catAShort: "Palabras",
     catBLabel: "Gestos prohibidos",

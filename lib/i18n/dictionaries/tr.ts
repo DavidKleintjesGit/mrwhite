@@ -286,6 +286,8 @@ const tr: Dictionary = {
     namesCta: "Kurallara geç",
 
     catsTitle: "Drinking Edition · kural türleri",
+
+    catCount: "{n} kural",
     catALabel: "Yasak kelimeler",
     catAShort: "Kelime",
     catBLabel: "Yasak davranışlar",

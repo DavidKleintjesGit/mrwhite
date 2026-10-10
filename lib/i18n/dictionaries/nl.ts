@@ -287,6 +287,8 @@ const nl = {
     namesCta: "Naar de regels",
 
     catsTitle: "Drinking Edition · regelsoorten",
+
+    catCount: "{n} regels",
     catALabel: "Verboden woorden",
     catAShort: "Woorden",
     catBLabel: "Verboden gedrag",

@@ -15,6 +15,8 @@ const ROLE_COLOUR: Record<Role, string> = {
 };
 
 type Props = {
+  /** The Drinking Edition closes with what the challenges did. */
+  drink: boolean;
   dict: Dictionary;
   players: Player[];
   pair: WordPair;
@@ -24,6 +26,7 @@ type Props = {
 };
 
 export default function EndScreen({
+  drink,
   dict,
   players,
   pair,
@@ -101,8 +104,8 @@ export default function EndScreen({
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        <div style={{ border: "3px solid var(--fg)", padding: "10px 12px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <div style={{ border: "3px solid var(--fg)", padding: "12px 14px" }}>
           <div
             style={{
               fontSize: 12,
@@ -123,7 +126,7 @@ export default function EndScreen({
             {pair[0]}
           </div>
         </div>
-        <div style={{ border: "3px solid #3DD6FF", padding: "10px 12px" }}>
+        <div style={{ border: "3px solid #3DD6FF", padding: "12px 14px" }}>
           <div
             style={{
               fontSize: 12,
@@ -151,7 +154,7 @@ export default function EndScreen({
           display: "grid",
           gridTemplateColumns:
             "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
-          gap: 10,
+          gap: 14,
         }}
       >
         {players.map((player, index) => (
@@ -195,6 +198,91 @@ export default function EndScreen({
           </div>
         ))}
       </div>
+
+      {/*
+        What the challenges did, once they are no longer secret. Only in the
+        Drinking Edition, and sorted so the ones that came off lead.
+      */}
+      {drink && (
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          <div
+            style={{
+              fontSize: 13,
+              letterSpacing: ".18em",
+              textTransform: "uppercase",
+              color: "var(--muted)",
+            }}
+          >
+            {dict.drink.challengesTitle}
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
+              gap: 12,
+            }}
+          >
+            {players
+              .map((player, index) => ({ player, index }))
+              .sort(
+                (a, b) =>
+                  Number(b.player.challengeDone) -
+                  Number(a.player.challengeDone)
+              )
+              .map(({ player, index }) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    border: "3px solid var(--fg)",
+                    padding: "10px 12px",
+                  }}
+                >
+                  <span
+                    style={{
+                      flex: "none",
+                      width: 34,
+                      height: 34,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: player.challengeDone ? "#B6F03C" : "#d9d5ca",
+                      color: "#0d0d0d",
+                      fontFamily: ARCHIVO,
+                      fontSize: 16,
+                    }}
+                  >
+                    {player.challengeDone ? "✓" : "–"}
+                  </span>
+                  <span
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      fontFamily: ARCHIVO,
+                      fontSize: 15,
+                      textTransform: "uppercase",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {player.name}
+                  </span>
+                  <span style={{ fontSize: 13, fontWeight: 700 }}>
+                    {player.challenge
+                      ? dict.drink.challenges[
+                          String(
+                            player.challenge
+                          ) as keyof typeof dict.drink.challenges
+                        ].t
+                      : ""}
+                  </span>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
 
       <FooterPair>
         <Press

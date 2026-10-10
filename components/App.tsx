@@ -720,6 +720,7 @@ export default function App({ dict, lang }: Props) {
         return (
           <EndScreen
             dict={dict}
+            drink={drink}
             players={stage.players}
             pair={stage.pair}
             winner={stage.winner}

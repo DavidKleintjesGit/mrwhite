@@ -63,8 +63,8 @@ export default function DealScreen({
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
-          gap: "16px 12px",
-          paddingTop: 10,
+          gap: "28px 18px",
+          paddingTop: 16,
         }}
       >
         {players.map((player, index) => (

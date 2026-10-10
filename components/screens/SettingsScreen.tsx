@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/Controls";
 import Press from "@/components/ui/Press";
 import Screen, { Header } from "@/components/ui/Screen";
+import { RULES_BY_CATEGORY } from "@/lib/drink";
 import type { Difficulty } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
 import type { Settings, Theme } from "@/lib/settings";
@@ -79,7 +80,7 @@ export default function SettingsScreen({
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
         alignContent: "start",
-        gap: "28px 36px",
+        gap: "40px 48px",
       }}
     >
       <Header
@@ -191,7 +192,7 @@ export default function SettingsScreen({
         style={{
           display: "grid",
           gridTemplateColumns: "minmax(0,1fr) minmax(0,1.6fr)",
-          gap: 14,
+          gap: 20,
         }}
       >
         <Field>
@@ -395,7 +396,13 @@ export default function SettingsScreen({
       */}
       <Field>
         <FieldLabel>{dict.drink.catsTitle}</FieldLabel>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0,1fr))",
+            gap: 12,
+          }}
+        >
           {(
             [
               ["A", dict.drink.catALabel, "#FFD23F"],
@@ -406,8 +413,7 @@ export default function SettingsScreen({
           ).map(([key, label, colour]) => {
             const on = settings.drinkCats[key] !== false;
             // Never let the last one go: with nothing enabled there would be
-            // no rules to deal, and the draw would silently fall back to all
-            // four anyway.
+            // no rules to deal, and the draw would fall back to all four.
             const last =
               on &&
               Object.values(settings.drinkCats).filter(Boolean).length === 1;
@@ -416,24 +422,40 @@ export default function SettingsScreen({
                 key={key}
                 disabled={last}
                 onClick={() =>
-                  update({
-                    drinkCats: { ...settings.drinkCats, [key]: !on },
-                  })
+                  update({ drinkCats: { ...settings.drinkCats, [key]: !on } })
                 }
                 style={{
-                  fontFamily: ARCHIVO,
-                  fontSize: 13,
-                  textTransform: "uppercase",
-                  background: on ? colour : "var(--off)",
-                  color: on ? "#0d0d0d" : "var(--offfg)",
-                  border: `3px ${on ? "solid #0d0d0d" : "dashed var(--offfg)"}`,
-                  padding: "10px 12px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  gap: 4,
+                  textAlign: "left",
+                  fontFamily: "inherit",
+                  padding: "12px 14px",
+                  border: "3px solid var(--fg)",
+                  background: on ? colour : "var(--bg)",
+                  color: on ? "#0d0d0d" : "var(--fg)",
+                  boxShadow: on ? "4px 4px 0 var(--fg)" : "none",
                   cursor: last ? "default" : "pointer",
                   opacity: last ? 0.7 : 1,
+                  transition: "transform .12s",
                 }}
                 press={last ? undefined : { transform: "translate(2px,2px)" }}
               >
-                {label}
+                <span
+                  style={{
+                    fontFamily: ARCHIVO,
+                    fontSize: 15,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {label}
+                </span>
+                <span style={{ fontSize: 13, fontWeight: 700 }}>
+                  {format(dict.drink.catCount, {
+                    n: RULES_BY_CATEGORY[key].length,
+                  })}
+                </span>
               </Press>
             );
           })}

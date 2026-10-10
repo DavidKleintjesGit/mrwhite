@@ -287,6 +287,8 @@ const de: Dictionary = {
     namesCta: "Weiter zu den Regeln",
 
     catsTitle: "Drinking Edition · Regelarten",
+
+    catCount: "{n} Regeln",
     catALabel: "Verbotene Wörter",
     catAShort: "Wörter",
     catBLabel: "Verbotenes Verhalten",

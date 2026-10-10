@@ -289,6 +289,8 @@ const it: Dictionary = {
     namesCta: "Alle regole",
 
     catsTitle: "Drinking Edition · tipi di regola",
+
+    catCount: "{n} regole",
     catALabel: "Parole vietate",
     catAShort: "Parole",
     catBLabel: "Gesti vietati",

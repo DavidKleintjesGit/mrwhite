@@ -21,7 +21,7 @@ export function FieldLabel({ children }: { children: ReactNode }) {
 
 export function Field({ children }: { children: ReactNode }) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       {children}
     </div>
   );

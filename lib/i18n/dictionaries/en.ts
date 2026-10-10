@@ -280,6 +280,8 @@ const en: Dictionary = {
     namesCta: "On to the rules",
 
     catsTitle: "Drinking Edition · kinds of rule",
+
+    catCount: "{n} rules",
     catALabel: "Forbidden words",
     catAShort: "Words",
     catBLabel: "Forbidden behaviour",
