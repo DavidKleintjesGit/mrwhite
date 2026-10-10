@@ -209,12 +209,15 @@ Mac, of een cloud-build (Codemagic, EAS, Bitrise).
 
 ### Losse einden
 
-- **Domein: `misterwhite.online`.** De Caddy-configuratie op de server staat
-  klaar voor het apex-domein en `www`, en wijst naar dezelfde webroot. Anders
-  dan de showcase-sites staat er géén `noindex` op — dit is de echte plek.
-  Wachtend op DNS: A-record `@` → 178.105.197.213 en A-record `www` →
-  hetzelfde. Zodra dat propageert haalt Caddy vanzelf een certificaat.
-  Daarna kan het privacybeleid daar en kan het server-IP helemaal uit beeld.
+- **Domein `misterwhite.online` is live** sinds 2026-10-10, met certificaat
+  voor het kale domein en `www`, geldig tot 8 januari 2027. De webroot is
+  dezelfde als die van de showcase-URL, maar zonder `noindex` — dit is de
+  echte plek. Het privacybeleid staat op
+  `https://misterwhite.online/nl/privacy/`; dat adres gaat naar beide winkels.
+  **Val bij het opzetten van een nieuw domein niet in dezelfde val:** Caddy
+  vraagt één certificaat aan voor alle namen in een blok, dus zolang `www`
+  geen DNS-record had, kreeg ook het kale domein er geen — ook al klopte dat
+  record allang.
 - `public/manifest.webmanifest` is door `capacitor-assets` gemaakt maar nog
   nergens aan gekoppeld. Voor PWA-installatie moet die nog in de `<head>`.
 
