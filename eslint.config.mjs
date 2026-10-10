@@ -18,6 +18,10 @@ const eslintConfig = defineConfig([
     // of warnings.
     "android/**",
     "ios/**",
+
+    // David's design bundles and whatever gets unpacked out of them. They
+    // are reference material, not code we ship.
+    "design/**",
   ]),
 ]);
 
