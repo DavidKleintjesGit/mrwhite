@@ -103,6 +103,7 @@ const it: Dictionary = {
     customEmpty:
       'Inventa una coppia di parole. Finirà nella categoria "Le tue parole".',
     save: "Salva",
+    privacy: "Informativa sulla privacy",
   },
 
   archive: {

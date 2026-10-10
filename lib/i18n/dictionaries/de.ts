@@ -103,6 +103,7 @@ const de: Dictionary = {
     customEmpty:
       'Denk dir ein Wortpaar aus. Es landet in der Kategorie "Eigene".',
     save: "Speichern",
+    privacy: "Datenschutz",
   },
 
   archive: {

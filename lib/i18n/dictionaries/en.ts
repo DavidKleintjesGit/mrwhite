@@ -96,6 +96,7 @@ const en: Dictionary = {
     customRemove: "Remove {a} and {b}",
     customEmpty: 'Make up a word pair. It lands in the "Own" category.',
     save: "Save",
+    privacy: "Privacy policy",
   },
 
   archive: {

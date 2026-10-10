@@ -377,6 +377,29 @@ export default function SettingsScreen({
         )}
       </Field>
 
+      {/*
+        Both stores want the policy reachable from inside the app, not only
+        from the website. A plain link is deliberate: it leaves the game, and
+        the game is written to storage on every move, so there is nothing to
+        lose by going.
+      */}
+      <a
+        href={`/${langCode}/privacy/`}
+        style={{
+          gridColumn: "1 / -1",
+          justifySelf: "end",
+          marginTop: "auto",
+          fontSize: 14,
+          letterSpacing: ".08em",
+          textTransform: "uppercase",
+          color: "var(--muted)",
+          textDecoration: "underline",
+          textUnderlineOffset: 4,
+        }}
+      >
+        {t.privacy}
+      </a>
+
       <Press
         onClick={onBack}
         style={{
@@ -384,7 +407,7 @@ export default function SettingsScreen({
           justifySelf: "end",
           width: "100%",
           maxWidth: 380,
-          marginTop: "auto",
+          marginTop: 16,
           fontFamily: ARCHIVO,
           fontSize: 20,
           textTransform: "uppercase",
