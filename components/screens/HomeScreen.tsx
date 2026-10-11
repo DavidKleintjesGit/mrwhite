@@ -43,7 +43,7 @@ export default function HomeScreen({
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
-        gridTemplateRows: "auto 1fr",
+        gridTemplateRows: "auto auto 1fr",
         alignItems: "center",
         gap: "32px clamp(40px,6vw,96px)",
         position: "relative",
@@ -169,6 +169,7 @@ export default function HomeScreen({
           flexDirection: "column",
           gap: 20,
           paddingTop: 22,
+          marginTop: "clamp(8px, 14vh, 150px)",
           textAlign: "left",
         }}
       >
@@ -217,7 +218,14 @@ export default function HomeScreen({
         </p>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 22,
+          alignSelf: "end",
+        }}
+      >
         {resumeLabel && onResume && (
           <Press
             onClick={onResume}
