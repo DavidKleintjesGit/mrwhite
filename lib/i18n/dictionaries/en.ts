@@ -199,6 +199,7 @@ const en: Dictionary = {
     voteNow: "Vote now",
     next: "Next",
     toVote: "To the vote",
+    timeUp: "Time up",
   },
 
   vote: {

@@ -204,6 +204,7 @@ const tr: Dictionary = {
     voteNow: "Hemen oyla",
     next: "Sıradaki",
     toVote: "Oylamaya geç",
+    timeUp: "Süre doldu",
   },
 
   vote: {

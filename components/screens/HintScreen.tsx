@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Press from "@/components/ui/Press";
-import Stamp from "@/components/ui/Stamp";
 import Screen, { FooterPair } from "@/components/ui/Screen";
 import type { Player } from "@/lib/game";
 import { format, type Dictionary } from "@/lib/i18n";
@@ -153,6 +152,7 @@ export default function HintScreen({
           seconds={timer}
           dark={dark}
           penalty={drink ? dict.drink.timeUp : null}
+          plain={t.timeUp}
         />
       )}
 
@@ -243,11 +243,14 @@ function ClueTimer({
   seconds,
   dark,
   penalty,
+  plain,
 }: {
   seconds: number;
   dark: boolean;
   /** The sip the Drinking Edition charges for running out; null in classic. */
   penalty: string | null;
+  /** What running out says when there is no penalty attached to it. */
+  plain: string;
 }) {
   const [left, setLeft] = useState(seconds);
   const handle = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -269,7 +272,37 @@ function ClueTimer({
   }, []);
 
   const colour = left <= 5 ? "#FF3D3D" : dark ? "#FFD23F" : "#0d0d0d";
-  const over = left === 0;
+
+  // Time up gets the whole row rather than a stamp squeezed into an 18px
+  // bar, where it spilled over the player chips underneath and left a bar
+  // that still looked half full.
+  if (left === 0) {
+    return (
+      <div
+        role="status"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 10,
+          background: "#FF3D3D",
+          color: "#0d0d0d",
+          border: "3px solid #0d0d0d",
+          padding: "14px 16px",
+          boxShadow: "5px 5px 0 var(--fg)",
+          fontFamily: ARCHIVO,
+          fontSize: "clamp(15px,4vw,19px)",
+          letterSpacing: ".06em",
+          textTransform: "uppercase",
+          textAlign: "center",
+          overflowWrap: "anywhere",
+          animation: "popIn .35s both",
+        }}
+      >
+        {penalty ?? plain}
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -289,24 +322,6 @@ function ClueTimer({
             transition: "width 1s linear, background .3s",
           }}
         />
-        {over && penalty && (
-          <span
-            aria-live="polite"
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: "50%",
-              display: "flex",
-              justifyContent: "center",
-              pointerEvents: "none",
-            }}
-          >
-            <Stamp fontSize={15} rotate={-4}>
-              {penalty}
-            </Stamp>
-          </span>
-        )}
       </div>
       <div
         style={{

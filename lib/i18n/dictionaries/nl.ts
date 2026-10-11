@@ -205,6 +205,7 @@ const nl = {
     voteNow: "Nu stemmen",
     next: "Volgende",
     toVote: "Naar de stemming",
+    timeUp: "Tijd om",
   },
 
   vote: {

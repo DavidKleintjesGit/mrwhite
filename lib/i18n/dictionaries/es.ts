@@ -205,6 +205,7 @@ const es: Dictionary = {
     voteNow: "Votar ya",
     next: "Siguiente",
     toVote: "Pasar a la votación",
+    timeUp: "Se acabó el tiempo",
   },
 
   vote: {
