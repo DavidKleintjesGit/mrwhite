@@ -307,6 +307,11 @@ export default function CaseFileDrawer({
           </div>
         </div>
 
+        {/*
+          Closed-looking on purpose. This is not a section you can stand on,
+          so it keeps every edge and the darker card stock — only the tab you
+          are actually on drops its edge and takes the light colour.
+        */}
         <Press
           className="case-close-narrow"
           onClick={onClose}
@@ -319,10 +324,9 @@ export default function CaseFileDrawer({
             fontSize: 12,
             letterSpacing: ".14em",
             textTransform: "uppercase",
-            background: "#E9DDB8",
+            background: "#C9B987",
             color: "#0d0d0d",
             border: "3px solid #0d0d0d",
-            borderTop: "none",
             borderRadius: "0 0 10px 10px",
             padding: "10px 16px",
             cursor: "pointer",
