@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Press from "@/components/ui/Press";
 import { challengeReward, ruleCategory } from "@/lib/drink";
 import type { Player } from "@/lib/game";
@@ -118,7 +118,12 @@ export default function CaseFileDrawer({
               }}
             />
           )}
-          <FolderTab label={t.quit} colour="#FF3D3D" onClick={onQuit} />
+          <FolderTab
+            label={t.quit}
+            colour="#FF3D3D"
+            onClick={onQuit}
+            className="case-bottom-wide"
+          />
 
           <FolderTab
             label={t.sheetClose}
@@ -283,15 +288,7 @@ export default function CaseFileDrawer({
                     {t.challengeCheck}
                   </p>
                 )}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                      "repeat(auto-fill, minmax(min(100%, 170px), 1fr))",
-                    gap: "26px 16px",
-                    paddingTop: 14,
-                  }}
-                >
+                <div className="case-folders">
                   {players.map((player, index) => (
                     <Folder
                       key={`${player.name}-${index}`}
@@ -308,36 +305,54 @@ export default function CaseFileDrawer({
         </div>
 
         {/*
-          Closed-looking on purpose. This is not a section you can stand on,
-          so it keeps every edge and the darker card stock — only the tab you
-          are actually on drops its edge and takes the light colour.
+          The tabs that hang under the folder on a narrow screen, where the
+          row above has no width left for them. Both look closed: neither is
+          a section you can stand on, so they keep every edge and the darker
+          card stock.
         */}
-        <Press
-          className="case-close-narrow"
-          onClick={onClose}
+        <div
           style={{
-            alignSelf: "flex-end",
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 6,
             marginRight: 16,
-            position: "relative",
-            top: -3,
-            fontFamily: ARCHIVO,
-            fontSize: 12,
-            letterSpacing: ".14em",
-            textTransform: "uppercase",
-            background: "#C9B987",
-            color: "#0d0d0d",
-            border: "3px solid #0d0d0d",
-            borderRadius: "0 0 10px 10px",
-            padding: "10px 16px",
-            cursor: "pointer",
           }}
         >
-          {t.sheetClose}
-        </Press>
+          <Press
+            className="case-bottom-narrow"
+            onClick={onQuit}
+            style={{ ...UNDER_TAB, background: "#FF3D3D" }}
+          >
+            {t.quit}
+          </Press>
+          <Press
+            className="case-close-narrow"
+            onClick={onClose}
+            style={UNDER_TAB}
+          >
+            {t.sheetClose}
+          </Press>
+        </div>
       </div>
     </div>
   );
 }
+
+/** A tab hanging under the folder rather than over it. */
+const UNDER_TAB: CSSProperties = {
+  position: "relative",
+  top: -3,
+  fontFamily: ARCHIVO,
+  fontSize: 12,
+  letterSpacing: ".14em",
+  textTransform: "uppercase",
+  background: "#C9B987",
+  color: "#0d0d0d",
+  border: "3px solid #0d0d0d",
+  borderRadius: "0 0 10px 10px",
+  padding: "10px 16px",
+  cursor: "pointer",
+};
 
 // --- Pieces ----------------------------------------------------------------
 
@@ -486,9 +501,12 @@ function Folder({
       {player.challengeDone && (
         <span
           style={{
-            position: "absolute",
-            right: 8,
-            top: 10,
+            // In the card rather than over it. The design stamps it across
+            // the corner, which works on its 170px folders; at the 130px two
+            // columns need on a phone there is no corner left to cross
+            // without landing on the name or the status.
+            alignSelf: "flex-end",
+            marginTop: 2,
             display: "inline-block",
             fontFamily: ARCHIVO,
             fontSize: 12,

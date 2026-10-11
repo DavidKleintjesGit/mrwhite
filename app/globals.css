@@ -55,17 +55,39 @@ input::placeholder {
   }
 }
 
-.case-close-wide {
+/*
+ * The agent folders. The design's 170px leaves a single column of very wide,
+ * very empty folders on a 360px phone, so there they narrow to 130 — the
+ * sheet gives 290px of content at that width, and two columns plus the gap
+ * come to 276. Wider screens keep the design's size.
+ */
+.case-folders {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
+  gap: 26px 16px;
+  padding-top: 14px;
+}
+@media (max-width: 640px) {
+  .case-folders {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 130px), 1fr));
+  }
+}
+
+.case-close-wide,
+.case-bottom-wide {
   display: inline-flex;
 }
-.case-close-narrow {
+.case-close-narrow,
+.case-bottom-narrow {
   display: none;
 }
 @media (max-width: 640px) {
-  .case-close-wide {
+  .case-close-wide,
+  .case-bottom-wide {
     display: none;
   }
-  .case-close-narrow {
+  .case-close-narrow,
+  .case-bottom-narrow {
     display: inline-flex;
   }
 }
