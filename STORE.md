@@ -196,9 +196,23 @@ geen batterij, geen netwerk, en elk beeld heeft meteen de juiste maat. Er
 wordt niets meer afgesneden — dat sneed eerder de dossierslip weg, die boven
 de inhoud uithangt.
 
-Twee schermen zijn langer dan een telefoon en lopen door onder de rand: de
-**spelmodus** (vijf zaken) en het **eindrapport**. Dat is wat een speler ook
-ziet; het beeld toont de bovenkant.
+Twee schermen zijn langer dan een telefoon. De **spelmodus** (vijf zaken)
+toont de bovenkant — Klassiek en de Drinking Edition, precies wat telt. Het
+**eindrapport** wordt een stukje opgeschoven tot de onderrand samenvalt met
+het einde van een hele regel, zodat het beeld niet door een naam heen
+eindigt.
+
+## Video
+
+`screenshots/video/mrwhite-demo.mp4` — 928 × 2016, ruim een minuut, een heel
+potje van beginscherm tot eindrapport met alle animaties. Opgenomen van de
+emulator met `screenrecord`, met de statusbalk in demo-modus (09:41, volle
+batterij, geen meldingen) zoals winkelbeelden dat doen.
+
+Let op de eisen als je hem inzendt: een **App Preview** bij Apple mag 15 tot
+30 seconden duren en moet in een toegestane maat staan, dus daar moet een
+kortere montage van. Google Play vraagt geen bestand maar een YouTube-link,
+en stelt geen lengte-eis.
 
 ### Welke schermen
 
