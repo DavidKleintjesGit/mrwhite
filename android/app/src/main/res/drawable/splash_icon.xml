@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The launcher art, pulled in from the edges.
+
+  Android's splash masks its icon to a circle and the adaptive-icon
+  foreground fills more than that, so without this the magnifier came out
+  with its glass sliced off. A quarter of inset on each side leaves the
+  whole mark inside the mask.
+-->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@mipmap/ic_launcher_foreground"
+    android:inset="25%" />

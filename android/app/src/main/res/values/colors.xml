@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The game's own black. Used for the launch screen and for whatever shows
+      behind the system bars, so the app never flashes a colour it does not
+      own.
+    -->
+    <color name="brandInk">#0d0d0d</color>
+</resources>
