@@ -53,12 +53,7 @@ export default function SetupScreen({
   return (
     <Screen
       label={t.title}
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
-        alignContent: "start",
-        gap: "40px 48px",
-      }}
+      style={{ display: "flex", flexDirection: "column", gap: 40 }}
     >
       <Header
         kicker={`${modeName} · ${format(t.kicker, { total: steps })}`}
@@ -67,83 +62,93 @@ export default function SetupScreen({
         onBack={onBack}
       />
 
-      <Stepper
-        label={t.players}
-        description={t.playersDesc}
-        value={players}
-        accent="#FFD23F"
-        decDisabled={players <= MIN_PLAYERS}
-        incDisabled={players >= MAX_PLAYERS}
-        onDec={() => onPlayers(-1)}
-        onInc={() => onPlayers(1)}
-      />
-      <Stepper
-        label={t.undercovers}
-        description={t.undercoversDesc}
-        value={undercovers}
-        accent="#3DD6FF"
-        decDisabled={undercovers <= 0 || atMinimum}
-        incDisabled={atLimit}
-        onDec={() => onUndercovers(-1)}
-        onInc={() => onUndercovers(1)}
-      />
-      <Stepper
-        label={t.whites}
-        description={t.whitesDesc}
-        value={whites}
-        accent="#FF3D3D"
-        decDisabled={whites <= 0 || atMinimum}
-        incDisabled={atLimit}
-        onDec={() => onWhites(-1)}
-        onInc={() => onWhites(1)}
-      />
-
       <div
         style={{
-          border: "3px dashed var(--fg)",
-          padding: 18,
-          display: "flex",
-          flexDirection: "column",
-          gap: 16,
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
+          alignContent: "start",
+          gap: "40px 48px",
         }}
       >
+        <Stepper
+          label={t.players}
+          description={t.playersDesc}
+          value={players}
+          accent="#FFD23F"
+          decDisabled={players <= MIN_PLAYERS}
+          incDisabled={players >= MAX_PLAYERS}
+          onDec={() => onPlayers(-1)}
+          onInc={() => onPlayers(1)}
+        />
+        <Stepper
+          label={t.undercovers}
+          description={t.undercoversDesc}
+          value={undercovers}
+          accent="#3DD6FF"
+          decDisabled={undercovers <= 0 || atMinimum}
+          incDisabled={atLimit}
+          onDec={() => onUndercovers(-1)}
+          onInc={() => onUndercovers(1)}
+        />
+        <Stepper
+          label={t.whites}
+          description={t.whitesDesc}
+          value={whites}
+          accent="#FF3D3D"
+          decDisabled={whites <= 0 || atMinimum}
+          incDisabled={atLimit}
+          onDec={() => onWhites(-1)}
+          onInc={() => onWhites(1)}
+        />
+
         <div
           style={{
-            fontSize: 13,
-            letterSpacing: ".18em",
-            textTransform: "uppercase",
-            color: "var(--muted)",
+            border: "3px dashed var(--fg)",
+            padding: 18,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
           }}
         >
-          {t.distribution}
-        </div>
+          <div
+            style={{
+              fontSize: 13,
+              letterSpacing: ".18em",
+              textTransform: "uppercase",
+              color: "var(--muted)",
+            }}
+          >
+            {t.distribution}
+          </div>
 
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-          {dots.map((color, index) => (
-            <span
-              key={index}
-              style={{
-                width: 26,
-                height: 34,
-                background: color,
-                border: "2px solid var(--fg)",
-                animation: "popIn .35s both",
-              }}
-            />
-          ))}
-        </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {dots.map((color, index) => (
+              <span
+                key={index}
+                style={{
+                  width: 26,
+                  height: 34,
+                  background: color,
+                  border: "2px solid var(--fg)",
+                  animation: "popIn .35s both",
+                }}
+              />
+            ))}
+          </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0,1fr))",
-            gap: 8,
-            textAlign: "center",
-          }}
-        >
-          <Tally label={t.civilians} value={civilians} />
-          <Tally label={t.undercover} value={undercovers} color="var(--cy)" />
-          <Tally label={t.white} value={whites} color="#FF3D3D" />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, minmax(0,1fr))",
+              gap: 8,
+              textAlign: "center",
+            }}
+          >
+            <Tally label={t.civilians} value={civilians} />
+            <Tally label={t.undercover} value={undercovers} color="var(--cy)" />
+            <Tally label={t.white} value={whites} color="#FF3D3D" />
+          </div>
         </div>
       </div>
 
