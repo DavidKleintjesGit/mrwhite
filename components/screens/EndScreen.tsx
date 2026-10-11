@@ -499,7 +499,10 @@ function Fact({
       <span
         style={{
           fontFamily: ARCHIVO,
-          fontSize: 20,
+          // 18 rather than the design's 20: at 20 a word like
+          // "Appeltaart" is a few pixels too wide for the box on a phone
+          // and breaks across two lines mid-word, which reads as a bug.
+          fontSize: 18,
           ...(plain
             ? null
             : { textTransform: "uppercase", wordBreak: "break-word" }),

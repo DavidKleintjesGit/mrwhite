@@ -177,6 +177,24 @@ Let op de verhouding van maximaal 2:1: een schermafbeelding van een moderne
 telefoon is vaak langer (1290 × 2796 is 1 : 2,17) en wordt dan geweigerd.
 Voor Google werkt **1080 × 1920** probleemloos.
 
+### Klaar om te uploaden
+
+Gemaakt op 2026-10-11 met de echte app in een emulator, op de maat die elke
+winkel eist. Ze staan in `screenshots/` en blijven buiten git: grote
+bestanden die alleen naar de winkels gaan.
+
+| Map | Inhoud | Maat |
+|---|---|---|
+| `apple-nl/` | 8 beelden, Nederlands | 1320 × 2868 |
+| `apple-en/` | 8 beelden, Engels | 1320 × 2868 |
+| `play-nl/` | 8 beelden, Nederlands | 1080 × 1920 |
+| `play-en/` | 8 beelden, Engels | 1080 × 1920 |
+| `play-assets/` | pictogram en uitgelichte afbeelding, beide talen | 512 × 512 · 1024 × 500 |
+
+De statusbalk staat in Androids demostand: 9:41, volle batterij, geen
+meldingen, geen netwerkgedoe. Dat is wat winkels van een schermafbeelding
+verwachten en het houdt de beelden tijdloos.
+
 ### Welke schermen
 
 In deze volgorde; de eerste twee bepalen of iemand doorklikt.
