@@ -104,6 +104,7 @@ const tr: Dictionary = {
     customEmpty:
       '"Kendi kelimelerin" kategorisine düşecek bir kelime çifti uydur.',
     save: "Kaydet",
+    support: "Yardım ve iletişim",
     privacy: "Gizlilik politikası",
     clear: "Her şeyi sil",
   },

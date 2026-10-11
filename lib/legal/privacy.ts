@@ -15,15 +15,10 @@
  * other locale falls back to English rather than showing a blank document.
  */
 import type { Locale } from "@/lib/i18n";
+import type { Doc } from "./doc";
 
-export type PrivacyDoc = {
-  title: string;
-  /** Rendered under the title; both languages must name the same date. */
-  updated: string;
-  lead: string;
-  sections: { heading: string; body: string[] }[];
-  back: string;
-};
+/** Kept as a name of its own; the shape is shared with the support page. */
+export type PrivacyDoc = Doc;
 
 const nl: PrivacyDoc = {
   title: "Privacybeleid",

@@ -16,7 +16,10 @@ const config: CapacitorConfig = {
   plugins: {
     SplashScreen: {
       launchShowDuration: 600,
-      backgroundColor: "#0d0d0d",
+      // Papier, niet inkt: het spel opent in het lichte thema, dus een
+      // donker opstartscherm gaf een zwart kader dat omsloeg zodra de
+      // pagina verfde.
+      backgroundColor: "#f3f0e8",
       showSpinner: false,
     },
   },

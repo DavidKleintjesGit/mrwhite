@@ -104,6 +104,7 @@ const it: Dictionary = {
     customEmpty:
       'Inventa una coppia di parole. Finirà nella categoria "Le tue parole".',
     save: "Salva",
+    support: "Aiuto e contatti",
     privacy: "Informativa sulla privacy",
     clear: "Cancella tutto",
   },

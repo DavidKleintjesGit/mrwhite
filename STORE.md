@@ -5,7 +5,10 @@ Teksten in het Nederlands en Engels; die twee talen zijn vrijgegeven, de
 andere vijf staan nog uit.
 
 **Naam:** Mister White · **App-id:** `online.misterwhite.game` ·
-**Privacybeleid:** https://misterwhite.online/nl/privacy/ (en `/en/`)
+**Privacybeleid:** https://misterwhite.online/nl/privacy/ (en `/en/`) ·
+**Ondersteuning:** https://misterwhite.online/nl/support/ (en `/en/`)
+
+De stappen voor het inzenden bij Apple staan in `IOS-OVERDRACHT.md`.
 
 ---
 

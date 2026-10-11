@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732" viewBox="0 0 2732 2732">
+  <!-- Launch screen: the home screen's background and title block, so the
+       app does not flash something unrelated before it boots. -->
+  <rect width="2732" height="2732" fill="#0d0d0d"/>
+  <g fill="#F3F0E8" fill-opacity=".08">
+    <pattern id="dots" width="36" height="36" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="4"/>
+    </pattern>
+  </g>
+  <rect width="2732" height="2732" fill="url(#dots)"/>
+  <g transform="translate(1366 1366)">
+    <text x="0" y="-80" text-anchor="middle" font-family="Archivo Black, Arial Black, sans-serif"
+          font-size="300" fill="#F3F0E8" letter-spacing="-6">MR.</text>
+    <g transform="rotate(-2)">
+      <rect x="-460" y="30" width="920" height="290" fill="#FFD23F"/>
+      <rect x="-440" y="50" width="920" height="290" fill="#F3F0E8" opacity="0"/>
+      <text x="0" y="250" text-anchor="middle" font-family="Archivo Black, Arial Black, sans-serif"
+            font-size="300" fill="#0d0d0d" letter-spacing="-6">WHITE</text>
+    </g>
+  </g>
+</svg>

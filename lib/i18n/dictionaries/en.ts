@@ -98,6 +98,7 @@ const en: Dictionary = {
     customRemove: "Remove {a} and {b}",
     customEmpty: 'Make up a word pair. It lands in the "Own" category.',
     save: "Save",
+    support: "Help and contact",
     privacy: "Privacy policy",
     clear: "Erase everything",
   },

@@ -103,6 +103,7 @@ const nl = {
     customRemove: "{a} en {b} verwijderen",
     customEmpty: 'Verzin een woordpaar. Het komt in de categorie "Eigen".',
     save: "Opslaan",
+    support: "Hulp en contact",
     privacy: "Privacybeleid",
     clear: "Alles wissen",
   },

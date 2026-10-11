@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import {
   Field,
   FieldLabel,
@@ -17,6 +17,16 @@ import type { Settings, Theme } from "@/lib/settings";
 import { CATEGORY_IDS } from "@/lib/words";
 
 const ARCHIVO = "var(--font-archivo-black), sans-serif";
+
+/** De twee voetlinks onderaan de instellingen. */
+const DOC_LINK: CSSProperties = {
+  fontSize: 14,
+  letterSpacing: ".08em",
+  textTransform: "uppercase",
+  color: "var(--muted)",
+  textDecoration: "underline",
+  textUnderlineOffset: 4,
+};
 
 type Props = {
   dict: Dictionary;
@@ -500,22 +510,23 @@ export default function SettingsScreen({
         the game is written to storage on every move, so there is nothing to
         lose by going.
       */}
-      <DocLink
-        href={`/${lang}/privacy/`}
+      <div
         style={{
           gridColumn: "1 / -1",
           justifySelf: "end",
           marginTop: 12,
-          fontSize: 14,
-          letterSpacing: ".08em",
-          textTransform: "uppercase",
-          color: "var(--muted)",
-          textDecoration: "underline",
-          textUnderlineOffset: 4,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "6px 20px",
         }}
       >
-        {t.privacy}
-      </DocLink>
+        <DocLink href={`/${lang}/support/`} style={DOC_LINK}>
+          {t.support}
+        </DocLink>
+        <DocLink href={`/${lang}/privacy/`} style={DOC_LINK}>
+          {t.privacy}
+        </DocLink>
+      </div>
 
       <Press
         onClick={onBack}
