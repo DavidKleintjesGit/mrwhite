@@ -175,7 +175,7 @@ Minimaal 3, maximaal 10 per maat.
 
 Let op de verhouding van maximaal 2:1: een schermafbeelding van een moderne
 telefoon is vaak langer (1290 × 2796 is 1 : 2,17) en wordt dan geweigerd.
-Voor Google werkt **1080 × 1920** probleemloos.
+Wij leveren **1080 × 2160**: precies 2:1, en hoog genoeg dat de langere schermen er helemaal op passen.
 
 ### Klaar om te uploaden
 
@@ -187,13 +187,18 @@ blijven buiten git.
 | Map | Inhoud | Maat |
 |---|---|---|
 | `apple-nl/` · `apple-en/` | elk 9 beelden | 1320 × 2868 |
-| `play-nl/` · `play-en/` | elk 9 beelden | 1080 × 1920 |
+| `play-nl/` · `play-en/` | elk 9 beelden | 1080 × 2160 |
 | `play-assets/` | pictogram en uitgelichte afbeelding, beide talen | 512 × 512 · 1024 × 500 |
 
-**Geen systeembalken.** Het scherm is tijdens het vastleggen hoger gezet dan
-de doelmaat en de balken zijn er daarna afgesneden, zodat elk beeld precies
-de vereiste afmeting heeft en niets van de telefoon zelf toont: geen klok,
-geen batterij, geen netwerk.
+**Geen systeembalken.** De beelden komen via het debugprotocol uit de pagina
+zelf, niet van het toestel, dus er zit niets van de telefoon op: geen klok,
+geen batterij, geen netwerk, en elk beeld heeft meteen de juiste maat. Er
+wordt niets meer afgesneden — dat sneed eerder de dossierslip weg, die boven
+de inhoud uithangt.
+
+Twee schermen zijn langer dan een telefoon en lopen door onder de rand: de
+**spelmodus** (vijf zaken) en het **eindrapport**. Dat is wat een speler ook
+ziet; het beeld toont de bovenkant.
 
 ### Welke schermen
 
