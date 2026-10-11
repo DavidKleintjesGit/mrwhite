@@ -38,6 +38,7 @@ const en: Dictionary = {
     titleBottom: "White",
     tagline:
       "Everyone gets the same secret word. Except the infiltrators. Who is not who they say they are?",
+    resume: "Continue game",
     play: "Play",
     rules: "How to play",
     settings: "Settings",
@@ -168,7 +169,8 @@ const en: Dictionary = {
     yes: "Yes, deal again",
     waiting: "Read it first… {n}",
     clearTitle: "Erase everything?",
-    clearBody: "Names, settings and any game in progress are removed from this device.",
+    clearBody:
+      "Names, settings and any game in progress are removed from this device.",
     clearYes: "Yes, erase",
     quitTitle: "Stop the game?",
     quitBody:
@@ -275,7 +277,7 @@ const en: Dictionary = {
     soonCases: [
       {
         title: "White Lies",
-        desc: "A new case in preparation. Details to follow.",
+        desc: "Every so often you have to lie and give the wrong clue on purpose.",
       },
       {
         title: "Trust Issues",

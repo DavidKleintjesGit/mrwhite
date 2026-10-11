@@ -107,7 +107,16 @@ export default function App({ dict, lang }: Props) {
    * would have the second quietly undo the first.
    */
   function setStage(next: Stage, also: Partial<Stored> = {}) {
-    save({ ...also, stage: next, stageAt: Date.now() });
+    // Moving anywhere lets go of the round the start screen was offering
+    // back: you have chosen to do something else with the app. Resuming
+    // hands over the round itself, which clears it the same way.
+    save({
+      resume: null,
+      resumeAt: 0,
+      ...also,
+      stage: next,
+      stageAt: Date.now(),
+    });
   }
 
   function updateSettings(change: Partial<Settings>) {
@@ -468,6 +477,10 @@ export default function App({ dict, lang }: Props) {
             onPlay={() => go({ name: "modes" })}
             onRules={() => go({ name: "rules" })}
             onSettings={() => go({ name: "settings" })}
+            resumeLabel={stored.resume ? dict.home.resume : null}
+            onResume={() => {
+              if (stored.resume) go(stored.resume);
+            }}
           />
         );
 

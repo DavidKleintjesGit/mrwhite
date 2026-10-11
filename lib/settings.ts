@@ -56,6 +56,14 @@ export type Stored = {
   stageAt: number;
   /** When the names were last touched, used to let them lapse. */
   namesAt: number;
+  /**
+   * The round that was open when the app was last closed, set aside so the
+   * start screen can offer it back. The app opens on the start screen now;
+   * without this the round would simply be gone.
+   */
+  resume: Stage | null;
+  /** When that round was last played, so it can go stale like any other. */
+  resumeAt: number;
 };
 
 export function defaultSettings(): Settings {
@@ -85,6 +93,8 @@ export function defaultStored(): Stored {
     stage: { name: "home" },
     stageAt: 0,
     namesAt: 0,
+    resume: null,
+    resumeAt: 0,
   };
 }
 
@@ -114,6 +124,9 @@ export function parseStored(raw: string | null): Stored {
 
   // A game is only picked up again if it is recent and still looks like one.
   const fresh = Date.now() - (saved.stageAt ?? 0) < MAX_GAME_AGE_MS;
+  const resumable =
+    Date.now() - (saved.resumeAt ?? 0) < MAX_GAME_AGE_MS &&
+    isResumable(saved.resume);
   const stage =
     fresh && isResumable(saved.stage) ? saved.stage : fallback.stage;
 
@@ -138,6 +151,8 @@ export function parseStored(raw: string | null): Stored {
     stage,
     stageAt: saved.stageAt ?? 0,
     namesAt: namesAreFresh(saved) ? saved.namesAt ?? 0 : 0,
+    resume: resumable ? (saved.resume as Stage) : null,
+    resumeAt: resumable ? saved.resumeAt ?? 0 : 0,
   };
 }
 

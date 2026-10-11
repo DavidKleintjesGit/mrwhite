@@ -42,6 +42,7 @@ const tr: Dictionary = {
     titleBottom: "White",
     tagline:
       "Herkes aynı gizli kelimeyi alır. Sızanlar hariç. Kim göründüğü kişi değil?",
+    resume: "Devam et",
     play: "Oyna",
     rules: "Nasıl oynanır",
     settings: "Ayarlar",
@@ -280,7 +281,7 @@ const tr: Dictionary = {
     soonCases: [
       {
         title: "White Lies",
-        desc: "Yeni bir dava hazırlanıyor. Ayrıntılar yakında.",
+        desc: "Arada bir yalan söyleyip bilerek yanlış ipucu vermen gerekir.",
       },
       {
         title: "Trust Issues",

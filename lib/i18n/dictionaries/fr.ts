@@ -42,6 +42,7 @@ const fr: Dictionary = {
     titleBottom: "White",
     tagline:
       "Tout le monde reçoit le même mot secret. Sauf les imposteurs. Qui n'est pas celui qu'il prétend être ?",
+    resume: "Reprendre",
     play: "Jouer",
     rules: "Règles",
     settings: "Réglages",
@@ -175,7 +176,8 @@ const fr: Dictionary = {
     yes: "Oui, redistribuer",
     waiting: "Lisez d'abord… {n}",
     clearTitle: "Tout effacer ?",
-    clearBody: "Les noms, les réglages et une partie en cours sont supprimés de cet appareil.",
+    clearBody:
+      "Les noms, les réglages et une partie en cours sont supprimés de cet appareil.",
     clearYes: "Oui, effacer",
     quitTitle: "Arrêter la partie ?",
     quitBody:
@@ -282,7 +284,7 @@ const fr: Dictionary = {
     soonCases: [
       {
         title: "White Lies",
-        desc: "Une nouvelle affaire en préparation. Détails à venir.",
+        desc: "De temps en temps, vous devez mentir et donner exprès le mauvais indice.",
       },
       {
         title: "Trust Issues",

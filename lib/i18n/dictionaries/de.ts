@@ -42,6 +42,7 @@ const de: Dictionary = {
     titleBottom: "White",
     tagline:
       "Alle bekommen dasselbe geheime Wort. Außer den Eindringlingen. Wer ist nicht der, für den er sich ausgibt?",
+    resume: "Weiterspielen",
     play: "Spielen",
     rules: "Anleitung",
     settings: "Einstellungen",
@@ -174,7 +175,8 @@ const de: Dictionary = {
     yes: "Ja, neu austeilen",
     waiting: "Erst lesen… {n}",
     clearTitle: "Alles löschen?",
-    clearBody: "Namen, Einstellungen und eine laufende Runde werden von diesem Gerät entfernt.",
+    clearBody:
+      "Namen, Einstellungen und eine laufende Runde werden von diesem Gerät entfernt.",
     clearYes: "Ja, löschen",
     quitTitle: "Spiel beenden?",
     quitBody:
@@ -282,7 +284,7 @@ const de: Dictionary = {
     soonCases: [
       {
         title: "White Lies",
-        desc: "Ein neuer Fall in Vorbereitung. Details folgen.",
+        desc: "Ab und zu musst du lügen und absichtlich den falschen Hinweis geben.",
       },
       {
         title: "Trust Issues",

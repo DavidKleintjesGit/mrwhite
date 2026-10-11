@@ -42,6 +42,7 @@ const es: Dictionary = {
     titleBottom: "White",
     tagline:
       "Todos reciben la misma palabra secreta. Salvo los impostores. ¿Quién no es quien dice ser?",
+    resume: "Continuar",
     play: "Jugar",
     rules: "Cómo se juega",
     settings: "Ajustes",
@@ -174,7 +175,8 @@ const es: Dictionary = {
     yes: "Sí, repartir de nuevo",
     waiting: "Léelo primero… {n}",
     clearTitle: "¿Borrar todo?",
-    clearBody: "Los nombres, los ajustes y una partida en curso se eliminan de este dispositivo.",
+    clearBody:
+      "Los nombres, los ajustes y una partida en curso se eliminan de este dispositivo.",
     clearYes: "Sí, borrar",
     quitTitle: "¿Parar la partida?",
     quitBody:
@@ -280,7 +282,7 @@ const es: Dictionary = {
     soonCases: [
       {
         title: "White Lies",
-        desc: "Un caso nuevo en preparación. Detalles por llegar.",
+        desc: "De vez en cuando tienes que mentir y dar la pista equivocada a propósito.",
       },
       {
         title: "Trust Issues",

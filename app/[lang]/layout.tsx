@@ -69,16 +69,17 @@ export const viewport: Viewport = {
  * the page showed the stylesheet's own background and the app opened on a
  * black frame that snapped to light a moment later.
  *
- * And it drops whatever game was stored. Opening the app, or reloading it,
- * should land on the start screen; it used to resume the round it was in,
- * which is not what starting an app means. The settings, the names and the
- * player counts all stay — only the stage goes.
+ * And it sets the open round aside. Opening the app, or reloading it, should
+ * land on the start screen; it used to drop you straight back into the round
+ * it was in, which is not what starting an app means. The round is not thrown
+ * away: the start screen offers it back.
  */
 const BOOT = `(function(){try{
 var k="mrwhite-noir-v1";
 var raw=localStorage.getItem(k),saved=null;
 try{saved=raw?JSON.parse(raw):null}catch(e){}
 if(saved&&saved.stage&&saved.stage.name!=="home"){
+  saved.resume=saved.stage;saved.resumeAt=saved.stageAt||Date.now();
   saved.stage={name:"home"};saved.stageAt=0;
   localStorage.setItem(k,JSON.stringify(saved));
 }

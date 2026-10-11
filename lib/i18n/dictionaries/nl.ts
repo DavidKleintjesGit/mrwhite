@@ -41,6 +41,7 @@ const nl = {
     titleBottom: "White",
     tagline:
       "Iedereen krijgt hetzelfde geheime woord. Behalve de infiltranten. Wie is er niet wie hij zegt te zijn?",
+    resume: "Verder spelen",
     play: "Spelen",
     rules: "Uitleg",
     settings: "Instellingen",
@@ -173,7 +174,8 @@ const nl = {
     yes: "Ja, opnieuw delen",
     waiting: "Lees eerst… {n}",
     clearTitle: "Alles wissen?",
-    clearBody: "Namen, instellingen en een lopend potje worden van dit toestel verwijderd.",
+    clearBody:
+      "Namen, instellingen en een lopend potje worden van dit toestel verwijderd.",
     clearYes: "Ja, wissen",
     quitTitle: "Spel stoppen?",
     quitBody:
@@ -282,7 +284,7 @@ const nl = {
     soonCases: [
       {
         title: "White Lies",
-        desc: "Nieuwe zaak in voorbereiding. Details volgen.",
+        desc: "Af en toe moet je liegen en expres de verkeerde hint geven.",
       },
       {
         title: "Trust Issues",

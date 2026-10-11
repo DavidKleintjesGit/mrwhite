@@ -2,6 +2,7 @@
 
 import Press from "@/components/ui/Press";
 import Screen, { Header } from "@/components/ui/Screen";
+import Stamp from "@/components/ui/Stamp";
 import type { Mode } from "@/lib/game";
 import type { Dictionary } from "@/lib/i18n";
 
@@ -183,24 +184,15 @@ export default function ModesScreen({ dict, onBack, onPick }: Props) {
                   {t.open}
                 </span>
               ) : (
-                <span
-                  style={{
-                    margin: "auto 18px 20px",
-                    alignSelf: "flex-end",
-                    display: "inline-block",
-                    fontFamily: ARCHIVO,
-                    fontSize: 15,
-                    letterSpacing: ".08em",
-                    textTransform: "uppercase",
-                    lineHeight: 1,
-                    color: "#E8202A",
-                    border: "5px double #E8202A",
-                    padding: "8px 12px",
-                    transform: "rotate(-9deg)",
-                  }}
+                <Stamp
+                  stacked
+                  fontSize={15}
+                  rotate={-9}
+                  delay={null}
+                  style={{ margin: "auto 18px 20px", alignSelf: "flex-end" }}
                 >
                   {t.soon}
-                </span>
+                </Stamp>
               )}
             </Press>
           );
