@@ -6,4 +6,12 @@
       own.
     -->
     <color name="brandInk">#0d0d0d</color>
+
+    <!--
+      Het papier van het lichte thema. Dat is waar de app op opent, dus het
+      opstartscherm en de achtergrond van het venster staan er ook op: anders
+      is het eerste wat je ziet een zwart vlak dat omslaat zodra de pagina
+      verft.
+    -->
+    <color name="brandPaper">#F3F0E8</color>
 </resources>

@@ -7,7 +7,12 @@
 html,
 body {
   margin: 0;
-  background: #0d0d0d;
+  /*
+   * Het lichte thema is wat de app zonder opgeslagen keuze toont, dus dat is
+   * ook wat er staat voordat er iets draait. Stond hier zwart, dan verfde de
+   * eerste frame zwart en sloeg hij daarna om naar licht.
+   */
+  background: #f3f0e8;
 }
 
 * {

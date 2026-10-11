@@ -53,13 +53,40 @@ export async function generateMetadata({
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0d0d0d",
+  themeColor: "#f3f0e8",
   maximumScale: 1,
   // Draw behind the notch and the home indicator, then keep the content
   // clear of them with env(safe-area-inset-*). Without this the page simply
   // stops at the notch and the dark background shows a band at the top.
   viewportFit: "cover",
 };
+
+/**
+ * Runs before the first paint, and before React.
+ *
+ * Two jobs. It paints the page in the saved theme straight away: the colours
+ * are inline custom properties the app writes on render, so until React is up
+ * the page showed the stylesheet's own background and the app opened on a
+ * black frame that snapped to light a moment later.
+ *
+ * And it drops whatever game was stored. Opening the app, or reloading it,
+ * should land on the start screen; it used to resume the round it was in,
+ * which is not what starting an app means. The settings, the names and the
+ * player counts all stay — only the stage goes.
+ */
+const BOOT = `(function(){try{
+var k="mrwhite-noir-v1";
+var raw=localStorage.getItem(k),saved=null;
+try{saved=raw?JSON.parse(raw):null}catch(e){}
+if(saved&&saved.stage&&saved.stage.name!=="home"){
+  saved.stage={name:"home"};saved.stageAt=0;
+  localStorage.setItem(k,JSON.stringify(saved));
+}
+var dark=!!(saved&&saved.settings&&saved.settings.theme==="donker");
+var root=document.documentElement;
+root.style.background=dark?"#0d0d0d":"#f3f0e8";
+root.style.colorScheme=dark?"dark":"light";
+}catch(e){}})()`;
 
 export default async function LocaleLayout({
   children,
@@ -70,6 +97,9 @@ export default async function LocaleLayout({
 
   return (
     <html lang={lang} className={FONTS}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: BOOT }} />
+      </head>
       <body>{children}</body>
     </html>
   );

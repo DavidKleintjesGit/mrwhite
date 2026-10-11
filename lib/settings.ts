@@ -68,7 +68,7 @@ export function defaultSettings(): Settings {
     mrGuess: true,
     mrNotFirst: true,
     diff: "mix",
-    theme: "donker",
+    theme: "licht",
     drinkCats: { A: true, B: true, C: true, D: true },
   };
 }
