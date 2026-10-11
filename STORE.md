@@ -179,21 +179,21 @@ Voor Google werkt **1080 × 1920** probleemloos.
 
 ### Klaar om te uploaden
 
-Gemaakt op 2026-10-11 met de echte app in een emulator, op de maat die elke
-winkel eist. Ze staan in `screenshots/` en blijven buiten git: grote
-bestanden die alleen naar de winkels gaan.
+Gemaakt met de echte app in een emulator, in **klassieke modus en licht
+thema** — vriendelijker in een winkel dan de donkere drankmodus, en het
+houdt de leeftijdsvraag uit de beelden. Ze staan in `screenshots/` en
+blijven buiten git.
 
 | Map | Inhoud | Maat |
 |---|---|---|
-| `apple-nl/` | 8 beelden, Nederlands | 1320 × 2868 |
-| `apple-en/` | 8 beelden, Engels | 1320 × 2868 |
-| `play-nl/` | 8 beelden, Nederlands | 1080 × 1920 |
-| `play-en/` | 8 beelden, Engels | 1080 × 1920 |
+| `apple-nl/` · `apple-en/` | elk 9 beelden | 1320 × 2868 |
+| `play-nl/` · `play-en/` | elk 9 beelden | 1080 × 1920 |
 | `play-assets/` | pictogram en uitgelichte afbeelding, beide talen | 512 × 512 · 1024 × 500 |
 
-De statusbalk staat in Androids demostand: 9:41, volle batterij, geen
-meldingen, geen netwerkgedoe. Dat is wat winkels van een schermafbeelding
-verwachten en het houdt de beelden tijdloos.
+**Geen systeembalken.** Het scherm is tijdens het vastleggen hoger gezet dan
+de doelmaat en de balken zijn er daarna afgesneden, zodat elk beeld precies
+de vereiste afmeting heeft en niets van de telefoon zelf toont: geen klok,
+geen batterij, geen netwerk.
 
 ### Welke schermen
 

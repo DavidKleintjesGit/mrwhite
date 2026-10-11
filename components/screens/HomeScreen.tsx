@@ -2,7 +2,6 @@
 
 import Press from "@/components/ui/Press";
 import Screen from "@/components/ui/Screen";
-import Stamp from "@/components/ui/Stamp";
 import type { Dictionary } from "@/lib/i18n";
 
 const ARCHIVO = "var(--font-archivo-black), sans-serif";
@@ -168,46 +167,19 @@ export default function HomeScreen({
           textAlign: "left",
         }}
       >
-        <Stamp
-          stacked
-          fontSize={14}
-          rotate={9}
-          delay={0.5}
-          style={{ position: "absolute", right: 4, top: 0 }}
-        >
-          <span
-            style={{
-              fontFamily: ARCHIVO,
-              fontSize: 14,
-              letterSpacing: ".1em",
-              textTransform: "uppercase",
-              lineHeight: 1,
-            }}
-          >
-            {t.stamp}
-          </span>
-          <span
-            style={{
-              fontSize: 8,
-              fontWeight: 700,
-              letterSpacing: ".14em",
-              textTransform: "uppercase",
-              borderTop: "2px solid #E8202A",
-              paddingTop: 3,
-            }}
-          >
-            {t.caseNumber}
-          </span>
-        </Stamp>
-
         <h1
           style={{
             margin: 0,
             fontFamily: ARCHIVO,
-            fontSize: "clamp(64px, 11vw, 150px)",
+            // Bigger now the stamp is gone: the title is the whole home
+            // screen. Sized in vw rather than from a fixed floor, so it
+            // shrinks with the phone instead of running off a narrow one —
+            // at 20vw "White" plus its padding still fits a 320px screen.
+            fontSize: "clamp(40px, 20vw, 240px)",
             lineHeight: 0.9,
             letterSpacing: "-.02em",
             textTransform: "uppercase",
+            maxWidth: "100%",
             animation: "flicker 6s infinite",
           }}
         >

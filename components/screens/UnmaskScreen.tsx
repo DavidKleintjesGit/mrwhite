@@ -216,6 +216,9 @@ export default function UnmaskScreen({
           <Press
             onClick={onContinue}
             style={{
+              // Onderaan, zoals op elk ander scherm: anders springt de
+              // doorgaanknop per scherm naar een andere hoogte.
+              marginTop: "auto",
               width: "100%",
               fontFamily: ARCHIVO,
               fontSize: 19,

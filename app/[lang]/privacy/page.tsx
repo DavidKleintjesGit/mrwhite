@@ -48,11 +48,14 @@ export default async function PrivacyPage({
         backgroundSize: "9px 9px",
         color: "#F3F0E8",
         fontFamily: "var(--font-courier-prime), 'Courier New', monospace",
-        paddingTop: "calc(clamp(32px,6vw,72px) + env(safe-area-inset-top))",
+        paddingTop:
+          "calc(clamp(32px,6vw,72px) + var(--sat, env(safe-area-inset-top)))",
         paddingBottom:
-          "calc(clamp(32px,6vw,72px) + env(safe-area-inset-bottom))",
-        paddingLeft: "calc(clamp(20px,5vw,40px) + env(safe-area-inset-left))",
-        paddingRight: "calc(clamp(20px,5vw,40px) + env(safe-area-inset-right))",
+          "calc(clamp(32px,6vw,72px) + var(--sab, env(safe-area-inset-bottom)))",
+        paddingLeft:
+          "calc(clamp(20px,5vw,40px) + var(--sal, env(safe-area-inset-left)))",
+        paddingRight:
+          "calc(clamp(20px,5vw,40px) + var(--sar, env(safe-area-inset-right)))",
       }}
     >
       <article style={{ maxWidth: 680, margin: "0 auto" }}>

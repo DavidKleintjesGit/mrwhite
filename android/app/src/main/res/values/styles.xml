@@ -13,9 +13,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <!--
-          What shows behind the status and navigation bars once MainActivity
-          has padded the WebView away from them. Black rather than @null, or
-          the strip above the game would be whatever the system felt like.
+          Only ever seen for the instant before the page paints: the game
+          now covers the whole screen and holds its own content clear of the
+          bars, so this no longer frames a light theme in black.
         -->
         <item name="android:background">@color/brandInk</item>
     </style>

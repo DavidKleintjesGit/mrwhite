@@ -6,32 +6,42 @@ import Press from "@/components/ui/Press";
  *
  * Two things are ours rather than the design's, both for the native app:
  *
- *   - `env(safe-area-inset-*)` is added to each side. The design is a browser
+ *   - A safe-area inset is added to each side. The design is a browser
  *     mock-up and has no notch to dodge; on a desktop or a phone without one
  *     the insets are zero and the numbers are exactly what the design says.
+ *
+ *     `--sat` and friends are what the native app sets, because an Android
+ *     WebView's own `env(safe-area-inset-*)` knows about a display cutout
+ *     but not about the status bar drawn on top of it. On the web nothing
+ *     sets them and the `env()` fallback takes over.
  *   - `--toppad` reserves room for the case-file tab hanging off the top
  *     edge. The app sets it on its root, 38px during a round and 0px
  *     elsewhere, exactly as the design does.
  */
 const TOP =
-  "calc(clamp(16px,4vw,56px) + var(--toppad, 0px) + env(safe-area-inset-top))";
-const BOTTOM = "calc(clamp(16px,4vw,56px) + env(safe-area-inset-bottom))";
+  "calc(clamp(16px,4vw,56px) + var(--toppad, 0px) + var(--sat, env(safe-area-inset-top)))";
+const BOTTOM =
+  "calc(clamp(16px,4vw,56px) + var(--sab, env(safe-area-inset-bottom)))";
 
 /** The wide screens; the card, unmask and guess screens use the narrow one. */
 const WIDE: CSSProperties = {
   maxWidth: 1240,
   paddingTop: TOP,
   paddingBottom: BOTTOM,
-  paddingLeft: "calc(clamp(18px,5vw,72px) + env(safe-area-inset-left))",
-  paddingRight: "calc(clamp(18px,5vw,72px) + env(safe-area-inset-right))",
+  paddingLeft:
+    "calc(clamp(18px,5vw,72px) + var(--sal, env(safe-area-inset-left)))",
+  paddingRight:
+    "calc(clamp(18px,5vw,72px) + var(--sar, env(safe-area-inset-right)))",
 };
 
 const NARROW: CSSProperties = {
   maxWidth: 760,
   paddingTop: TOP,
   paddingBottom: BOTTOM,
-  paddingLeft: "calc(clamp(18px,5vw,40px) + env(safe-area-inset-left))",
-  paddingRight: "calc(clamp(18px,5vw,40px) + env(safe-area-inset-right))",
+  paddingLeft:
+    "calc(clamp(18px,5vw,40px) + var(--sal, env(safe-area-inset-left)))",
+  paddingRight:
+    "calc(clamp(18px,5vw,40px) + var(--sar, env(safe-area-inset-right)))",
 };
 
 type Props = {

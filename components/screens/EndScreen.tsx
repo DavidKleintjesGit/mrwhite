@@ -266,8 +266,14 @@ export default function EndScreen({
             <div
               style={{
                 display: "grid",
+                // 200 rather than the design's 150. At 150 a phone fits two
+                // columns of about 127px of text, and a word like
+                // "Appeltaart" is a hair wider than that, so it broke across
+                // two lines mid-word. At 200 the facts stack on a phone and
+                // each one gets the full width; a wide screen still puts
+                // them side by side.
                 gridTemplateColumns:
-                  "repeat(auto-fit, minmax(min(100%, 150px), 1fr))",
+                  "repeat(auto-fit, minmax(min(100%, 200px), 1fr))",
                 gap: 12,
               }}
             >
@@ -499,10 +505,7 @@ function Fact({
       <span
         style={{
           fontFamily: ARCHIVO,
-          // 18 rather than the design's 20: at 20 a word like
-          // "Appeltaart" is a few pixels too wide for the box on a phone
-          // and breaks across two lines mid-word, which reads as a bug.
-          fontSize: 18,
+          fontSize: 20,
           ...(plain
             ? null
             : { textTransform: "uppercase", wordBreak: "break-word" }),

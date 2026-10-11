@@ -2,26 +2,38 @@ package online.misterwhite.game;
 
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.getcapacitor.BridgeActivity;
+import com.getcapacitor.BridgeWebViewClient;
+import java.util.Locale;
 
 public class MainActivity extends BridgeActivity {
 
+    /** The last insets we were given, already written as the script that applies them. */
+    private String applyInsets = "";
+
     /**
-     * Keeps the game clear of the status and navigation bars.
+     * Tells the page how much room the system bars take.
      *
      * Android 15 draws every app edge to edge whether it asks to or not, and
-     * a WebView is told nothing about it: env(safe-area-inset-top) covers a
-     * display cutout but not the clock sitting on top of it. Without this the
-     * first line of every screen ran underneath the status bar.
+     * a WebView learns nothing about it: env(safe-area-inset-top) covers a
+     * display cutout but not the clock sitting on it, so the first line of
+     * every screen ran underneath the status bar.
      *
-     * The listener goes on the activity's content root rather than on the
-     * WebView: the view the bridge builds sits inside Capacitor's own layout,
-     * and a parent there swallows the insets before the WebView ever sees
-     * them. What shows behind the bars is the window background, which the
-     * theme paints in the app's own black.
+     * The insets go in as CSS custom properties rather than as padding on the
+     * view. Padding worked, but it left the strip behind each bar painted in
+     * the window background, which is one fixed colour — black bands around a
+     * light-themed game. This way the page itself covers the whole screen and
+     * only its content is held clear, so the bars sit on whatever the chosen
+     * theme is painting.
+     *
+     * They are re-applied on every page load. Insets arrive once, before the
+     * first page is up, and a custom property set on a document dies with
+     * that document — including when the app crosses from one language to
+     * the other, which is a full page load.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,9 +46,38 @@ public class MainActivity extends BridgeActivity {
                 Insets bars = windowInsets.getInsets(
                     WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()
                 );
-                view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+                float density = getResources().getDisplayMetrics().density;
+                applyInsets = String.format(
+                    Locale.US,
+                    "document.documentElement.style.setProperty('--sat','%.2fpx');" +
+                    "document.documentElement.style.setProperty('--sar','%.2fpx');" +
+                    "document.documentElement.style.setProperty('--sab','%.2fpx');" +
+                    "document.documentElement.style.setProperty('--sal','%.2fpx');",
+                    bars.top / density,
+                    bars.right / density,
+                    bars.bottom / density,
+                    bars.left / density
+                );
+                sendInsets();
                 return WindowInsetsCompat.CONSUMED;
             }
         );
+
+        getBridge()
+            .getWebView()
+            .setWebViewClient(
+                new BridgeWebViewClient(getBridge()) {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        super.onPageFinished(view, url);
+                        sendInsets();
+                    }
+                }
+            );
+    }
+
+    private void sendInsets() {
+        if (applyInsets.isEmpty()) return;
+        getBridge().getWebView().evaluateJavascript(applyInsets, null);
     }
 }
