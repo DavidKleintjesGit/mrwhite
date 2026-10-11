@@ -379,6 +379,7 @@ function FolderTab({
       onClick={onClick}
       style={{
         position: "relative",
+        zIndex: 1,
         top: 3,
         ...(atRight ? { marginLeft: "auto" } : null),
         fontFamily: ARCHIVO,

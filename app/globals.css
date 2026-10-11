@@ -34,16 +34,15 @@ input::placeholder {
 /*
  * The folder tabs. On a phone the row has no room for three at full size:
  * it wrapped onto a second line and the spare tab landed on top of the
- * content behind it. They shrink instead, and the row scrolls rather than
- * wraps if a translation still runs long.
+ * content behind it, so they shrink instead.
+ *
+ * Deliberately no overflow on this row. The open tab sits 3px lower than
+ * the others so it covers the folder's top edge and reads as the page you
+ * are standing on, and any overflow value clips that overhang away — which
+ * is exactly what an earlier scrolling version of this row did.
  */
 .case-tabs {
   flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.case-tabs::-webkit-scrollbar {
-  display: none;
 }
 .case-tab {
   flex: none;
