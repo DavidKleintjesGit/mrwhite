@@ -193,19 +193,41 @@ en geen tijdstempel heeft, hoort zo bij een uploadsleutel.
 Wat nog rest aan Android-kant is de Play Console zelf: $25 eenmalig, de app
 aanmaken, en uploaden.
 
-### iOS — kan niet op deze machine
+### iOS — eerste build staat bij Apple
 
-Xcode draait alleen op macOS. Het project staat klaar in `ios/`. Keuze: een
-Mac, of een cloud-build (Codemagic, EAS, Bitrise).
+Gebouwd op de Mac van Ismael, 12 oktober 2026. De app staat in App Store
+Connect onder het account **Logicly Solutions B.V.**, Apple ID 6822089226,
+status *Prepare for Submission*. Stappen staan in `IOS-OVERDRACHT.md`.
+
+Twee dingen om te onthouden:
+
+- **Het bundel-id wijkt af van Android.** iOS is `online.misterwhite.app`,
+  Android blijft `online.misterwhite.game`. Die laatste bleek geregistreerd
+  op een ander Apple-account en een App ID is uniek over alle accounts heen.
+- **Build 1 is kapot en moet niet ingezonden worden.** Die bleef zwart op
+  iOS: de controle op "draaien we in de app" keek alleen naar https, wat
+  Android is, terwijl iOS op `capacitor://localhost` draait. Build 2 heeft
+  de reparatie en draait wél op een iPhone.
+
+Bouwen op die Mac: `npm run build && npx cap sync ios`, dan archiveren met
+`-allowProvisioningUpdates`. Xcode draait niet op deze machine, dus alles
+wat iOS raakt gaat via de repo.
 
 ### Winkelmateriaal
 
-- Schermafbeeldingen in de vereiste maten
+- Schermafbeeldingen in de vereiste maten — gemaakt, staan in
+  `screenshots/`, buiten git. Nog niet geüpload naar een winkel
 - Beschrijving, ondertitel, trefwoorden
 - ~~Privacybeleid op een URL~~ — klaar. Staat op `/nl/privacy/` en
   `/en/privacy/`, tekst in `lib/legal/privacy.ts`. Nog te regelen: het adres
   `privacy@misterwhite.online` moet bestaan en doorsturen
 - Leeftijdsclassificatie
+- Handelsgegevens voor de EU. Sinds februari 2025 moet een ontwikkelaar die
+  in de EU verkoopt zich bij Apple als handelaar registreren, anders wordt de
+  app daar niet getoond. Gegevens van Logicly, dus via Ismael
+- Promovideo: 26 seconden, `screenshots/video/`. Bruikbaar voor YouTube en
+  Google Play, **niet** voor een App Preview bij Apple — die eist 886 × 1920
+  of 1080 × 1920 en de onze is 880 × 1912
 
 ### Losse einden
 
