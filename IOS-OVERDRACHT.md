@@ -31,12 +31,17 @@ App Store Connect → **Apps** → **+** → **New App**:
 | Platform | iOS |
 | Name | `Mister White` |
 | Primary language | English (U.S.) |
-| Bundle ID | `online.misterwhite.game` |
+| Bundle ID | `online.misterwhite.app` |
 | SKU | `misterwhite-game` (vrij te kiezen, alleen intern) |
 | User Access | Full Access |
 
-De bundel-id moet exact `online.misterwhite.game` zijn: die zit al in de
-Android-build en in het Xcode-project, en hij ligt na publicatie vast.
+De bundel-id moet exact `online.misterwhite.app` zijn.
+
+Let op dat die **afwijkt van Android**, dat op `online.misterwhite.game`
+staat. Dat is geen slordigheid: die laatste bleek geregistreerd op een ander
+Apple-account, en een App ID is uniek over alle accounts heen. De twee
+winkels houden toch elk hun eigen id, en die van Google ligt al vast door
+wat daar is geüpload.
 
 Staat de id nog niet in het account, maak hem dan eerst aan onder
 **Certificates, Identifiers & Profiles → Identifiers**. Geen enkele
@@ -49,18 +54,19 @@ capability aanzetten — de app gebruikt er geen.
 Dit kan alleen op een Mac. Eenmalig:
 
 ```bash
-git clone https://github.com/<david>/mrwhite.git
+git clone https://github.com/DavidKleintjesGit/mrwhite.git
 cd mrwhite
 npm install
 npm run build
 npx cap sync ios
 ```
 
-`npm run build` maakt de statische export in `out/`, `cap sync` zet die in het
-Xcode-project en haalt de pods op. Daarna:
+`npm run build` maakt de statische export in `out/`, en `cap sync` zet die in
+het Xcode-project. Er is geen CocoaPods nodig: dit project gebruikt Swift
+Package Manager, dus Xcode haalt zijn pakketten zelf op bij het openen.
 
 ```bash
-open ios/App/App.xcworkspace
+open ios/App/App.xcodeproj
 ```
 
 In Xcode, doel **App**:

@@ -1,6 +1,12 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
+  // Android's application id. iOS does not use this one: its bundle
+  // identifier is online.misterwhite.app, set in the Xcode project.
+  // online.misterwhite.game turned out to be registered to another Apple
+  // account, and an App ID is unique across all of them. The two platforms
+  // keep their own identifier anyway, and Android's is already fixed by
+  // what has been uploaded to Google.
   appId: "online.misterwhite.game",
   appName: "Mister White",
 
