@@ -58,10 +58,13 @@ export default function DocLink({
  */
 export function isNativeShell(): boolean {
   if (typeof window === "undefined") return false;
-  return (
-    window.location.protocol === "https:" &&
-    window.location.hostname === "localhost"
-  );
+  // The two platforms serve the bundle over different schemes: Android over
+  // https, iOS over capacitor:. Checking only for https meant iOS fell
+  // through to the web behaviour, asked for the directory URL, got the empty
+  // document and sat on a black screen. Both hosts are localhost.
+  if (window.location.hostname !== "localhost") return false;
+  const scheme = window.location.protocol;
+  return scheme === "https:" || scheme === "capacitor:" || scheme === "ionic:";
 }
 
 /** The same path, in the form Capacitor's local server will actually serve. */

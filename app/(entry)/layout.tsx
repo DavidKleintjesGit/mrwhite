@@ -52,7 +52,9 @@ if(ok.indexOf(want)<0){
 }
 var to="/"+(want||ok[0])+"/";
 // Capacitor serveert geen mappaden bij paginanavigatie; zie DocLink.
-if(location.protocol==="https:"&&location.hostname==="localhost")to+="index.html";
+// Android draait op https, iOS op capacitor: — beide moeten hier langs.
+var s=location.protocol;
+if(location.hostname==="localhost"&&(s==="https:"||s==="capacitor:"||s==="ionic:"))to+="index.html";
 location.replace(to);
 }catch(e){}})()`;
 
