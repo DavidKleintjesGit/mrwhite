@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useState,
-  type CSSProperties,
-  type PointerEvent,
-  type ReactNode,
-} from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 
 type Props = {
   /** The resting style, written out exactly as the design has it. */
@@ -15,14 +10,6 @@ type Props = {
   /** Merged in on hover — the design's `style-hover`. */
   hover?: CSSProperties;
   onClick?: () => void;
-  /**
-   * Meeluisteren met de aanwijzer, naast wat Press er zelf mee doet. De
-   * dossiertab gebruikt dit om open te kunnen slepen in plaats van alleen
-   * aangetikt te worden.
-   */
-  onPointerDown?: (event: PointerEvent<HTMLButtonElement>) => void;
-  onPointerMove?: (event: PointerEvent<HTMLButtonElement>) => void;
-  onPointerUp?: (event: PointerEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   title?: string;
   /** For the few cases a media query has to reach the button. */
@@ -41,9 +28,6 @@ export default function Press({
   press,
   hover,
   onClick,
-  onPointerDown,
-  onPointerMove,
-  onPointerUp,
   disabled,
   title,
   className,
@@ -59,15 +43,8 @@ export default function Press({
       disabled={disabled}
       title={title}
       onClick={onClick}
-      onPointerDown={(event) => {
-        setDown(true);
-        onPointerDown?.(event);
-      }}
-      onPointerMove={onPointerMove}
-      onPointerUp={(event) => {
-        setDown(false);
-        onPointerUp?.(event);
-      }}
+      onPointerDown={() => setDown(true)}
+      onPointerUp={() => setDown(false)}
       onPointerCancel={() => setDown(false)}
       onPointerEnter={() => setOver(true)}
       onPointerLeave={() => {

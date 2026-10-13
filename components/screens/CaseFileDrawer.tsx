@@ -30,6 +30,12 @@ type Props = {
   onChallengeDone: (index: number) => void;
   onQuit: () => void;
   onClose: () => void;
+  /**
+   * Hoeveel pixel de lade al uitgetrokken is terwijl er gesleept wordt, of
+   * null als hij gewoon opengaat. Tijdens het slepen staat er geen animatie
+   * op: de lade hoort onder je vinger te staan en nergens anders.
+   */
+  pull?: number | null;
 };
 
 /**
@@ -48,6 +54,7 @@ export default function CaseFileDrawer({
   onChallengeDone,
   onQuit,
   onClose,
+  pull,
 }: Props) {
   const t = dict.drink;
   // Agents first: opening the file is usually about a person, not the rules.
@@ -68,11 +75,17 @@ export default function CaseFileDrawer({
         inset: 0,
         zIndex: 50,
         background: "rgba(13,13,13,.86)",
+        ...(pull === null || pull === undefined
+          ? null
+          : { opacity: Math.min(1, pull / 160) }),
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-end",
-        padding: "12px 10px",
-        animation: "veilIn .34s ease both",
+        // Links ruimte, rechts niets: de lade hoort tegen de rand te
+        // sluiten, anders hangt hij in het niets.
+        padding: "10px 0 10px 12px",
+        animation:
+          pull === null || pull === undefined ? "veilIn .34s ease both" : "none",
       }}
     >
       {/*
@@ -103,8 +116,11 @@ export default function CaseFileDrawer({
             "inset -14px 0 22px rgba(0,0,0,.55), inset 0 2px 0 rgba(243,240,232,.12), -14px 0 44px rgba(0,0,0,.6)",
           // Lang genoeg om als uittrekken te lezen, en met een kromme die
           // vooral aan het eind afremt — zoals een lade die op zijn rails
-          // uitloopt.
-          animation: "railOut .52s cubic-bezier(.16,.86,.3,1) both",
+          // uitloopt. Tijdens het slepen staat die uit: dan bepaalt de
+          // vinger waar hij staat.
+          ...(pull === null || pull === undefined
+            ? { animation: "railOut .52s cubic-bezier(.16,.86,.3,1) both" }
+            : { transform: `translateX(calc(100% - ${pull}px))` }),
         }}
       >
         <div
@@ -114,7 +130,12 @@ export default function CaseFileDrawer({
             display: "flex",
             flexDirection: "column",
             paddingTop: 14,
-            animation: "fileUp .46s .22s cubic-bezier(.2,1.05,.3,1) both",
+            ...(pull === null || pull === undefined
+              ? {
+                  animation:
+                    "fileUp .46s .22s cubic-bezier(.2,1.05,.3,1) both",
+                }
+              : null),
           }}
         >
           {/* The folder tabs along the top edge. */}
@@ -228,6 +249,32 @@ export default function CaseFileDrawer({
                     border: "2px solid rgba(13,13,13,.55)",
                     borderRadius: "2px 0 0 2px",
                     transform: `rotate(${slip.tilt}deg)`,
+                  }}
+                />
+              ))}
+
+              {/*
+                De ringen van de map. Ze liggen over het papier heen aan de
+                linkerkant, waar in een echte map de perforatie zit.
+              */}
+              {[0.22, 0.5, 0.78].map((y) => (
+                <span
+                  key={y}
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    left: 2,
+                    top: `calc(${y * 100}% - 14px)`,
+                    width: 28,
+                    height: 28,
+                    borderRadius: "50%",
+                    border: "5px solid #b3ad9c",
+                    borderTopColor: "#f1eee2",
+                    borderLeftColor: "#87816f",
+                    borderBottomColor: "#6f6a5b",
+                    boxSizing: "border-box",
+                    boxShadow: "0 1px 3px rgba(13,13,13,.5)",
+                    zIndex: 3,
                   }}
                 />
               ))}

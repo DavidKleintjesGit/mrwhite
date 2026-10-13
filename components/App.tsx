@@ -27,7 +27,6 @@ import RulesScreen from "@/components/screens/RulesScreen";
 import SecretVoteScreen from "@/components/screens/SecretVoteScreen";
 import SettingsScreen from "@/components/screens/SettingsScreen";
 import { nativeHref } from "@/components/ui/DocLink";
-import Press from "@/components/ui/Press";
 import SetupScreen from "@/components/screens/SetupScreen";
 import UnmaskScreen from "@/components/screens/UnmaskScreen";
 import VoteScreen from "@/components/screens/VoteScreen";
@@ -96,6 +95,8 @@ export default function App({ dict, lang }: Props) {
    * tijdens het slepen zou dat juist in de weg zitten.
    */
   const dragFrom = useRef<number | null>(null);
+  /** Hoeveel pixel de lade uit staat terwijl er aan de hendel getrokken wordt. */
+  const [pull, setPull] = useState<number | null>(null);
 
   const drink = stored.mode === "drink";
   /** The Drinking Edition deals its house rules as a step of its own. */
@@ -367,94 +368,86 @@ export default function App({ dict, lang }: Props) {
         voetknoppen, en onder je duim.
       */}
       {"players" in stage && stage.name !== "card" && !drawerOpen && (
-        <Press
-          onClick={() => setDrawerOpen(true)}
-          // Aantikken werkt, maar naar links trekken ook: dat is wat de
-          // vorm belooft. Veertig pixel is ver genoeg om het van een
-          // onvaste duim te onderscheiden.
+        <button
+          type="button"
+          aria-label={dict.drink.sheetOpen}
+          // Alleen trekken, niet tikken. Een lade gaat niet open van een
+          // tikje op de greep, en dit moet aanvoelen als een lade.
+          //
+          // Het toetsenbord kan niet slepen, dus Enter en spatie openen hem
+          // wel — anders is het dossier voor wie zo bedient onbereikbaar.
+          onKeyDown={(event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            setDrawerOpen(true);
+          }}
           onPointerDown={(event) => {
+            event.currentTarget.setPointerCapture(event.pointerId);
             dragFrom.current = event.clientX;
+            setPull(0);
           }}
           onPointerMove={(event) => {
             if (dragFrom.current === null) return;
-            if (dragFrom.current - event.clientX < 40) return;
-            dragFrom.current = null;
-            setDrawerOpen(true);
+            const width = Math.min(window.innerWidth * 0.88, 520);
+            setPull(
+              Math.max(0, Math.min(dragFrom.current - event.clientX, width))
+            );
           }}
-          onPointerUp={() => {
+          onPointerUp={(event) => {
+            if (dragFrom.current === null) return;
+            const travelled = dragFrom.current - event.clientX;
             dragFrom.current = null;
+            setPull(null);
+            // Ver genoeg getrokken om het te menen: dan neemt de lade het
+            // over en loopt vanzelf uit.
+            if (travelled > 70) setDrawerOpen(true);
+          }}
+          onPointerCancel={() => {
+            dragFrom.current = null;
+            setPull(null);
           }}
           style={{
-            touchAction: "none",
-            // Fixed, not absolute: it has to stay reachable while the page
-            // scrolls, and the layered shadow is what makes it read as
-            // hanging over the content rather than sitting in it.
             position: "fixed",
             right: 0,
-            // Onder het midden: daar valt hij onder je duim als je de
-            // telefoon vasthoudt, en niet midden over de inhoud heen.
             top: "64%",
             transform: "translateY(-50%)",
             zIndex: 40,
+            width: 36,
+            height: 104,
             display: "flex",
             alignItems: "center",
-            gap: 8,
-            // Van boven naar beneden, zoals het ruitertje op een hangmap.
-            writingMode: "vertical-rl",
-            fontFamily: "var(--font-archivo-black), sans-serif",
-            fontSize: 12,
-            letterSpacing: ".14em",
-            textTransform: "uppercase",
-            background: "#E9DDB8",
-            color: "#0d0d0d",
-            border: "2px solid #0d0d0d",
+            justifyContent: "center",
+            padding: 0,
+            // Het front van de lade dat nog net uit de kast steekt.
+            background: "#1b1a14",
+            border: "3px solid #0d0d0d",
             borderRight: "none",
             borderRadius: "12px 0 0 12px",
-            padding: "16px 10px 16px 12px",
-            // Het gele vlak zit nu ín de tab langs de linkerrand in plaats
-            // van er als harde blokschaduw naast: dat las als een tweede,
-            // scheve tab. Daarbuiten alleen een zachte schaduw, zodat hij
-            // boven de pagina lijkt te liggen.
-            boxShadow: "inset 5px 0 0 #FFD23F, -6px 0 18px rgba(13,13,13,.32)",
-            cursor: "pointer",
-            transition: "padding .15s",
+            boxShadow:
+              "inset 0 2px 0 rgba(243,240,232,.14), -7px 0 20px rgba(13,13,13,.45)",
+            cursor: "grab",
+            touchAction: "none",
           }}
-          hover={{ paddingRight: 13 }}
-          press={{ paddingRight: 15 }}
         >
-          {/*
-            De greep. Drie ribbels dwars op de hendel, zoals op een lade:
-            dat is wat ervan zegt dat je eraan kunt trekken in plaats van
-            alleen tikken.
-          */}
+          {/* De greep: een metalen beugel op twee pootjes. */}
           <span
             aria-hidden="true"
             style={{
-              writingMode: "horizontal-tb",
-              display: "flex",
-              flexDirection: "column",
-              gap: 3,
+              width: 11,
+              height: 62,
+              borderRadius: 6,
+              background:
+                "linear-gradient(90deg,#6f6a5c,#efece0 38%,#c3bdac 62%,#6f6a5c)",
+              boxShadow:
+                "0 0 0 2px #0d0d0d, 3px 0 7px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.25)",
             }}
-          >
-            {[0, 1, 2].map((line) => (
-              <span
-                key={line}
-                style={{
-                  width: 16,
-                  height: 2,
-                  borderRadius: 1,
-                  background: "#0d0d0d",
-                  opacity: 0.5,
-                }}
-              />
-            ))}
-          </span>
-          {dict.drink.sheetOpen}
-        </Press>
+          />
+        </button>
       )}
 
-      {drawerOpen && "players" in stage && (
+      {(drawerOpen || pull !== null) && "players" in stage && (
         <CaseFileDrawer
+          pull={drawerOpen ? null : pull}
           dict={dict}
           players={stage.players}
           rules={stored.rules}
