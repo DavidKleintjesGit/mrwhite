@@ -116,7 +116,7 @@ export default function CaseFileDrawer({
           zIndex: 50,
           display: "flex",
           alignItems: "stretch",
-          height: "56dvh",
+          height: "80dvh",
           transform: `translateY(-50%) translateX(${Math.max(
             0,
             width - at
@@ -331,48 +331,6 @@ export default function CaseFileDrawer({
                       border: "2px solid rgba(13,13,13,.55)",
                       borderRadius: "2px 0 0 2px",
                       transform: `rotate(${slip.tilt}deg)`,
-                    }}
-                  />
-                ))}
-
-                {/*
-                Het hechtmechaniek: een metalen strip langs de linkerrand met
-                twee tongen die over de bladen heen zijn omgeslagen. Dit waren
-                drie losse ringen, maar die lagen als rondjes op het papier
-                zonder er iets mee te doen — een clip laat zien dát hij
-                vasthoudt.
-              */}
-                <span
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    top: 14,
-                    bottom: 14,
-                    width: 11,
-                    borderRadius: 3,
-                    background:
-                      "linear-gradient(90deg,#6c6759,#e4e0d2 42%,#b5afa0 64%,#6c6759)",
-                    boxShadow: "0 0 0 1px rgba(13,13,13,.55)",
-                    zIndex: 3,
-                  }}
-                />
-                {[0.26, 0.74].map((y) => (
-                  <span
-                    key={y}
-                    aria-hidden="true"
-                    style={{
-                      position: "absolute",
-                      left: 8,
-                      top: `calc(${y * 100}% - 6px)`,
-                      width: 46,
-                      height: 12,
-                      borderRadius: "3px 6px 6px 3px",
-                      background:
-                        "linear-gradient(180deg,#f1eee2,#bdb7a7 55%,#7d7769)",
-                      boxShadow:
-                        "0 0 0 1px rgba(13,13,13,.55), 2px 3px 6px rgba(13,13,13,.4)",
-                      zIndex: 4,
                     }}
                   />
                 ))}
