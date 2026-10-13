@@ -110,7 +110,7 @@ export default function App({ dict, lang }: Props) {
   const [drawerWide, setDrawerWide] = useState(0);
 
   useEffect(() => {
-    const meet = () => setDrawerWide(Math.min(window.innerWidth * 0.8, 460));
+    const meet = () => setDrawerWide(Math.min(window.innerWidth * 0.9, 540));
     meet();
     window.addEventListener("resize", meet);
     return () => window.removeEventListener("resize", meet);
