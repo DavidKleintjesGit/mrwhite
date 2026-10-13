@@ -409,8 +409,8 @@ export default function App({ dict, lang }: Props) {
             color: "#0d0d0d",
             border: "2px solid #0d0d0d",
             borderRight: "none",
-            borderRadius: "10px 0 0 10px",
-            padding: "14px 9px 14px 11px",
+            borderRadius: "12px 0 0 12px",
+            padding: "16px 10px 16px 12px",
             // Het gele vlak zit nu ín de tab langs de linkerrand in plaats
             // van er als harde blokschaduw naast: dat las als een tweede,
             // scheve tab. Daarbuiten alleen een zachte schaduw, zodat hij
@@ -422,6 +422,33 @@ export default function App({ dict, lang }: Props) {
           hover={{ paddingRight: 13 }}
           press={{ paddingRight: 15 }}
         >
+          {/*
+            De greep. Drie ribbels dwars op de hendel, zoals op een lade:
+            dat is wat ervan zegt dat je eraan kunt trekken in plaats van
+            alleen tikken.
+          */}
+          <span
+            aria-hidden="true"
+            style={{
+              writingMode: "horizontal-tb",
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+            }}
+          >
+            {[0, 1, 2].map((line) => (
+              <span
+                key={line}
+                style={{
+                  width: 16,
+                  height: 2,
+                  borderRadius: 1,
+                  background: "#0d0d0d",
+                  opacity: 0.5,
+                }}
+              />
+            ))}
+          </span>
           {dict.drink.sheetOpen}
         </Press>
       )}

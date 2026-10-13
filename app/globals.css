@@ -99,16 +99,32 @@ input::placeholder {
 
 /* The case file sliding down from the top edge, as the design has it. */
 /*
- * Het dossier schuift recht naar links het beeld in, vanaf de rand waar de
- * tab zit. Er zat eerst een draai in om een openslaande map te suggereren,
- * maar dat las als schuin omhoog bewegen in plaats van als opengaan.
+ * Het openen gaat in twee bewegingen die in elkaar overlopen: eerst rolt de
+ * lade naar links het beeld in, en zodra die onderweg is komt het dossier
+ * eruit omhoog. Daarom start de tweede met vertraging en loopt hij door
+ * nadat de eerste al stilstaat — dat leest als één handeling in plaats van
+ * als twee animaties achter elkaar.
  */
-@keyframes drawerIn {
+@keyframes railOut {
   0% {
     transform: translateX(100%);
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes fileUp {
+  0% {
+    opacity: 0;
+    transform: translateY(34px) scale(0.96);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

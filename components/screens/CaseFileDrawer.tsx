@@ -75,6 +75,11 @@ export default function CaseFileDrawer({
         animation: "screenIn .25s both",
       }}
     >
+      {/*
+        De ladebak. Hij schuift als geheel naar binnen en vormt de donkere
+        omlijsting waar het dossier in ligt: open aan de linkerkant, met de
+        schaduw naar binnen zodat het een bak lijkt en geen vlak.
+      */}
       <div
         role="dialog"
         aria-modal="true"
@@ -89,254 +94,309 @@ export default function CaseFileDrawer({
           maxHeight: "calc(100dvh - 24px)",
           display: "flex",
           flexDirection: "column",
-          paddingTop: 14,
-          // Scharnier links: daar slaat de map open.
-          transformOrigin: "left center",
-          animation: "drawerIn .46s cubic-bezier(.2,1,.3,1) both",
+          background: "#16150f",
+          border: "3px solid #0d0d0d",
+          borderRight: "none",
+          borderRadius: "12px 0 0 12px",
+          padding: "12px 10px 14px 12px",
+          boxShadow:
+            "inset -14px 0 22px rgba(0,0,0,.55), inset 0 2px 0 rgba(243,240,232,.12), -14px 0 44px rgba(0,0,0,.6)",
+          animation: "railOut .3s cubic-bezier(.22,1,.36,1) both",
         }}
       >
-        {/* The folder tabs along the top edge. */}
-        <div
-          className="case-tabs"
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            gap: 6,
-            paddingLeft: 14,
-          }}
-        >
-          <FolderTab
-            label={t.agents}
-            active={view === "agents"}
-            onClick={() => {
-              setView("agents");
-              setOpenFile(null);
-            }}
-          />
-          {drink && (
-            <FolderTab
-              label={t.rulesTab}
-              active={view === "rules"}
-              onClick={() => {
-                setView("rules");
-                setOpenFile(null);
-              }}
-            />
-          )}
-          <FolderTab
-            label={t.quit}
-            colour="#FF3D3D"
-            onClick={onQuit}
-            className="case-bottom-wide"
-          />
-
-          <FolderTab
-            label={t.sheetClose}
-            onClick={onClose}
-            atRight
-            className="case-close-wide"
-          />
-        </div>
-
         <div
           style={{
             flex: 1,
             minHeight: 0,
             display: "flex",
             flexDirection: "column",
-            background: "#E9DDB8",
-            color: "#0d0d0d",
-            border: "3px solid #0d0d0d",
-            borderRadius: "0 8px 0 0",
-            boxShadow: "10px 10px 0 #FFD23F",
-            overflow: "hidden",
+            paddingTop: 14,
+            animation: "fileUp .44s .13s cubic-bezier(.2,1.05,.3,1) both",
           }}
         >
+          {/* The folder tabs along the top edge. */}
           <div
+            className="case-tabs"
             style={{
               display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 12,
-              padding: "14px 20px",
-              borderBottom: "2px dashed rgba(13,13,13,.45)",
-              fontSize: 12,
-              letterSpacing: ".18em",
-              textTransform: "uppercase",
-              fontWeight: 700,
+              alignItems: "flex-end",
+              gap: 6,
+              paddingLeft: 14,
             }}
           >
-            <span>{t.caseNo}</span>
-            <span>
-              {drink ? dict.modes.drinkTitle : dict.modes.classicTitle}
-            </span>
+            <FolderTab
+              label={t.agents}
+              active={view === "agents"}
+              onClick={() => {
+                setView("agents");
+                setOpenFile(null);
+              }}
+            />
+            {drink && (
+              <FolderTab
+                label={t.rulesTab}
+                active={view === "rules"}
+                onClick={() => {
+                  setView("rules");
+                  setOpenFile(null);
+                }}
+              />
+            )}
+            <FolderTab
+              label={t.quit}
+              colour="#FF3D3D"
+              onClick={onQuit}
+              className="case-bottom-wide"
+            />
+
+            <FolderTab
+              label={t.sheetClose}
+              onClick={onClose}
+              atRight
+              className="case-close-wide"
+            />
           </div>
 
           <div
             style={{
               flex: 1,
               minHeight: 0,
-              overflowY: "auto",
-              overflowX: "hidden",
-              padding: 20,
+              display: "flex",
+              flexDirection: "column",
+              background: "#E9DDB8",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              borderRadius: "0 8px 0 0",
+              boxShadow: "10px 10px 0 #FFD23F",
+              overflow: "hidden",
             }}
           >
-            {openFile !== null ? (
-              <FileView
-                dict={dict}
-                player={players[openFile]}
-                number={openFile + 1}
-                revealed={revealed}
-                onReveal={() => setRevealed(true)}
-                onDone={() => onChallengeDone(openFile)}
-                onBack={() => setOpenFile(null)}
-              />
-            ) : view === "rules" ? (
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 18 }}
-              >
-                <Heading text={t.houseRules} />
-                <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
-                  {t.rulesHelp}
-                </p>
-                {rules.map((id, index) => {
-                  const rule = t.rules[String(id) as keyof typeof t.rules];
-                  const category = ruleCategory(id);
-                  return (
-                    <div
-                      key={id}
-                      style={{
-                        position: "relative",
-                        ...LINED,
-                        border: "2px solid #0d0d0d",
-                        boxShadow: "4px 4px 0 rgba(13,13,13,.25)",
-                        padding: "14px 14px 14px 56px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          position: "absolute",
-                          left: 12,
-                          top: 14,
-                          fontFamily: ARCHIVO,
-                          fontSize: 28,
-                          lineHeight: 1,
-                        }}
-                      >
-                        {index + 1}
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        style={{
-                          position: "absolute",
-                          left: 42,
-                          top: 0,
-                          bottom: 0,
-                          width: 2,
-                          background: "rgba(232,32,42,.45)",
-                        }}
-                      />
-                      <div
-                        style={{
-                          display: "flex",
-                          flexWrap: "wrap",
-                          alignItems: "center",
-                          gap: "6px 10px",
-                          marginBottom: 6,
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: ARCHIVO,
-                            fontSize: 18,
-                            textTransform: "uppercase",
-                            lineHeight: 1.1,
-                          }}
-                        >
-                          {rule.t}
-                        </span>
-                        <span
-                          style={{
-                            fontFamily: ARCHIVO,
-                            fontSize: 10,
-                            letterSpacing: ".12em",
-                            textTransform: "uppercase",
-                            background: COLOUR[category],
-                            border: "2px solid #0d0d0d",
-                            padding: "3px 6px",
-                          }}
-                        >
-                          {
-                            {
-                              A: t.catAShort,
-                              B: t.catBShort,
-                              C: t.catCShort,
-                              D: t.catDShort,
-                            }[category]
-                          }
-                        </span>
-                      </div>
-                      <span style={{ fontSize: 15, lineHeight: 1.5 }}>
-                        {rule.d}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 18 }}
-              >
-                <Heading text={t.agents} />
-                {drink && (
-                  <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
-                    {t.challengeCheck}
-                  </p>
-                )}
-                <div className="case-folders">
-                  {players.map((player, index) => (
-                    <Folder
-                      key={`${player.name}-${index}`}
-                      dict={dict}
-                      player={player}
-                      number={index + 1}
-                      onOpen={() => showFile(index)}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                padding: "14px 20px",
+                borderBottom: "2px dashed rgba(13,13,13,.45)",
+                fontSize: 12,
+                letterSpacing: ".18em",
+                textTransform: "uppercase",
+                fontWeight: 700,
+              }}
+            >
+              <span>{t.caseNo}</span>
+              <span>
+                {drink ? dict.modes.drinkTitle : dict.modes.classicTitle}
+              </span>
+            </div>
 
-        {/*
+            {/*
+            De inhoud ligt op een witte bladzijde in de map, niet direct op
+            het karton. Daaronder steekt een tweede vel net uit, scheef,
+            zodat het een stapel wordt in plaats van één blad.
+          */}
+            <div
+              style={{
+                position: "relative",
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                padding: "12px 13px 14px",
+              }}
+            >
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  top: 16,
+                  left: 18,
+                  right: 9,
+                  bottom: 10,
+                  background: "#F6F2E6",
+                  border: "2px solid rgba(13,13,13,.35)",
+                  transform: "rotate(.5deg)",
+                }}
+              />
+              <div
+                style={{
+                  position: "relative",
+                  flex: 1,
+                  minHeight: 0,
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                  background: "#FDFBF3",
+                  border: "2px solid rgba(13,13,13,.55)",
+                  boxShadow: "0 3px 10px rgba(13,13,13,.22)",
+                  padding: 18,
+                }}
+              >
+                {openFile !== null ? (
+                  <FileView
+                    dict={dict}
+                    player={players[openFile]}
+                    number={openFile + 1}
+                    revealed={revealed}
+                    onReveal={() => setRevealed(true)}
+                    onDone={() => onChallengeDone(openFile)}
+                    onBack={() => setOpenFile(null)}
+                  />
+                ) : view === "rules" ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 18,
+                    }}
+                  >
+                    <Heading text={t.houseRules} />
+                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
+                      {t.rulesHelp}
+                    </p>
+                    {rules.map((id, index) => {
+                      const rule = t.rules[String(id) as keyof typeof t.rules];
+                      const category = ruleCategory(id);
+                      return (
+                        <div
+                          key={id}
+                          style={{
+                            position: "relative",
+                            ...LINED,
+                            border: "2px solid #0d0d0d",
+                            boxShadow: "4px 4px 0 rgba(13,13,13,.25)",
+                            padding: "14px 14px 14px 56px",
+                          }}
+                        >
+                          <span
+                            style={{
+                              position: "absolute",
+                              left: 12,
+                              top: 14,
+                              fontFamily: ARCHIVO,
+                              fontSize: 28,
+                              lineHeight: 1,
+                            }}
+                          >
+                            {index + 1}
+                          </span>
+                          <span
+                            aria-hidden="true"
+                            style={{
+                              position: "absolute",
+                              left: 42,
+                              top: 0,
+                              bottom: 0,
+                              width: 2,
+                              background: "rgba(232,32,42,.45)",
+                            }}
+                          />
+                          <div
+                            style={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              alignItems: "center",
+                              gap: "6px 10px",
+                              marginBottom: 6,
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontFamily: ARCHIVO,
+                                fontSize: 18,
+                                textTransform: "uppercase",
+                                lineHeight: 1.1,
+                              }}
+                            >
+                              {rule.t}
+                            </span>
+                            <span
+                              style={{
+                                fontFamily: ARCHIVO,
+                                fontSize: 10,
+                                letterSpacing: ".12em",
+                                textTransform: "uppercase",
+                                background: COLOUR[category],
+                                border: "2px solid #0d0d0d",
+                                padding: "3px 6px",
+                              }}
+                            >
+                              {
+                                {
+                                  A: t.catAShort,
+                                  B: t.catBShort,
+                                  C: t.catCShort,
+                                  D: t.catDShort,
+                                }[category]
+                              }
+                            </span>
+                          </div>
+                          <span style={{ fontSize: 15, lineHeight: 1.5 }}>
+                            {rule.d}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 18,
+                    }}
+                  >
+                    <Heading text={t.agents} />
+                    {drink && (
+                      <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
+                        {t.challengeCheck}
+                      </p>
+                    )}
+                    <div className="case-folders">
+                      {players.map((player, index) => (
+                        <Folder
+                          key={`${player.name}-${index}`}
+                          dict={dict}
+                          player={player}
+                          number={index + 1}
+                          onOpen={() => showFile(index)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/*
           The tabs that hang under the folder on a narrow screen, where the
           row above has no width left for them. Both look closed: neither is
           a section you can stand on, so they keep every edge and the darker
           card stock.
         */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 6,
-            marginRight: 16,
-          }}
-        >
-          <Press
-            className="case-bottom-narrow"
-            onClick={onQuit}
-            style={{ ...UNDER_TAB, background: "#FF3D3D" }}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 6,
+              marginRight: 16,
+            }}
           >
-            {t.quit}
-          </Press>
-          <Press
-            className="case-close-narrow"
-            onClick={onClose}
-            style={UNDER_TAB}
-          >
-            {t.sheetClose}
-          </Press>
+            <Press
+              className="case-bottom-narrow"
+              onClick={onQuit}
+              style={{ ...UNDER_TAB, background: "#FF3D3D" }}
+            >
+              {t.quit}
+            </Press>
+            <Press
+              className="case-close-narrow"
+              onClick={onClose}
+              style={UNDER_TAB}
+            >
+              {t.sheetClose}
+            </Press>
+          </div>
         </div>
       </div>
     </div>
