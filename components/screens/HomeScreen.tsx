@@ -1,5 +1,6 @@
 "use client";
 
+import Magnifier from "@/components/ui/Magnifier";
 import Press from "@/components/ui/Press";
 import Screen from "@/components/ui/Screen";
 import type { Dictionary } from "@/lib/i18n";
@@ -205,6 +206,21 @@ export default function HomeScreen({
             {t.titleBottom}
           </span>
         </h1>
+
+        {/*
+          Vult de ruimte onder de titel, en zegt zonder woorden waar het spel
+          over gaat. Rechts onderin, scheef, alsof hij daar is neergelegd.
+        */}
+        <Magnifier
+          variant="outline"
+          style={{
+            alignSelf: "flex-end",
+            marginRight: "4%",
+            marginTop: 4,
+            transform: "rotate(-12deg)",
+            animation: "driftGlass 9s ease-in-out infinite",
+          }}
+        />
       </div>
 
       <div

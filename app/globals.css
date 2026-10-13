@@ -98,12 +98,30 @@ input::placeholder {
 }
 
 /* The case file sliding down from the top edge, as the design has it. */
+/*
+ * Het dossier zwaait open vanaf de rechterrand, met het scharnier aan de
+ * linkerkant — alsof je de map daar openslaat. Kwam eerder van boven
+ * vallen, wat nergens op sloeg zodra de tab naar de zijkant verhuisde.
+ */
 @keyframes drawerIn {
   0% {
-    transform: translateY(-105%);
+    opacity: 0.35;
+    transform: perspective(1600px) translateX(22%) rotateY(-16deg);
   }
   100% {
-    transform: none;
+    opacity: 1;
+    transform: perspective(1600px) translateX(0) rotateY(0deg);
+  }
+}
+
+/* Het vergrootglas op het beginscherm dobbert wat rond. */
+@keyframes driftGlass {
+  0%,
+  100% {
+    transform: rotate(-12deg) translate(0, 0);
+  }
+  50% {
+    transform: rotate(-7deg) translate(-7px, -11px);
   }
 }
 @keyframes screenIn {

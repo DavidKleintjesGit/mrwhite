@@ -69,9 +69,9 @@ export default function CaseFileDrawer({
         zIndex: 50,
         background: "rgba(13,13,13,.86)",
         display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: "0 12px",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        padding: "12px 10px",
         animation: "screenIn .25s both",
       }}
     >
@@ -87,7 +87,9 @@ export default function CaseFileDrawer({
           display: "flex",
           flexDirection: "column",
           paddingTop: 14,
-          animation: "drawerIn .42s cubic-bezier(.2,1,.3,1) both",
+          // Scharnier links: daar slaat de map open.
+          transformOrigin: "left center",
+          animation: "drawerIn .46s cubic-bezier(.2,1,.3,1) both",
         }}
       >
         {/* The folder tabs along the top edge. */}

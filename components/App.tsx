@@ -368,7 +368,9 @@ export default function App({ dict, lang }: Props) {
             // hanging over the content rather than sitting in it.
             position: "fixed",
             right: 0,
-            top: "50%",
+            // Onder het midden: daar valt hij onder je duim als je de
+            // telefoon vasthoudt, en niet midden over de inhoud heen.
+            top: "64%",
             transform: "translateY(-50%)",
             zIndex: 40,
             display: "flex",
@@ -386,7 +388,11 @@ export default function App({ dict, lang }: Props) {
             borderRight: "none",
             borderRadius: "10px 0 0 10px",
             padding: "14px 9px 14px 11px",
-            boxShadow: "-3px 3px 0 #FFD23F, -8px 0 20px rgba(0,0,0,.4)",
+            // Het gele vlak zit nu ín de tab langs de linkerrand in plaats
+            // van er als harde blokschaduw naast: dat las als een tweede,
+            // scheve tab. Daarbuiten alleen een zachte schaduw, zodat hij
+            // boven de pagina lijkt te liggen.
+            boxShadow: "inset 5px 0 0 #FFD23F, -6px 0 18px rgba(13,13,13,.32)",
             cursor: "pointer",
             transition: "padding .15s",
           }}
