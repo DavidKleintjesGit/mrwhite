@@ -225,13 +225,19 @@ input::placeholder {
     transform: none;
   }
 }
-@keyframes blink {
+/*
+ * Het opnamelampje. Was een harde aan-uit op steps(1), wat op een telefoon
+ * leest als een haperend scherm in plaats van als een lampje. Nu zwelt het
+ * aan en af, met een rustpunt bovenin.
+ */
+@keyframes breathe {
   0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
   100% {
-    opacity: 0;
+    opacity: 1;
+    transform: scale(1);
+  }
+  55% {
+    opacity: 0.25;
+    transform: scale(0.82);
   }
 }

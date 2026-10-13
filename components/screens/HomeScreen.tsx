@@ -77,7 +77,7 @@ export default function HomeScreen({
               height: 9,
               borderRadius: "50%",
               background: "#FF3D3D",
-              animation: "blink 1.2s steps(1) infinite",
+              animation: "breathe 2.8s ease-in-out infinite",
             }}
           />
           {t.recNumber}
@@ -181,7 +181,7 @@ export default function HomeScreen({
             // screen. Sized in vw rather than from a fixed floor, so it
             // shrinks with the phone instead of running off a narrow one —
             // at 20vw "White" plus its padding still fits a 320px screen.
-            fontSize: "clamp(40px, 20vw, 240px)",
+            fontSize: "clamp(40px, 24vw, 280px)",
             lineHeight: 0.9,
             letterSpacing: "-.02em",
             textTransform: "uppercase",

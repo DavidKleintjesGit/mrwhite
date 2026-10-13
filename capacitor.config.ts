@@ -21,7 +21,11 @@ const config: CapacitorConfig = {
 
   plugins: {
     SplashScreen: {
-      launchShowDuration: 600,
+      // iOS laat de storyboard los zodra de WebView er is, en dat is te snel
+      // om te zien. De plugin houdt hem vast; Android had zijn eigen
+      // opstartscherm al via het systeem.
+      launchShowDuration: 1100,
+      launchAutoHide: true,
       // Papier, niet inkt: het spel opent in het lichte thema, dus een
       // donker opstartscherm gaf een zwart kader dat omsloeg zodra de
       // pagina verfde.

@@ -18,8 +18,15 @@ import Press from "@/components/ui/Press";
  *     edge. The app sets it on its root, 38px during a round and 0px
  *     elsewhere, exactly as the design does.
  */
+/*
+ * De bovenmarge is de veilige zone plus `--toppad`. Die laatste is normaal de
+ * gewone marge van het ontwerp, en tijdens een ronde iets meer, omdat de
+ * dossierslip daar hangt. Eerder stond de marge van het ontwerp er nog los
+ * bovenop, en dan telde je op een telefoon drie keer ruimte achter elkaar:
+ * de notch, de slip, en de marge.
+ */
 const TOP =
-  "calc(clamp(16px,4vw,56px) + var(--toppad, 0px) + var(--sat, env(safe-area-inset-top)))";
+  "calc(var(--sat, env(safe-area-inset-top)) + var(--toppad, clamp(16px,4vw,56px)))";
 const BOTTOM =
   "calc(clamp(16px,4vw,56px) + var(--sab, env(safe-area-inset-bottom)))";
 

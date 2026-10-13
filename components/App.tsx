@@ -311,7 +311,12 @@ export default function App({ dict, lang }: Props) {
     "--dot": theme.dot,
     // Room for the case-file tab hanging off the top edge, so no screen
     // tucks its first line underneath it. Zero everywhere else.
-    "--toppad": "players" in stage && stage.name !== "card" ? "38px" : "0px",
+    // Tijdens een ronde hangt de dossierslip bovenaan en moet de inhoud
+    // eronder beginnen; anders is dit gewoon de marge van het ontwerp.
+    "--toppad":
+      "players" in stage && stage.name !== "card"
+        ? "62px"
+        : "clamp(16px,4vw,56px)",
     backgroundColor: "var(--bg)",
     backgroundImage: "radial-gradient(var(--dot) 1px, transparent 1.6px)",
     backgroundSize: "9px 9px",
@@ -356,7 +361,10 @@ export default function App({ dict, lang }: Props) {
             // scrolls, and the layered shadow is what makes it read as
             // hanging over the content rather than sitting in it.
             position: "fixed",
-            top: 0,
+            // Onder de systeembalk, niet eronderdoor: op een iPhone valt het
+            // bovenste stuk van het scherm onder de Dynamic Island, en daar
+            // vangt iOS de tik af voordat de app hem ziet.
+            top: "var(--sat, env(safe-area-inset-top))",
             right: "max(16px, calc((100% - 1240px) / 2 + 20px))",
             zIndex: 40,
             display: "flex",
