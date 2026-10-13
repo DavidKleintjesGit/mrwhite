@@ -37,8 +37,6 @@ type Props = {
   onClose: () => void;
   /** Hoeveel pixel de lade uit staat. */
   at: number;
-  /** Hoe ver hij uit kán: dat is helemaal open. */
-  width: number;
   /** Of er op dit moment aan getrokken wordt. */
   dragging: boolean;
   /** Wat de greep aan de voorkant van de lade met de aanwijzer moet doen. */
@@ -69,7 +67,6 @@ export default function CaseFileDrawer({
   onQuit,
   onClose,
   at,
-  width,
   dragging,
   grip,
 }: Props) {

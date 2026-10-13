@@ -397,7 +397,6 @@ export default function App({ dict, lang }: Props) {
       {"players" in stage && stage.name !== "card" && (
         <CaseFileDrawer
           at={drawerAt}
-          width={drawerWidth()}
           dragging={dragging}
           grip={{
             label: dict.drink.sheetOpen,
