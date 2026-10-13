@@ -99,18 +99,16 @@ input::placeholder {
 
 /* The case file sliding down from the top edge, as the design has it. */
 /*
- * Het dossier zwaait open vanaf de rechterrand, met het scharnier aan de
- * linkerkant — alsof je de map daar openslaat. Kwam eerder van boven
- * vallen, wat nergens op sloeg zodra de tab naar de zijkant verhuisde.
+ * Het dossier schuift recht naar links het beeld in, vanaf de rand waar de
+ * tab zit. Er zat eerst een draai in om een openslaande map te suggereren,
+ * maar dat las als schuin omhoog bewegen in plaats van als opengaan.
  */
 @keyframes drawerIn {
   0% {
-    opacity: 0.35;
-    transform: perspective(1600px) translateX(22%) rotateY(-16deg);
+    transform: translateX(100%);
   }
   100% {
-    opacity: 1;
-    transform: perspective(1600px) translateX(0) rotateY(0deg);
+    transform: translateX(0);
   }
 }
 

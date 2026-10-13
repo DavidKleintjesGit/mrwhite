@@ -2,6 +2,7 @@
 
 import {
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
   type CSSProperties,
@@ -89,6 +90,12 @@ export default function App({ dict, lang }: Props) {
   /** The rule cards reshuffling; a flourish, so it stays out of storage. */
   const [rolling, setRolling] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  /**
+   * Waar een sleep op de dossiertab begon, of null als er niet gesleept
+   * wordt. Een ref en geen state: hier hoeft niets van te hertekenen, en
+   * tijdens het slepen zou dat juist in de weg zitten.
+   */
+  const dragFrom = useRef<number | null>(null);
 
   const drink = stored.mode === "drink";
   /** The Drinking Edition deals its house rules as a step of its own. */
@@ -362,7 +369,23 @@ export default function App({ dict, lang }: Props) {
       {"players" in stage && stage.name !== "card" && !drawerOpen && (
         <Press
           onClick={() => setDrawerOpen(true)}
+          // Aantikken werkt, maar naar links trekken ook: dat is wat de
+          // vorm belooft. Veertig pixel is ver genoeg om het van een
+          // onvaste duim te onderscheiden.
+          onPointerDown={(event) => {
+            dragFrom.current = event.clientX;
+          }}
+          onPointerMove={(event) => {
+            if (dragFrom.current === null) return;
+            if (dragFrom.current - event.clientX < 40) return;
+            dragFrom.current = null;
+            setDrawerOpen(true);
+          }}
+          onPointerUp={() => {
+            dragFrom.current = null;
+          }}
           style={{
+            touchAction: "none",
             // Fixed, not absolute: it has to stay reachable while the page
             // scrolls, and the layered shadow is what makes it read as
             // hanging over the content rather than sitting in it.

@@ -81,8 +81,11 @@ export default function CaseFileDrawer({
         aria-label={t.sheetOpen}
         onClick={(event) => event.stopPropagation()}
         style={{
-          width: "100%",
-          maxWidth: 660,
+          // Niet schermvullend: er hoort een strook pagina naast te
+          // blijven staan, anders leest het als een nieuw scherm in plaats
+          // van als een map die eroverheen is geschoven.
+          width: "88%",
+          maxWidth: 520,
           maxHeight: "calc(100dvh - 24px)",
           display: "flex",
           flexDirection: "column",
