@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -73,15 +74,6 @@ type Dialog = "none" | "categories" | "language" | "confirm" | "quit" | "clear";
 /** The stored settings do not change behind our back while a page is open. */
 const subscribe = () => () => {};
 
-/**
- * Hoe ver de dossierlade uit kan. Gelijk aan de breedte van het paneel, want
- * helemaal open betekent dat hij er helemaal uit is.
- */
-function drawerWidth(): number {
-  if (typeof window === "undefined") return 0;
-  return Math.min(window.innerWidth * 0.88, 520);
-}
-
 export default function App({ dict, lang }: Props) {
   // Read through useSyncExternalStore so the prerendered HTML and the first
   // client render agree, and the saved settings arrive without an effect.
@@ -109,6 +101,20 @@ export default function App({ dict, lang }: Props) {
    */
   const [drawerAt, setDrawerAt] = useState(0);
   const [dragging, setDragging] = useState(false);
+  /**
+   * De breedte van de ladebak. Hij staat in de staat en niet in een functie,
+   * omdat hij ook de afstand is waarover de lade dichtschuift: verandert het
+   * venster van maat en blijft dit getal staan, dan klopt die afstand niet
+   * meer en blijft er een kier open.
+   */
+  const [drawerWide, setDrawerWide] = useState(0);
+
+  useEffect(() => {
+    const meet = () => setDrawerWide(Math.min(window.innerWidth * 0.72, 420));
+    meet();
+    window.addEventListener("resize", meet);
+    return () => window.removeEventListener("resize", meet);
+  }, []);
   /**
    * Waar een sleep op de dossiertab begon, of null als er niet gesleept
    * wordt. Een ref en geen state: hier hoeft niets van te hertekenen, en
@@ -397,6 +403,7 @@ export default function App({ dict, lang }: Props) {
       {"players" in stage && stage.name !== "card" && (
         <CaseFileDrawer
           at={drawerAt}
+          width={drawerWide}
           dragging={dragging}
           grip={{
             label: dict.drink.sheetOpen,
@@ -406,7 +413,7 @@ export default function App({ dict, lang }: Props) {
             onKeyDown: (event) => {
               if (event.key !== "Enter" && event.key !== " ") return;
               event.preventDefault();
-              setDrawerAt(drawerWidth());
+              setDrawerAt(drawerWide);
             },
             onPointerDown: (event) => {
               event.currentTarget.setPointerCapture(event.pointerId);
@@ -418,7 +425,7 @@ export default function App({ dict, lang }: Props) {
               if (dragFrom.current === null) return;
               const gone =
                 dragFrom2.current + (dragFrom.current - event.clientX);
-              setDrawerAt(Math.max(0, Math.min(gone, drawerWidth())));
+              setDrawerAt(Math.max(0, Math.min(gone, drawerWide)));
             },
             onPointerUp: () => {
               if (dragFrom.current === null) return;
@@ -426,9 +433,7 @@ export default function App({ dict, lang }: Props) {
               setDragging(false);
               // Over de helft betekent: hij gaat open. Daaronder glijdt hij
               // terug, vanaf waar hij staat.
-              setDrawerAt((at) =>
-                at >= drawerWidth() / 2 ? drawerWidth() : 0
-              );
+              setDrawerAt((at) => (at >= drawerWide / 2 ? drawerWide : 0));
             },
             onPointerCancel: () => {
               dragFrom.current = null;

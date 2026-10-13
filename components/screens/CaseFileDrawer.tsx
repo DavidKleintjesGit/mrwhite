@@ -37,6 +37,8 @@ type Props = {
   onClose: () => void;
   /** Hoeveel pixel de lade uit staat. */
   at: number;
+  /** De breedte van de bak, in pixels: zo ver schuift hij dicht. */
+  width: number;
   /** Of er op dit moment aan getrokken wordt. */
   dragging: boolean;
   /** Wat de greep aan de voorkant van de lade met de aanwijzer moet doen. */
@@ -67,6 +69,7 @@ export default function CaseFileDrawer({
   onQuit,
   onClose,
   at,
+  width,
   dragging,
   grip,
 }: Props) {
@@ -84,70 +87,45 @@ export default function CaseFileDrawer({
   return (
     <>
       {/*
-        De kamer erachter is donker zodra de lade ook maar een kier open
-        staat. Geen overgang: dit is geen venster dat verschijnt, en alles
-        wat faadt verraadt dat alsnog.
+        Vangt tikken naast de lade op, maar verft niets. Zonder dit druk je
+        tijdens een ronde zo op de knop die achter de lade langs nog
+        zichtbaar is, en dat kost een potje. Met kleur zou het een venster
+        worden, en dit is geen venster.
       */}
       {at > 0 && (
         <div
           onClick={onClose}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 49,
-            background: "rgba(13,13,13,.86)",
-          }}
+          style={{ position: "fixed", inset: 0, zIndex: 49 }}
         />
       )}
 
       {/*
-        De ladebak, met de greep aan zijn voorkant. Eén star blok: het
-        schuift alleen zijwaarts, want een lade kent geen andere beweging.
+        Hendel en bak staan náást elkaar in één rij, en die rij schuift als
+        geheel. Daarom kan de greep niet van de lade af lopen: hij staat
+        ernaast, hij wordt niet op zijn plek gerekend.
+
+        Dicht is de rij `width` naar rechts geschoven — precies de breedte
+        van de bak — zodat de bak buiten beeld staat en de greep op de rand
+        blijft hangen.
       */}
       <div
-        role="dialog"
-        aria-modal={at > 0}
-        aria-label={t.sheetOpen}
-        onClick={(event) => event.stopPropagation()}
         style={{
           position: "fixed",
           right: 0,
           top: "50%",
           zIndex: 50,
-          width: "88%",
-          maxWidth: 520,
-          // Zo hoog als zijn inhoud, niet zo hoog als het scherm. Een lade
-          // die altijd van boven tot onder loopt is geen lade meer.
-          maxHeight: "calc(100dvh - 24px)",
-          // Rand en binnenmarge horen binnen die 88% te vallen. Zonder dit
-          // komen ze erbovenop en bleef er bij een dichte lade precies dat
-          // verschil in beeld staan.
-          boxSizing: "border-box",
           display: "flex",
-          flexDirection: "column",
-          background: "#16150f",
-          border: "3px solid #0d0d0d",
-          borderRight: "none",
-          borderRadius: "12px 0 0 12px",
-          padding: "12px 10px 14px 12px",
-          boxShadow:
-            "inset -14px 0 22px rgba(0,0,0,.55), inset 0 2px 0 rgba(243,240,232,.12), -14px 0 44px rgba(0,0,0,.6)",
-          // Geen animatie maar een plek: de lade staat waar hij getrokken
-          // is. Laat je los, dan loopt hij vanaf dáár door of terug — hij
-          // begint nooit opnieuw vanaf dicht.
-          // Honderd procent van zichzelf, niet van een gemeten getal: dan
-          // staat hij dicht altijd precies buiten beeld, wat er ook voor
-          // rand omheen zit.
-          transform: `translateY(-50%) translateX(calc(100% - ${at}px))`,
+          alignItems: "stretch",
+          height: "56dvh",
+          transform: `translateY(-50%) translateX(${Math.max(
+            0,
+            width - at
+          )}px)`,
           transition: dragging
             ? "none"
             : "transform .34s cubic-bezier(.22,.9,.3,1)",
         }}
       >
-        {/*
-          De greep zit aan het front en reist dus mee. Hij steekt links uit
-          de bak, zodat hij bij een dichte lade het enige is wat je ziet.
-        */}
         <button
           type="button"
           aria-label={grip.label}
@@ -157,17 +135,11 @@ export default function CaseFileDrawer({
           onPointerUp={grip.onPointerUp}
           onPointerCancel={grip.onPointerCancel}
           style={{
-            position: "absolute",
-            // Het aanraakgebied is breder dan de greep; de greep zelf
-            // eindigt precies op de rand van het ladefront.
-            left: -58,
-            top: "50%",
-            transform: "translateY(-50%)",
-            width: 58,
-            height: 128,
+            position: "relative",
+            width: 36,
             display: "flex",
             alignItems: "center",
-            justifyContent: "flex-end",
+            justifyContent: "center",
             padding: 0,
             border: "none",
             background: "transparent",
@@ -175,6 +147,22 @@ export default function CaseFileDrawer({
             touchAction: "none",
           }}
         >
+          {/*
+            Rekt op waar een duim komt, zonder de rij breder te maken: dit
+            ligt erbuiten en telt dus niet mee voor de opmaak, maar vangt
+            wel aan.
+          */}
+          <span
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              left: -18,
+              right: -6,
+              top: 0,
+              bottom: 0,
+            }}
+          />
+          {/* Het front van de lade, met de metalen beugel erop. */}
           <span
             style={{
               display: "flex",
@@ -206,365 +194,387 @@ export default function CaseFileDrawer({
         </button>
 
         <div
+          role="dialog"
+          aria-modal={at > 0}
+          aria-label={t.sheetOpen}
+          onClick={(event) => event.stopPropagation()}
           style={{
-            flex: 1,
-            minHeight: 0,
+            width,
+            boxSizing: "border-box",
             display: "flex",
             flexDirection: "column",
-            paddingTop: 14,
+            background: "#16150f",
+            border: "3px solid #0d0d0d",
+            borderRight: "none",
+            padding: "12px 10px 14px 12px",
+            boxShadow:
+              "inset -14px 0 22px rgba(0,0,0,.55), inset 0 2px 0 rgba(243,240,232,.12), -14px 0 44px rgba(0,0,0,.6)",
           }}
         >
-          {/* The folder tabs along the top edge. */}
-          <div
-            className="case-tabs"
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              gap: 6,
-              paddingLeft: 14,
-            }}
-          >
-            <FolderTab
-              label={t.agents}
-              active={view === "agents"}
-              onClick={() => {
-                setView("agents");
-                setOpenFile(null);
-              }}
-            />
-            {drink && (
-              <FolderTab
-                label={t.rulesTab}
-                active={view === "rules"}
-                onClick={() => {
-                  setView("rules");
-                  setOpenFile(null);
-                }}
-              />
-            )}
-            <FolderTab
-              label={t.quit}
-              colour="#FF3D3D"
-              onClick={onQuit}
-              className="case-bottom-wide"
-            />
-
-            <FolderTab
-              label={t.sheetClose}
-              onClick={onClose}
-              atRight
-              className="case-close-wide"
-            />
-          </div>
-
           <div
             style={{
               flex: 1,
               minHeight: 0,
               display: "flex",
               flexDirection: "column",
-              background: "#E9DDB8",
-              color: "#0d0d0d",
-              border: "3px solid #0d0d0d",
-              borderRadius: "0 8px 0 0",
-              boxShadow: "10px 10px 0 #FFD23F",
-              overflow: "hidden",
+              paddingTop: 14,
             }}
           >
+            {/* The folder tabs along the top edge. */}
             <div
+              className="case-tabs"
               style={{
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                padding: "14px 20px",
-                borderBottom: "2px dashed rgba(13,13,13,.45)",
-                fontSize: 12,
-                letterSpacing: ".18em",
-                textTransform: "uppercase",
-                fontWeight: 700,
+                alignItems: "flex-end",
+                gap: 6,
+                paddingLeft: 14,
               }}
             >
-              <span>{t.caseNo}</span>
-              <span>
-                {drink ? dict.modes.drinkTitle : dict.modes.classicTitle}
-              </span>
+              <FolderTab
+                label={t.agents}
+                active={view === "agents"}
+                onClick={() => {
+                  setView("agents");
+                  setOpenFile(null);
+                }}
+              />
+              {drink && (
+                <FolderTab
+                  label={t.rulesTab}
+                  active={view === "rules"}
+                  onClick={() => {
+                    setView("rules");
+                    setOpenFile(null);
+                  }}
+                />
+              )}
+              <FolderTab
+                label={t.quit}
+                colour="#FF3D3D"
+                onClick={onQuit}
+                className="case-bottom-wide"
+              />
+
+              <FolderTab
+                label={t.sheetClose}
+                onClick={onClose}
+                atRight
+                className="case-close-wide"
+              />
             </div>
 
-            {/*
+            <div
+              style={{
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
+                background: "#E9DDB8",
+                color: "#0d0d0d",
+                border: "3px solid #0d0d0d",
+                borderRadius: "0 8px 0 0",
+                boxShadow: "10px 10px 0 #FFD23F",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
+                  padding: "14px 20px",
+                  borderBottom: "2px dashed rgba(13,13,13,.45)",
+                  fontSize: 12,
+                  letterSpacing: ".18em",
+                  textTransform: "uppercase",
+                  fontWeight: 700,
+                }}
+              >
+                <span>{t.caseNo}</span>
+                <span>
+                  {drink ? dict.modes.drinkTitle : dict.modes.classicTitle}
+                </span>
+              </div>
+
+              {/*
             De inhoud ligt op een witte bladzijde in de map, niet direct op
             het karton. Daaronder steekt een tweede vel net uit, scheef,
             zodat het een stapel wordt in plaats van één blad.
           */}
-            <div
-              style={{
-                position: "relative",
-                flex: 1,
-                minHeight: 0,
-                display: "flex",
-                padding: "18px 18px 20px 16px",
-              }}
-            >
-              {/*
+              <div
+                style={{
+                  position: "relative",
+                  flex: 1,
+                  minHeight: 0,
+                  display: "flex",
+                  padding: "18px 18px 20px 16px",
+                }}
+              >
+                {/*
                 De stapel onder het blad waar je op leest: drie vellen die
                 er aan verschillende kanten net onderuit steken, elk een
                 graadje anders. En daartussen de briefjes die iemand erin
                 heeft gestopt, met hun hoekje buiten het papier.
               */}
-              {SLIPS.map((slip) => (
-                <span
-                  key={slip.top}
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    right: slip.right,
-                    top: slip.top,
-                    width: slip.width,
-                    height: 13,
-                    background: slip.colour,
-                    border: "2px solid rgba(13,13,13,.55)",
-                    borderRadius: "2px 0 0 2px",
-                    transform: `rotate(${slip.tilt}deg)`,
-                  }}
-                />
-              ))}
+                {SLIPS.map((slip) => (
+                  <span
+                    key={slip.top}
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      right: slip.right,
+                      top: slip.top,
+                      width: slip.width,
+                      height: 13,
+                      background: slip.colour,
+                      border: "2px solid rgba(13,13,13,.55)",
+                      borderRadius: "2px 0 0 2px",
+                      transform: `rotate(${slip.tilt}deg)`,
+                    }}
+                  />
+                ))}
 
-              {/*
+                {/*
                 Het hechtmechaniek: een metalen strip langs de linkerrand met
                 twee tongen die over de bladen heen zijn omgeslagen. Dit waren
                 drie losse ringen, maar die lagen als rondjes op het papier
                 zonder er iets mee te doen — een clip laat zien dát hij
                 vasthoudt.
               */}
-              <span
-                aria-hidden="true"
-                style={{
-                  position: "absolute",
-                  left: 10,
-                  top: 14,
-                  bottom: 14,
-                  width: 11,
-                  borderRadius: 3,
-                  background:
-                    "linear-gradient(90deg,#6c6759,#e4e0d2 42%,#b5afa0 64%,#6c6759)",
-                  boxShadow: "0 0 0 1px rgba(13,13,13,.55)",
-                  zIndex: 3,
-                }}
-              />
-              {[0.26, 0.74].map((y) => (
                 <span
-                  key={y}
                   aria-hidden="true"
                   style={{
                     position: "absolute",
-                    left: 8,
-                    top: `calc(${y * 100}% - 6px)`,
-                    width: 46,
-                    height: 12,
-                    borderRadius: "3px 6px 6px 3px",
+                    left: 10,
+                    top: 14,
+                    bottom: 14,
+                    width: 11,
+                    borderRadius: 3,
                     background:
-                      "linear-gradient(180deg,#f1eee2,#bdb7a7 55%,#7d7769)",
-                    boxShadow:
-                      "0 0 0 1px rgba(13,13,13,.55), 2px 3px 6px rgba(13,13,13,.4)",
-                    zIndex: 4,
+                      "linear-gradient(90deg,#6c6759,#e4e0d2 42%,#b5afa0 64%,#6c6759)",
+                    boxShadow: "0 0 0 1px rgba(13,13,13,.55)",
+                    zIndex: 3,
                   }}
                 />
-              ))}
-
-              {SHEETS.map((sheet) => (
-                <span
-                  key={sheet.tilt}
-                  aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    top: sheet.top,
-                    left: sheet.left,
-                    right: sheet.right,
-                    bottom: sheet.bottom,
-                    background: sheet.tone,
-                    border: "2px solid rgba(13,13,13,.3)",
-                    transform: `rotate(${sheet.tilt}deg)`,
-                  }}
-                />
-              ))}
-              <div
-                style={{
-                  position: "relative",
-                  flex: 1,
-                  minHeight: 0,
-                  overflowY: "auto",
-                  overflowX: "hidden",
-                  background: "#FDFBF3",
-                  border: "2px solid rgba(13,13,13,.55)",
-                  boxShadow: "0 3px 10px rgba(13,13,13,.22)",
-                  padding: 18,
-                }}
-              >
-                {openFile !== null ? (
-                  <FileView
-                    dict={dict}
-                    player={players[openFile]}
-                    number={openFile + 1}
-                    revealed={revealed}
-                    onReveal={() => setRevealed(true)}
-                    onDone={() => onChallengeDone(openFile)}
-                    onBack={() => setOpenFile(null)}
-                  />
-                ) : view === "rules" ? (
-                  <div
+                {[0.26, 0.74].map((y) => (
+                  <span
+                    key={y}
+                    aria-hidden="true"
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 18,
+                      position: "absolute",
+                      left: 8,
+                      top: `calc(${y * 100}% - 6px)`,
+                      width: 46,
+                      height: 12,
+                      borderRadius: "3px 6px 6px 3px",
+                      background:
+                        "linear-gradient(180deg,#f1eee2,#bdb7a7 55%,#7d7769)",
+                      boxShadow:
+                        "0 0 0 1px rgba(13,13,13,.55), 2px 3px 6px rgba(13,13,13,.4)",
+                      zIndex: 4,
                     }}
-                  >
-                    <Heading text={t.houseRules} />
-                    <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
-                      {t.rulesHelp}
-                    </p>
-                    {rules.map((id, index) => {
-                      const rule = t.rules[String(id) as keyof typeof t.rules];
-                      const category = ruleCategory(id);
-                      return (
-                        <div
-                          key={id}
-                          style={{
-                            position: "relative",
-                            ...LINED,
-                            border: "2px solid #0d0d0d",
-                            boxShadow: "4px 4px 0 rgba(13,13,13,.25)",
-                            padding: "14px 14px 14px 56px",
-                          }}
-                        >
-                          <span
-                            style={{
-                              position: "absolute",
-                              left: 12,
-                              top: 14,
-                              fontFamily: ARCHIVO,
-                              fontSize: 28,
-                              lineHeight: 1,
-                            }}
-                          >
-                            {index + 1}
-                          </span>
-                          <span
-                            aria-hidden="true"
-                            style={{
-                              position: "absolute",
-                              left: 42,
-                              top: 0,
-                              bottom: 0,
-                              width: 2,
-                              background: "rgba(232,32,42,.45)",
-                            }}
-                          />
+                  />
+                ))}
+
+                {SHEETS.map((sheet) => (
+                  <span
+                    key={sheet.tilt}
+                    aria-hidden="true"
+                    style={{
+                      position: "absolute",
+                      top: sheet.top,
+                      left: sheet.left,
+                      right: sheet.right,
+                      bottom: sheet.bottom,
+                      background: sheet.tone,
+                      border: "2px solid rgba(13,13,13,.3)",
+                      transform: `rotate(${sheet.tilt}deg)`,
+                    }}
+                  />
+                ))}
+                <div
+                  style={{
+                    position: "relative",
+                    flex: 1,
+                    minHeight: 0,
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    background: "#FDFBF3",
+                    border: "2px solid rgba(13,13,13,.55)",
+                    boxShadow: "0 3px 10px rgba(13,13,13,.22)",
+                    padding: 18,
+                  }}
+                >
+                  {openFile !== null ? (
+                    <FileView
+                      dict={dict}
+                      player={players[openFile]}
+                      number={openFile + 1}
+                      revealed={revealed}
+                      onReveal={() => setRevealed(true)}
+                      onDone={() => onChallengeDone(openFile)}
+                      onBack={() => setOpenFile(null)}
+                    />
+                  ) : view === "rules" ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 18,
+                      }}
+                    >
+                      <Heading text={t.houseRules} />
+                      <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
+                        {t.rulesHelp}
+                      </p>
+                      {rules.map((id, index) => {
+                        const rule =
+                          t.rules[String(id) as keyof typeof t.rules];
+                        const category = ruleCategory(id);
+                        return (
                           <div
+                            key={id}
                             style={{
-                              display: "flex",
-                              flexWrap: "wrap",
-                              alignItems: "center",
-                              gap: "6px 10px",
-                              marginBottom: 6,
+                              position: "relative",
+                              ...LINED,
+                              border: "2px solid #0d0d0d",
+                              boxShadow: "4px 4px 0 rgba(13,13,13,.25)",
+                              padding: "14px 14px 14px 56px",
                             }}
                           >
                             <span
                               style={{
+                                position: "absolute",
+                                left: 12,
+                                top: 14,
                                 fontFamily: ARCHIVO,
-                                fontSize: 18,
-                                textTransform: "uppercase",
-                                lineHeight: 1.1,
+                                fontSize: 28,
+                                lineHeight: 1,
                               }}
                             >
-                              {rule.t}
+                              {index + 1}
                             </span>
                             <span
+                              aria-hidden="true"
                               style={{
-                                fontFamily: ARCHIVO,
-                                fontSize: 10,
-                                letterSpacing: ".12em",
-                                textTransform: "uppercase",
-                                background: COLOUR[category],
-                                border: "2px solid #0d0d0d",
-                                padding: "3px 6px",
+                                position: "absolute",
+                                left: 42,
+                                top: 0,
+                                bottom: 0,
+                                width: 2,
+                                background: "rgba(232,32,42,.45)",
+                              }}
+                            />
+                            <div
+                              style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                alignItems: "center",
+                                gap: "6px 10px",
+                                marginBottom: 6,
                               }}
                             >
-                              {
+                              <span
+                                style={{
+                                  fontFamily: ARCHIVO,
+                                  fontSize: 18,
+                                  textTransform: "uppercase",
+                                  lineHeight: 1.1,
+                                }}
+                              >
+                                {rule.t}
+                              </span>
+                              <span
+                                style={{
+                                  fontFamily: ARCHIVO,
+                                  fontSize: 10,
+                                  letterSpacing: ".12em",
+                                  textTransform: "uppercase",
+                                  background: COLOUR[category],
+                                  border: "2px solid #0d0d0d",
+                                  padding: "3px 6px",
+                                }}
+                              >
                                 {
-                                  A: t.catAShort,
-                                  B: t.catBShort,
-                                  C: t.catCShort,
-                                  D: t.catDShort,
-                                }[category]
-                              }
+                                  {
+                                    A: t.catAShort,
+                                    B: t.catBShort,
+                                    C: t.catCShort,
+                                    D: t.catDShort,
+                                  }[category]
+                                }
+                              </span>
+                            </div>
+                            <span style={{ fontSize: 15, lineHeight: 1.5 }}>
+                              {rule.d}
                             </span>
                           </div>
-                          <span style={{ fontSize: 15, lineHeight: 1.5 }}>
-                            {rule.d}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 18,
-                    }}
-                  >
-                    <Heading text={t.agents} />
-                    {drink && (
-                      <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>
-                        {t.challengeCheck}
-                      </p>
-                    )}
-                    <div className="case-folders">
-                      {players.map((player, index) => (
-                        <Folder
-                          key={`${player.name}-${index}`}
-                          dict={dict}
-                          player={player}
-                          number={index + 1}
-                          onOpen={() => showFile(index)}
-                        />
-                      ))}
+                        );
+                      })}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 18,
+                      }}
+                    >
+                      <Heading text={t.agents} />
+                      {drink && (
+                        <p
+                          style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}
+                        >
+                          {t.challengeCheck}
+                        </p>
+                      )}
+                      <div className="case-folders">
+                        {players.map((player, index) => (
+                          <Folder
+                            key={`${player.name}-${index}`}
+                            dict={dict}
+                            player={player}
+                            number={index + 1}
+                            onOpen={() => showFile(index)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/*
+            {/*
           The tabs that hang under the folder on a narrow screen, where the
           row above has no width left for them. Both look closed: neither is
           a section you can stand on, so they keep every edge and the darker
           card stock.
         */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 6,
-              marginRight: 16,
-            }}
-          >
-            <Press
-              className="case-bottom-narrow"
-              onClick={onQuit}
-              style={{ ...UNDER_TAB, background: "#FF3D3D" }}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 6,
+                marginRight: 16,
+              }}
             >
-              {t.quit}
-            </Press>
-            <Press
-              className="case-close-narrow"
-              onClick={onClose}
-              style={UNDER_TAB}
-            >
-              {t.sheetClose}
-            </Press>
+              <Press
+                className="case-bottom-narrow"
+                onClick={onQuit}
+                style={{ ...UNDER_TAB, background: "#FF3D3D" }}
+              >
+                {t.quit}
+              </Press>
+              <Press
+                className="case-close-narrow"
+                onClick={onClose}
+                style={UNDER_TAB}
+              >
+                {t.sheetClose}
+              </Press>
+            </div>
           </div>
         </div>
       </div>
