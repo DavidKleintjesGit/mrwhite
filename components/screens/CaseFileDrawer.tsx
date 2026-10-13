@@ -87,15 +87,20 @@ export default function CaseFileDrawer({
   return (
     <>
       {/*
-        Vangt tikken naast de lade op, maar verft niets. Zonder dit druk je
-        tijdens een ronde zo op de knop die achter de lade langs nog
-        zichtbaar is, en dat kost een potje. Met kleur zou het een venster
-        worden, en dit is geen venster.
+        De kamer erachter is donker zodra de lade open staat, en vangt
+        tikken op: zonder dat druk je tijdens een ronde op de knop die naast
+        de lade nog zichtbaar is, en dat kost een potje. Hij verschijnt
+        ineens en niet geleidelijk — faden is wat een venster doet.
       */}
       {at > 0 && (
         <div
           onClick={onClose}
-          style={{ position: "fixed", inset: 0, zIndex: 49 }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 49,
+            background: "rgba(13,13,13,.72)",
+          }}
         />
       )}
 
@@ -203,16 +208,49 @@ export default function CaseFileDrawer({
             boxSizing: "border-box",
             display: "flex",
             flexDirection: "column",
-            background: "#16150f",
+            // Vooraan licht, achterin donker: dat is wat een bak van een
+            // vlak onderscheidt. De dikke linkerrand is het front dat je
+            // ziet zodra hij uitgetrokken is, met een lichte bovenkant als
+            // afschuining erop.
+            background:
+              "linear-gradient(90deg,#211f17 0,#16150f 34%,#100f0a 100%)",
             border: "3px solid #0d0d0d",
+            borderLeft: "9px solid #23211a",
             borderRight: "none",
-            padding: "12px 10px 14px 12px",
+            padding: "12px 10px 14px 10px",
+            position: "relative",
             boxShadow:
-              "inset -14px 0 22px rgba(0,0,0,.55), inset 0 2px 0 rgba(243,240,232,.12), -14px 0 44px rgba(0,0,0,.6)",
+              "inset -16px 0 26px rgba(0,0,0,.6), inset 0 3px 0 rgba(243,240,232,.16), inset 0 -3px 0 rgba(0,0,0,.6), -18px 0 50px rgba(0,0,0,.6)",
           }}
         >
+          {/*
+            De randen van de mappen die er verder in liggen. Een lade met
+            precies één dossier erin is geen archief.
+          */}
+          {[
+            { right: 16, tone: "#9d8f64" },
+            { right: 30, tone: "#7f744f" },
+          ].map((other) => (
+            <span
+              key={other.right}
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                top: 5,
+                left: 26,
+                right: other.right,
+                height: 12,
+                background: other.tone,
+                border: "2px solid #0d0d0d",
+                borderBottom: "none",
+                borderRadius: "5px 5px 0 0",
+              }}
+            />
+          ))}
+
           <div
             style={{
+              position: "relative",
               flex: 1,
               minHeight: 0,
               display: "flex",
