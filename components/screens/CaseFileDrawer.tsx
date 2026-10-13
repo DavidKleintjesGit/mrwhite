@@ -119,7 +119,13 @@ export default function CaseFileDrawer({
           zIndex: 50,
           width: "88%",
           maxWidth: 520,
-          height: "calc(100dvh - 20px)",
+          // Zo hoog als zijn inhoud, niet zo hoog als het scherm. Een lade
+          // die altijd van boven tot onder loopt is geen lade meer.
+          maxHeight: "calc(100dvh - 24px)",
+          // Rand en binnenmarge horen binnen die 88% te vallen. Zonder dit
+          // komen ze erbovenop en bleef er bij een dichte lade precies dat
+          // verschil in beeld staan.
+          boxSizing: "border-box",
           display: "flex",
           flexDirection: "column",
           background: "#16150f",
@@ -132,10 +138,10 @@ export default function CaseFileDrawer({
           // Geen animatie maar een plek: de lade staat waar hij getrokken
           // is. Laat je los, dan loopt hij vanaf dáár door of terug — hij
           // begint nooit opnieuw vanaf dicht.
-          transform: `translateY(-50%) translateX(${Math.max(
-            0,
-            width - at
-          )}px)`,
+          // Honderd procent van zichzelf, niet van een gemeten getal: dan
+          // staat hij dicht altijd precies buiten beeld, wat er ook voor
+          // rand omheen zit.
+          transform: `translateY(-50%) translateX(calc(100% - ${at}px))`,
           transition: dragging
             ? "none"
             : "transform .34s cubic-bezier(.22,.9,.3,1)",
@@ -155,7 +161,9 @@ export default function CaseFileDrawer({
           onPointerCancel={grip.onPointerCancel}
           style={{
             position: "absolute",
-            left: -47,
+            // Het aanraakgebied is breder dan de greep; de greep zelf
+            // eindigt precies op de rand van het ladefront.
+            left: -58,
             top: "50%",
             transform: "translateY(-50%)",
             width: 58,
