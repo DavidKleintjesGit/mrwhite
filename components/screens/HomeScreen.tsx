@@ -171,17 +171,23 @@ export default function HomeScreen({
           paddingTop: 22,
           marginTop: "clamp(8px, 14vh, 150px)",
           textAlign: "left",
+          // Maakt dit blok de maatstaf voor de titel eronder. In vw meten
+          // ging mis: dat is het hele venster, terwijl de titel het binnen
+          // deze kolom moet redden, en die is smaller door de schermmarges.
+          containerType: "inline-size",
         }}
       >
         <h1
           style={{
             margin: 0,
             fontFamily: ARCHIVO,
-            // Bigger now the stamp is gone: the title is the whole home
-            // screen. Sized in vw rather than from a fixed floor, so it
-            // shrinks with the phone instead of running off a narrow one —
-            // at 20vw "White" plus its padding still fits a 320px screen.
-            fontSize: "clamp(40px, 24vw, 280px)",
+            // Zo groot als past, en geen punt groter. "White" in Archivo
+            // Black meet 3,595 keer de lettergrootte plus 28px padding —
+            // opgemeten, niet geschat. Met 6px voor de slagschaduw past het
+            // in de kolom zolang de lettergrootte onder (100cqw - 34) / 3,6
+            // blijft, oftewel 27,8cqw. Hieronder staat 26cqw, wat marge laat
+            // voor afrondingen en voor een lettertype dat nog laadt.
+            fontSize: "min(280px, calc(26cqw - 10px))",
             lineHeight: 0.9,
             letterSpacing: "-.02em",
             textTransform: "uppercase",
@@ -189,7 +195,14 @@ export default function HomeScreen({
             animation: "flicker 6s infinite",
           }}
         >
-          {t.titleTop}
+          <span
+            style={{
+              display: "inline-block",
+              animation: "driftTop 7s ease-in-out infinite",
+            }}
+          >
+            {t.titleTop}
+          </span>
           <br />
           <span
             style={{
@@ -199,23 +212,14 @@ export default function HomeScreen({
               padding: "2px 14px 6px",
               transform: "rotate(-2deg)",
               boxShadow: "6px 6px 0 var(--fg)",
+              // Andere looptijd dan de bovenste regel, zodat ze uit de pas
+              // raken en het zweven niet als één blok leest.
+              animation: "driftBottom 9s ease-in-out infinite",
             }}
           >
             {t.titleBottom}
           </span>
         </h1>
-
-        <p
-          style={{
-            margin: "12px 0 0",
-            maxWidth: 440,
-            fontSize: "clamp(17px,1.5vw,21px)",
-            lineHeight: 1.45,
-            textWrap: "pretty",
-          }}
-        >
-          {t.tagline}
-        </p>
       </div>
 
       <div

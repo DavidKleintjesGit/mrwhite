@@ -136,6 +136,33 @@ input::placeholder {
     transform: translate(-60%, -10%);
   }
 }
+/*
+ * De twee helften van het woordmerk drijven van elkaar weg en weer naar
+ * elkaar toe. De onderste houdt zijn rotatie vast in elke stap, anders gooit
+ * de animatie die overboord.
+ */
+@keyframes driftTop {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-7px, -6px);
+  }
+}
+
+@keyframes driftBottom {
+  0%,
+  100% {
+    transform: rotate(-2deg) translate(0, 0);
+  }
+  50% {
+    /* Zijwaarts bewust klein: op een smalle telefoon houdt de titel maar
+       vijftien pixel over, en dat zweven moet daar niet overheen gaan. */
+    transform: rotate(-2deg) translate(5px, 7px);
+  }
+}
+
 @keyframes flicker {
   0%,
   92%,
