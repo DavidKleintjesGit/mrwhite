@@ -73,6 +73,15 @@ type Dialog = "none" | "categories" | "language" | "confirm" | "quit" | "clear";
 /** The stored settings do not change behind our back while a page is open. */
 const subscribe = () => () => {};
 
+/**
+ * Hoe ver de dossierlade uit kan. Gelijk aan de breedte van het paneel, want
+ * helemaal open betekent dat hij er helemaal uit is.
+ */
+function drawerWidth(): number {
+  if (typeof window === "undefined") return 0;
+  return Math.min(window.innerWidth * 0.88, 520);
+}
+
 export default function App({ dict, lang }: Props) {
   // Read through useSyncExternalStore so the prerendered HTML and the first
   // client render agree, and the saved settings arrive without an effect.
@@ -88,15 +97,26 @@ export default function App({ dict, lang }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
   /** The rule cards reshuffling; a flourish, so it stays out of storage. */
   const [rolling, setRolling] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  /**
+   * Hoeveel pixel de dossierlade uit staat. Nul is dicht, `drawerWidth` is
+   * helemaal open, en alles ertussenin is waar je hem met je vinger hebt
+   * laten staan.
+   *
+   * Dit was eerst een open-ja-nee plus een aparte sleepstand, en dat werkte
+   * niet: bij het loslaten verdween de lade die je vasthield en begon een
+   * tweede zijn eigen animatie vanaf dicht. Dat las als een pop-up, niet als
+   * een lade. Eén getal, één lade, die blijft staan waar hij staat.
+   */
+  const [drawerAt, setDrawerAt] = useState(0);
+  const [dragging, setDragging] = useState(false);
   /**
    * Waar een sleep op de dossiertab begon, of null als er niet gesleept
    * wordt. Een ref en geen state: hier hoeft niets van te hertekenen, en
    * tijdens het slepen zou dat juist in de weg zitten.
    */
   const dragFrom = useRef<number | null>(null);
-  /** Hoeveel pixel de lade uit staat terwijl er aan de hendel getrokken wordt. */
-  const [pull, setPull] = useState<number | null>(null);
+  /** Waar de lade stond toen de vinger neerkwam. */
+  const dragFrom2 = useRef(0);
 
   const drink = stored.mode === "drink";
   /** The Drinking Edition deals its house rules as a step of its own. */
@@ -367,44 +387,43 @@ export default function App({ dict, lang }: Props) {
         de rechterrand, halverwege — buiten de systeembalken, buiten de
         voetknoppen, en onder je duim.
       */}
-      {"players" in stage && stage.name !== "card" && !drawerOpen && (
+      {"players" in stage && stage.name !== "card" && (
         <button
           type="button"
           aria-label={dict.drink.sheetOpen}
           // Alleen trekken, niet tikken. Een lade gaat niet open van een
-          // tikje op de greep, en dit moet aanvoelen als een lade.
+          // tikje op de greep.
           //
           // Het toetsenbord kan niet slepen, dus Enter en spatie openen hem
           // wel — anders is het dossier voor wie zo bedient onbereikbaar.
           onKeyDown={(event) => {
             if (event.key !== "Enter" && event.key !== " ") return;
             event.preventDefault();
-            setDrawerOpen(true);
+            setDrawerAt(drawerWidth());
           }}
           onPointerDown={(event) => {
             event.currentTarget.setPointerCapture(event.pointerId);
             dragFrom.current = event.clientX;
-            setPull(0);
+            dragFrom2.current = drawerAt;
+            setDragging(true);
           }}
           onPointerMove={(event) => {
             if (dragFrom.current === null) return;
-            const width = Math.min(window.innerWidth * 0.88, 520);
-            setPull(
-              Math.max(0, Math.min(dragFrom.current - event.clientX, width))
-            );
+            const gone = dragFrom2.current + (dragFrom.current - event.clientX);
+            setDrawerAt(Math.max(0, Math.min(gone, drawerWidth())));
           }}
-          onPointerUp={(event) => {
+          onPointerUp={() => {
             if (dragFrom.current === null) return;
-            const travelled = dragFrom.current - event.clientX;
             dragFrom.current = null;
-            setPull(null);
-            // Ver genoeg getrokken om het te menen: dan neemt de lade het
-            // over en loopt vanzelf uit.
-            if (travelled > 70) setDrawerOpen(true);
+            setDragging(false);
+            // Over de helft betekent: hij gaat open. Daaronder glijdt hij
+            // terug, vanaf waar hij staat.
+            setDrawerAt((at) => (at >= drawerWidth() / 2 ? drawerWidth() : 0));
           }}
           onPointerCancel={() => {
             dragFrom.current = null;
-            setPull(null);
+            setDragging(false);
+            setDrawerAt(0);
           }}
           style={{
             position: "fixed",
@@ -412,42 +431,58 @@ export default function App({ dict, lang }: Props) {
             top: "64%",
             transform: "translateY(-50%)",
             zIndex: 40,
-            width: 36,
-            height: 104,
+            // Het aanraakgebied is ruimer dan wat je ziet: de greep zelf is
+            // smal, en een duim is dat niet.
+            width: 58,
+            height: 128,
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "flex-end",
             padding: 0,
-            // Het front van de lade dat nog net uit de kast steekt.
-            background: "#1b1a14",
-            border: "3px solid #0d0d0d",
-            borderRight: "none",
-            borderRadius: "12px 0 0 12px",
-            boxShadow:
-              "inset 0 2px 0 rgba(243,240,232,.14), -7px 0 20px rgba(13,13,13,.45)",
+            border: "none",
+            background: "transparent",
             cursor: "grab",
             touchAction: "none",
           }}
         >
-          {/* De greep: een metalen beugel op twee pootjes. */}
+          {/* Het front van de lade dat nog net uit de kast steekt. */}
           <span
-            aria-hidden="true"
             style={{
-              width: 11,
-              height: 62,
-              borderRadius: 6,
-              background:
-                "linear-gradient(90deg,#6f6a5c,#efece0 38%,#c3bdac 62%,#6f6a5c)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 36,
+              height: 104,
+              background: "#1b1a14",
+              border: "3px solid #0d0d0d",
+              borderRight: "none",
+              borderRadius: "12px 0 0 12px",
               boxShadow:
-                "0 0 0 2px #0d0d0d, 3px 0 7px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.25)",
+                "inset 0 2px 0 rgba(243,240,232,.14), -7px 0 20px rgba(13,13,13,.45)",
             }}
-          />
+          >
+            {/* De greep: een metalen beugel. */}
+            <span
+              aria-hidden="true"
+              style={{
+                width: 11,
+                height: 62,
+                borderRadius: 6,
+                background:
+                  "linear-gradient(90deg,#6f6a5c,#efece0 38%,#c3bdac 62%,#6f6a5c)",
+                boxShadow:
+                  "0 0 0 2px #0d0d0d, 3px 0 7px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.25)",
+              }}
+            />
+          </span>
         </button>
       )}
 
-      {(drawerOpen || pull !== null) && "players" in stage && (
+      {(drawerAt > 0 || dragging) && "players" in stage && (
         <CaseFileDrawer
-          pull={drawerOpen ? null : pull}
+          at={drawerAt}
+          width={drawerWidth()}
+          dragging={dragging}
           dict={dict}
           players={stage.players}
           rules={stored.rules}
@@ -460,10 +495,10 @@ export default function App({ dict, lang }: Props) {
             )
           }
           onQuit={() => {
-            setDrawerOpen(false);
+            setDrawerAt(0);
             setDialog("quit");
           }}
-          onClose={() => setDrawerOpen(false)}
+          onClose={() => setDrawerAt(0)}
         />
       )}
 

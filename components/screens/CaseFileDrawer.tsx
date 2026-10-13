@@ -30,12 +30,12 @@ type Props = {
   onChallengeDone: (index: number) => void;
   onQuit: () => void;
   onClose: () => void;
-  /**
-   * Hoeveel pixel de lade al uitgetrokken is terwijl er gesleept wordt, of
-   * null als hij gewoon opengaat. Tijdens het slepen staat er geen animatie
-   * op: de lade hoort onder je vinger te staan en nergens anders.
-   */
-  pull?: number | null;
+  /** Hoeveel pixel de lade uit staat. */
+  at: number;
+  /** Hoe ver hij uit kán: dat is helemaal open. */
+  width: number;
+  /** Of er op dit moment aan getrokken wordt. */
+  dragging: boolean;
 };
 
 /**
@@ -54,7 +54,9 @@ export default function CaseFileDrawer({
   onChallengeDone,
   onQuit,
   onClose,
-  pull,
+  at,
+  width,
+  dragging,
 }: Props) {
   const t = dict.drink;
   // Agents first: opening the file is usually about a person, not the rules.
@@ -75,17 +77,14 @@ export default function CaseFileDrawer({
         inset: 0,
         zIndex: 50,
         background: "rgba(13,13,13,.86)",
-        ...(pull === null || pull === undefined
-          ? null
-          : { opacity: Math.min(1, pull / 160) }),
+        opacity: width === 0 ? 1 : Math.min(1, at / width),
+        transition: dragging ? "none" : "opacity .34s ease",
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-end",
         // Links ruimte, rechts niets: de lade hoort tegen de rand te
         // sluiten, anders hangt hij in het niets.
         padding: "10px 0 10px 12px",
-        animation:
-          pull === null || pull === undefined ? "veilIn .34s ease both" : "none",
       }}
     >
       {/*
@@ -114,13 +113,13 @@ export default function CaseFileDrawer({
           padding: "12px 10px 14px 12px",
           boxShadow:
             "inset -14px 0 22px rgba(0,0,0,.55), inset 0 2px 0 rgba(243,240,232,.12), -14px 0 44px rgba(0,0,0,.6)",
-          // Lang genoeg om als uittrekken te lezen, en met een kromme die
-          // vooral aan het eind afremt — zoals een lade die op zijn rails
-          // uitloopt. Tijdens het slepen staat die uit: dan bepaalt de
-          // vinger waar hij staat.
-          ...(pull === null || pull === undefined
-            ? { animation: "railOut .52s cubic-bezier(.16,.86,.3,1) both" }
-            : { transform: `translateX(calc(100% - ${pull}px))` }),
+          // Geen animatie maar een plek: de lade staat waar hij getrokken
+          // is. Laat je los, dan loopt hij vanaf dáár door of terug — hij
+          // begint nooit opnieuw vanaf dicht.
+          transform: `translateX(${Math.max(0, width - at)}px)`,
+          transition: dragging
+            ? "none"
+            : "transform .34s cubic-bezier(.22,.9,.3,1)",
         }}
       >
         <div
@@ -130,12 +129,14 @@ export default function CaseFileDrawer({
             display: "flex",
             flexDirection: "column",
             paddingTop: 14,
-            ...(pull === null || pull === undefined
-              ? {
-                  animation:
-                    "fileUp .46s .22s cubic-bezier(.2,1.05,.3,1) both",
-                }
-              : null),
+            // Komt mee omhoog met hoe ver de lade uit staat, zodat het één
+            // beweging blijft in plaats van een animatie die erachteraan komt.
+            transform: `translateY(${Math.round(
+              30 * (1 - (width === 0 ? 1 : at / width))
+            )}px)`,
+            transition: dragging
+              ? "none"
+              : "transform .34s cubic-bezier(.22,.9,.3,1)",
           }}
         >
           {/* The folder tabs along the top edge. */}
@@ -254,27 +255,43 @@ export default function CaseFileDrawer({
               ))}
 
               {/*
-                De ringen van de map. Ze liggen over het papier heen aan de
-                linkerkant, waar in een echte map de perforatie zit.
+                Het hechtmechaniek: een metalen strip langs de linkerrand met
+                twee tongen die over de bladen heen zijn omgeslagen. Dit waren
+                drie losse ringen, maar die lagen als rondjes op het papier
+                zonder er iets mee te doen — een clip laat zien dát hij
+                vasthoudt.
               */}
-              {[0.22, 0.5, 0.78].map((y) => (
+              <span
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  top: 14,
+                  bottom: 14,
+                  width: 11,
+                  borderRadius: 3,
+                  background:
+                    "linear-gradient(90deg,#6c6759,#e4e0d2 42%,#b5afa0 64%,#6c6759)",
+                  boxShadow: "0 0 0 1px rgba(13,13,13,.55)",
+                  zIndex: 3,
+                }}
+              />
+              {[0.26, 0.74].map((y) => (
                 <span
                   key={y}
                   aria-hidden="true"
                   style={{
                     position: "absolute",
-                    left: 2,
-                    top: `calc(${y * 100}% - 14px)`,
-                    width: 28,
-                    height: 28,
-                    borderRadius: "50%",
-                    border: "5px solid #b3ad9c",
-                    borderTopColor: "#f1eee2",
-                    borderLeftColor: "#87816f",
-                    borderBottomColor: "#6f6a5b",
-                    boxSizing: "border-box",
-                    boxShadow: "0 1px 3px rgba(13,13,13,.5)",
-                    zIndex: 3,
+                    left: 8,
+                    top: `calc(${y * 100}% - 6px)`,
+                    width: 46,
+                    height: 12,
+                    borderRadius: "3px 6px 6px 3px",
+                    background:
+                      "linear-gradient(180deg,#f1eee2,#bdb7a7 55%,#7d7769)",
+                    boxShadow:
+                      "0 0 0 1px rgba(13,13,13,.55), 2px 3px 6px rgba(13,13,13,.4)",
+                    zIndex: 4,
                   }}
                 />
               ))}

@@ -98,60 +98,6 @@ input::placeholder {
 }
 
 /* The case file sliding down from the top edge, as the design has it. */
-/*
- * Het openen gaat in twee bewegingen die in elkaar overlopen: eerst rolt de
- * lade naar links het beeld in, en zodra die onderweg is komt het dossier
- * eruit omhoog. Daarom start de tweede met vertraging en loopt hij door
- * nadat de eerste al stilstaat — dat leest als één handeling in plaats van
- * als twee animaties achter elkaar.
- */
-/*
- * Alleen donkerder worden, verder niets. Hier zat eerst screenIn op, die
- * ook schaalt en verticaal beweegt: dat overstemde het schuiven volledig,
- * en dan lijkt de lade op te poppen in plaats van open te gaan.
- */
-@keyframes veilIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes railOut {
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-@keyframes fileUp {
-  0% {
-    opacity: 0;
-    transform: translateY(34px) scale(0.96);
-  }
-  55% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Het vergrootglas op het beginscherm dobbert wat rond. */
-@keyframes driftGlass {
-  0%,
-  100% {
-    transform: rotate(-12deg) translate(0, 0);
-  }
-  50% {
-    transform: rotate(-7deg) translate(-7px, -11px);
-  }
-}
 @keyframes screenIn {
   0% {
     opacity: 0;
