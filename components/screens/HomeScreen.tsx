@@ -14,9 +14,6 @@ type Props = {
   onLanguage: () => void;
   onTheme: () => void;
   onPlay: () => void;
-  /** The round left open last time, or null when there is none. */
-  resumeLabel?: string | null;
-  onResume?: () => void;
   onRules: () => void;
   onSettings: () => void;
 };
@@ -29,8 +26,6 @@ export default function HomeScreen({
   onLanguage,
   onTheme,
   onPlay,
-  resumeLabel = null,
-  onResume,
   onRules,
   onSettings,
 }: Props) {
@@ -71,15 +66,6 @@ export default function HomeScreen({
             whiteSpace: "nowrap",
           }}
         >
-          <span
-            style={{
-              width: 9,
-              height: 9,
-              borderRadius: "50%",
-              background: "#FF3D3D",
-              animation: "breathe 2.8s ease-in-out infinite",
-            }}
-          />
           {t.recNumber}
         </span>
 
@@ -192,7 +178,6 @@ export default function HomeScreen({
             letterSpacing: "-.02em",
             textTransform: "uppercase",
             maxWidth: "100%",
-            animation: "flicker 6s infinite",
           }}
         >
           <span
@@ -230,30 +215,6 @@ export default function HomeScreen({
           alignSelf: "end",
         }}
       >
-        {resumeLabel && onResume && (
-          <Press
-            onClick={onResume}
-            style={{
-              fontFamily: ARCHIVO,
-              fontSize: 17,
-              textTransform: "uppercase",
-              letterSpacing: ".04em",
-              background: "var(--card)",
-              color: "#0d0d0d",
-              border: "3px solid #0d0d0d",
-              padding: 15,
-              boxShadow: "6px 6px 0 #E8202A",
-              cursor: "pointer",
-            }}
-            press={{
-              transform: "translate(5px,5px)",
-              boxShadow: "1px 1px 0 #E8202A",
-            }}
-          >
-            {resumeLabel}
-          </Press>
-        )}
-
         <Press
           onClick={onPlay}
           style={{

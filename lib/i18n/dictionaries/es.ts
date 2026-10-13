@@ -183,6 +183,12 @@ const es: Dictionary = {
     quitBody:
       "La ronda termina y vuelves al menú. Los roles y los votos se borran.",
     quitYes: "Sí, parar",
+    resumeTag: "INTERRUMPIDO",
+    resumeTitle: "Estabas a mitad de partida",
+    resumeBody: "Queda una ronda abierta en este dispositivo. ¿Continuar, o dejarla y empezar de nuevo?",
+    resumeYes: "Continuar",
+    resumeNo: "Dejarla",
+    resumeWait: "Un momento… {n}",
   },
 
   card: {

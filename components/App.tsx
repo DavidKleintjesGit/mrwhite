@@ -14,6 +14,7 @@ import {
   CategoryDialog,
   ConfirmDialog,
   LanguageDialog,
+  ResumeDialog,
 } from "@/components/screens/Dialogs";
 import EndScreen from "@/components/screens/EndScreen";
 import GuessScreen from "@/components/screens/GuessScreen";
@@ -311,12 +312,10 @@ export default function App({ dict, lang }: Props) {
     "--dot": theme.dot,
     // Room for the case-file tab hanging off the top edge, so no screen
     // tucks its first line underneath it. Zero everywhere else.
-    // Tijdens een ronde hangt de dossierslip bovenaan en moet de inhoud
-    // eronder beginnen; anders is dit gewoon de marge van het ontwerp.
-    "--toppad":
-      "players" in stage && stage.name !== "card"
-        ? "62px"
-        : "clamp(16px,4vw,56px)",
+    // De marge van het ontwerp, altijd. De dossierslip hing hier vroeger
+    // bovenaan en eiste een eigen strook, wat op een telefoon een lap wit
+    // boven elk scherm gaf; hij staat nu tegen de rechterrand.
+    "--toppad": "clamp(16px,4vw,56px)",
     backgroundColor: "var(--bg)",
     backgroundImage: "radial-gradient(var(--dot) 1px, transparent 1.6px)",
     backgroundSize: "9px 9px",
@@ -349,9 +348,16 @@ export default function App({ dict, lang }: Props) {
       {renderStage()}
 
       {/*
-        The case file hangs off the top edge during a round, exactly where
-        the design puts it: a rule gets broken mid-sentence and the moment
-        passes if you have to navigate for it.
+        Het dossier moet onder handbereik blijven tijdens een ronde: een
+        regel wordt midden in een zin overtreden en het moment is voorbij als
+        je ervoor moet navigeren.
+
+        Het hing aan de bovenrand, waar het ontwerp het zet. Op een telefoon
+        gaat dat niet: daar ligt de Dynamic Island, die de tik opvangt
+        voordat de app hem ziet, en de strook die ervoor vrijgehouden moest
+        worden gaf boven elk scherm een lap wit. Het staat nu als tab tegen
+        de rechterrand, halverwege — buiten de systeembalken, buiten de
+        voetknoppen, en onder je duim.
       */}
       {"players" in stage && stage.name !== "card" && !drawerOpen && (
         <Press
@@ -361,15 +367,15 @@ export default function App({ dict, lang }: Props) {
             // scrolls, and the layered shadow is what makes it read as
             // hanging over the content rather than sitting in it.
             position: "fixed",
-            // Onder de systeembalk, niet eronderdoor: op een iPhone valt het
-            // bovenste stuk van het scherm onder de Dynamic Island, en daar
-            // vangt iOS de tik af voordat de app hem ziet.
-            top: "var(--sat, env(safe-area-inset-top))",
-            right: "max(16px, calc((100% - 1240px) / 2 + 20px))",
+            right: 0,
+            top: "50%",
+            transform: "translateY(-50%)",
             zIndex: 40,
             display: "flex",
             alignItems: "center",
             gap: 8,
+            // Van boven naar beneden, zoals het ruitertje op een hangmap.
+            writingMode: "vertical-rl",
             fontFamily: "var(--font-archivo-black), sans-serif",
             fontSize: 12,
             letterSpacing: ".14em",
@@ -377,15 +383,15 @@ export default function App({ dict, lang }: Props) {
             background: "#E9DDB8",
             color: "#0d0d0d",
             border: "2px solid #0d0d0d",
-            borderTop: "none",
-            borderRadius: "0 0 10px 10px",
-            padding: "9px 14px 10px",
-            boxShadow: "3px 3px 0 #FFD23F, 0 10px 22px rgba(0,0,0,.45)",
+            borderRight: "none",
+            borderRadius: "10px 0 0 10px",
+            padding: "14px 9px 14px 11px",
+            boxShadow: "-3px 3px 0 #FFD23F, -8px 0 20px rgba(0,0,0,.4)",
             cursor: "pointer",
             transition: "padding .15s",
           }}
-          hover={{ paddingTop: 13 }}
-          press={{ paddingTop: 15 }}
+          hover={{ paddingRight: 13 }}
+          press={{ paddingRight: 15 }}
         >
           {dict.drink.sheetOpen}
         </Press>
@@ -409,6 +415,21 @@ export default function App({ dict, lang }: Props) {
             setDialog("quit");
           }}
           onClose={() => setDrawerOpen(false)}
+        />
+      )}
+
+      {/*
+        Stond er nog een ronde open, dan is dat het eerste wat je te zien
+        krijgt — en de enige vraag die beantwoord moet worden voordat je
+        verder kunt.
+      */}
+      {stage.name === "home" && stored.resume && (
+        <ResumeDialog
+          dict={dict}
+          onResume={() => {
+            if (stored.resume) go(stored.resume);
+          }}
+          onDrop={() => save({ resume: null, resumeAt: 0 })}
         />
       )}
 
@@ -485,10 +506,6 @@ export default function App({ dict, lang }: Props) {
             onPlay={() => go({ name: "modes" })}
             onRules={() => go({ name: "rules" })}
             onSettings={() => go({ name: "settings" })}
-            resumeLabel={stored.resume ? dict.home.resume : null}
-            onResume={() => {
-              if (stored.resume) go(stored.resume);
-            }}
           />
         );
 

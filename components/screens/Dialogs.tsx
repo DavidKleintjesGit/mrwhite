@@ -549,3 +549,149 @@ export function ConfirmDialog({
     </Modal>
   );
 }
+
+/**
+ * Wat er staat als de app opent terwijl er nog een potje openstond.
+ *
+ * Dit was een knop op het beginscherm, maar dat laat zich makkelijk
+ * wegklikken: je tikt Spelen en je ronde is weg. Nu staat de vraag er en
+ * moet hij beantwoord worden.
+ *
+ * De vertraging zit hier op de knop die de ronde laat vallen, niet op de
+ * knop die doorgaat. Dat is precies andersom dan bij opnieuw delen, en met
+ * opzet: doorspelen is ongevaarlijk, weggooien niet.
+ */
+export function ResumeDialog({
+  dict,
+  onResume,
+  onDrop,
+}: {
+  dict: Dictionary;
+  onResume: () => void;
+  onDrop: () => void;
+}) {
+  const t = dict.confirm;
+  const [left, setLeft] = useState(3);
+
+  useEffect(() => {
+    const handle = setInterval(() => {
+      setLeft((current) => {
+        if (current <= 1) {
+          clearInterval(handle);
+          return 0;
+        }
+        return current - 1;
+      });
+    }, 1000);
+    return () => clearInterval(handle);
+  }, []);
+
+  return (
+    <Modal
+      tag={t.resumeTag}
+      tagColor="#FFD23F"
+      shadowColor="#FFD23F"
+      maxWidth={480}
+      fill={false}
+      onClose={undefined}
+      style={{ padding: "30px 24px 24px", gap: 16 }}
+    >
+      <h3
+        style={{
+          margin: 0,
+          fontFamily: ARCHIVO,
+          fontSize: 28,
+          textTransform: "uppercase",
+          lineHeight: 1.05,
+        }}
+      >
+        {t.resumeTitle}
+      </h3>
+      <p
+        style={{
+          margin: 0,
+          fontSize: 17,
+          lineHeight: 1.45,
+          textWrap: "pretty",
+        }}
+      >
+        {t.resumeBody}
+      </p>
+
+      <div style={{ height: 10, border: "2px solid #0d0d0d" }}>
+        <div
+          style={{
+            height: "100%",
+            width: `${Math.round(((3 - left) / 3) * 100)}%`,
+            background: "#FFD23F",
+            transition: "width 1s linear",
+          }}
+        />
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0,1fr) minmax(0,1.3fr)",
+          gap: 12,
+        }}
+      >
+        {left === 0 ? (
+          <Press
+            onClick={onDrop}
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 15,
+              textTransform: "uppercase",
+              background: "var(--card)",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: "15px 8px",
+              boxShadow: "4px 4px 0 #0d0d0d",
+              cursor: "pointer",
+              animation: "popIn .3s both",
+            }}
+            press={CLOSE_PRESS}
+          >
+            {t.resumeNo}
+          </Press>
+        ) : (
+          <button
+            type="button"
+            disabled
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 15,
+              textTransform: "uppercase",
+              background: "#d9d5ca",
+              color: "#6a675f",
+              border: "3px solid #b4b0a6",
+              padding: "15px 8px",
+              cursor: "default",
+            }}
+          >
+            {format(t.resumeWait, { n: left })}
+          </button>
+        )}
+
+        <Press
+          onClick={onResume}
+          style={{
+            fontFamily: ARCHIVO,
+            fontSize: 15,
+            textTransform: "uppercase",
+            background: "#FFD23F",
+            color: "#0d0d0d",
+            border: "3px solid #0d0d0d",
+            padding: "15px 8px",
+            boxShadow: "4px 4px 0 #0d0d0d",
+            cursor: "pointer",
+          }}
+          press={CLOSE_PRESS}
+        >
+          {t.resumeYes}
+        </Press>
+      </div>
+    </Modal>
+  );
+}

@@ -181,6 +181,12 @@ const tr: Dictionary = {
     quitTitle: "Oyun dursun mu?",
     quitBody: "Tur biter ve menüye dönersin. Roller ve oylar silinir.",
     quitYes: "Evet, durdur",
+    resumeTag: "YARIM KALDI",
+    resumeTitle: "Oyunun ortasındaydın",
+    resumeBody: "Bu cihazda hâlâ açık bir tur var. Devam mı, yoksa bırakıp yeniden mi başlıyoruz?",
+    resumeYes: "Devam et",
+    resumeNo: "Bırak",
+    resumeWait: "Bir saniye… {n}",
   },
 
   card: {

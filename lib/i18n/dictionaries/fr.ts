@@ -184,6 +184,12 @@ const fr: Dictionary = {
     quitBody:
       "La manche s'arrête et tu reviens au menu. Les rôles et les votes sont effacés.",
     quitYes: "Oui, arrêter",
+    resumeTag: "INTERROMPU",
+    resumeTitle: "Vous étiez en pleine partie",
+    resumeBody: "Une manche est encore ouverte sur cet appareil. Continuer, ou l'abandonner et recommencer ?",
+    resumeYes: "Continuer",
+    resumeNo: "Abandonner",
+    resumeWait: "Un instant… {n}",
   },
 
   card: {

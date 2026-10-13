@@ -183,6 +183,12 @@ const de: Dictionary = {
     quitBody:
       "Die Runde endet und ihr geht zurück ins Menü. Rollen und Stimmen werden gelöscht.",
     quitYes: "Ja, beenden",
+    resumeTag: "UNTERBROCHEN",
+    resumeTitle: "Du warst mittendrin",
+    resumeBody: "Auf diesem Gerät läuft noch eine Runde. Weiterspielen oder verwerfen und neu anfangen?",
+    resumeYes: "Weiterspielen",
+    resumeNo: "Verwerfen",
+    resumeWait: "Moment… {n}",
   },
 
   card: {

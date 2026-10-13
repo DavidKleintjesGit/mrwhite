@@ -182,6 +182,12 @@ const nl = {
     quitBody:
       "Het potje stopt en je gaat terug naar het menu. Rollen en stemmen worden gewist.",
     quitYes: "Ja, stoppen",
+    resumeTag: "ONDERBROKEN",
+    resumeTitle: "Je was nog bezig",
+    resumeBody: "Er staat nog een potje open op dit toestel. Verder spelen, of het laten vallen en opnieuw beginnen?",
+    resumeYes: "Verder spelen",
+    resumeNo: "Laten vallen",
+    resumeWait: "Nog even… {n}",
   },
 
   card: {

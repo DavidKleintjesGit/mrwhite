@@ -11,7 +11,12 @@ type Props = {
   /** Panels that scroll set their own height; the confirm box does not. */
   fill?: boolean;
   background?: string;
-  onClose: () => void;
+  /**
+   * Klik naast het venster om het te sluiten. Weglaten maakt het venster
+   * onontkoombaar: dat is voor de vraag of je een onderbroken potje wil
+   * hervatten, want daar moet een antwoord op komen.
+   */
+  onClose?: () => void;
   style?: CSSProperties;
   children: ReactNode;
 };
