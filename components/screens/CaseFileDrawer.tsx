@@ -1,6 +1,11 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import {
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+} from "react";
 import Press from "@/components/ui/Press";
 import { challengeReward, ruleCategory } from "@/lib/drink";
 import type { Player } from "@/lib/game";
@@ -36,6 +41,15 @@ type Props = {
   width: number;
   /** Of er op dit moment aan getrokken wordt. */
   dragging: boolean;
+  /** Wat de greep aan de voorkant van de lade met de aanwijzer moet doen. */
+  grip: {
+    label: string;
+    onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
+    onPointerDown: (event: PointerEvent<HTMLButtonElement>) => void;
+    onPointerMove: (event: PointerEvent<HTMLButtonElement>) => void;
+    onPointerUp: (event: PointerEvent<HTMLButtonElement>) => void;
+    onPointerCancel: () => void;
+  };
 };
 
 /**
@@ -57,6 +71,7 @@ export default function CaseFileDrawer({
   at,
   width,
   dragging,
+  grip,
 }: Props) {
   const t = dict.drink;
   // Agents first: opening the file is usually about a person, not the rules.
@@ -70,40 +85,41 @@ export default function CaseFileDrawer({
   }
 
   return (
-    <div
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 50,
-        background: "rgba(13,13,13,.86)",
-        opacity: width === 0 ? 1 : Math.min(1, at / width),
-        transition: dragging ? "none" : "opacity .34s ease",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "flex-end",
-        // Links ruimte, rechts niets: de lade hoort tegen de rand te
-        // sluiten, anders hangt hij in het niets.
-        padding: "10px 0 10px 12px",
-      }}
-    >
+    <>
       {/*
-        De ladebak. Hij schuift als geheel naar binnen en vormt de donkere
-        omlijsting waar het dossier in ligt: open aan de linkerkant, met de
-        schaduw naar binnen zodat het een bak lijkt en geen vlak.
+        De kamer erachter is donker zodra de lade ook maar een kier open
+        staat. Geen overgang: dit is geen venster dat verschijnt, en alles
+        wat faadt verraadt dat alsnog.
+      */}
+      {at > 0 && (
+        <div
+          onClick={onClose}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 49,
+            background: "rgba(13,13,13,.86)",
+          }}
+        />
+      )}
+
+      {/*
+        De ladebak, met de greep aan zijn voorkant. Eén star blok: het
+        schuift alleen zijwaarts, want een lade kent geen andere beweging.
       */}
       <div
         role="dialog"
-        aria-modal="true"
+        aria-modal={at > 0}
         aria-label={t.sheetOpen}
         onClick={(event) => event.stopPropagation()}
         style={{
-          // Niet schermvullend: er hoort een strook pagina naast te
-          // blijven staan, anders leest het als een nieuw scherm in plaats
-          // van als een map die eroverheen is geschoven.
+          position: "fixed",
+          right: 0,
+          top: "50%",
+          zIndex: 50,
           width: "88%",
           maxWidth: 520,
-          maxHeight: "calc(100dvh - 24px)",
+          height: "calc(100dvh - 20px)",
           display: "flex",
           flexDirection: "column",
           background: "#16150f",
@@ -116,12 +132,74 @@ export default function CaseFileDrawer({
           // Geen animatie maar een plek: de lade staat waar hij getrokken
           // is. Laat je los, dan loopt hij vanaf dáár door of terug — hij
           // begint nooit opnieuw vanaf dicht.
-          transform: `translateX(${Math.max(0, width - at)}px)`,
+          transform: `translateY(-50%) translateX(${Math.max(
+            0,
+            width - at
+          )}px)`,
           transition: dragging
             ? "none"
             : "transform .34s cubic-bezier(.22,.9,.3,1)",
         }}
       >
+        {/*
+          De greep zit aan het front en reist dus mee. Hij steekt links uit
+          de bak, zodat hij bij een dichte lade het enige is wat je ziet.
+        */}
+        <button
+          type="button"
+          aria-label={grip.label}
+          onKeyDown={grip.onKeyDown}
+          onPointerDown={grip.onPointerDown}
+          onPointerMove={grip.onPointerMove}
+          onPointerUp={grip.onPointerUp}
+          onPointerCancel={grip.onPointerCancel}
+          style={{
+            position: "absolute",
+            left: -47,
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: 58,
+            height: 128,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            padding: 0,
+            border: "none",
+            background: "transparent",
+            cursor: "grab",
+            touchAction: "none",
+          }}
+        >
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 36,
+              height: 104,
+              background: "#1b1a14",
+              border: "3px solid #0d0d0d",
+              borderRight: "none",
+              borderRadius: "12px 0 0 12px",
+              boxShadow:
+                "inset 0 2px 0 rgba(243,240,232,.14), -7px 0 20px rgba(13,13,13,.45)",
+            }}
+          >
+            <span
+              aria-hidden="true"
+              style={{
+                width: 11,
+                height: 62,
+                borderRadius: 6,
+                background:
+                  "linear-gradient(90deg,#6f6a5c,#efece0 38%,#c3bdac 62%,#6f6a5c)",
+                boxShadow:
+                  "0 0 0 2px #0d0d0d, 3px 0 7px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.25)",
+              }}
+            />
+          </span>
+        </button>
+
         <div
           style={{
             flex: 1,
@@ -129,14 +207,6 @@ export default function CaseFileDrawer({
             display: "flex",
             flexDirection: "column",
             paddingTop: 14,
-            // Komt mee omhoog met hoe ver de lade uit staat, zodat het één
-            // beweging blijft in plaats van een animatie die erachteraan komt.
-            transform: `translateY(${Math.round(
-              30 * (1 - (width === 0 ? 1 : at / width))
-            )}px)`,
-            transition: dragging
-              ? "none"
-              : "transform .34s cubic-bezier(.22,.9,.3,1)",
           }}
         >
           {/* The folder tabs along the top edge. */}
@@ -493,7 +563,7 @@ export default function CaseFileDrawer({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

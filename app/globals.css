@@ -8,6 +8,12 @@ html,
 body {
   margin: 0;
   /*
+   * De dossierlade staat vast gepositioneerd en steekt bij een dichte lade
+   * buiten het venster uit. Zonder dit zou dat een horizontale schuifbalk
+   * opleveren op een pagina die nooit zijwaarts hoort te scrollen.
+   */
+  overflow-x: hidden;
+  /*
    * Het lichte thema is wat de app zonder opgeslagen keuze toont, dus dat is
    * ook wat er staat voordat er iets draait. Stond hier zwart, dan verfde de
    * eerste frame zwart en sloeg hij daarna om naar licht.

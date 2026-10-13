@@ -136,6 +136,9 @@ export default function App({ dict, lang }: Props) {
    * would have the second quietly undo the first.
    */
   function setStage(next: Stage, also: Partial<Stored> = {}) {
+    // Een openstaande lade hoort niet mee te reizen naar het volgende
+    // scherm: daar gaat het over andere spelers of over niets.
+    setDrawerAt(0);
     // Moving anywhere lets go of the round the start screen was offering
     // back: you have chosen to do something else with the app. Resuming
     // hands over the round itself, which clears it the same way.
@@ -387,102 +390,53 @@ export default function App({ dict, lang }: Props) {
         de rechterrand, halverwege — buiten de systeembalken, buiten de
         voetknoppen, en onder je duim.
       */}
+      {/*
+        De lade staat er de hele ronde. Dicht steekt alleen zijn greep in
+        beeld; daaraan trek je hem open.
+      */}
       {"players" in stage && stage.name !== "card" && (
-        <button
-          type="button"
-          aria-label={dict.drink.sheetOpen}
-          // Alleen trekken, niet tikken. Een lade gaat niet open van een
-          // tikje op de greep.
-          //
-          // Het toetsenbord kan niet slepen, dus Enter en spatie openen hem
-          // wel — anders is het dossier voor wie zo bedient onbereikbaar.
-          onKeyDown={(event) => {
-            if (event.key !== "Enter" && event.key !== " ") return;
-            event.preventDefault();
-            setDrawerAt(drawerWidth());
-          }}
-          onPointerDown={(event) => {
-            event.currentTarget.setPointerCapture(event.pointerId);
-            dragFrom.current = event.clientX;
-            dragFrom2.current = drawerAt;
-            setDragging(true);
-          }}
-          onPointerMove={(event) => {
-            if (dragFrom.current === null) return;
-            const gone = dragFrom2.current + (dragFrom.current - event.clientX);
-            setDrawerAt(Math.max(0, Math.min(gone, drawerWidth())));
-          }}
-          onPointerUp={() => {
-            if (dragFrom.current === null) return;
-            dragFrom.current = null;
-            setDragging(false);
-            // Over de helft betekent: hij gaat open. Daaronder glijdt hij
-            // terug, vanaf waar hij staat.
-            setDrawerAt((at) => (at >= drawerWidth() / 2 ? drawerWidth() : 0));
-          }}
-          onPointerCancel={() => {
-            dragFrom.current = null;
-            setDragging(false);
-            setDrawerAt(0);
-          }}
-          style={{
-            position: "fixed",
-            right: 0,
-            top: "64%",
-            transform: "translateY(-50%)",
-            zIndex: 40,
-            // Het aanraakgebied is ruimer dan wat je ziet: de greep zelf is
-            // smal, en een duim is dat niet.
-            width: 58,
-            height: 128,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            padding: 0,
-            border: "none",
-            background: "transparent",
-            cursor: "grab",
-            touchAction: "none",
-          }}
-        >
-          {/* Het front van de lade dat nog net uit de kast steekt. */}
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 36,
-              height: 104,
-              background: "#1b1a14",
-              border: "3px solid #0d0d0d",
-              borderRight: "none",
-              borderRadius: "12px 0 0 12px",
-              boxShadow:
-                "inset 0 2px 0 rgba(243,240,232,.14), -7px 0 20px rgba(13,13,13,.45)",
-            }}
-          >
-            {/* De greep: een metalen beugel. */}
-            <span
-              aria-hidden="true"
-              style={{
-                width: 11,
-                height: 62,
-                borderRadius: 6,
-                background:
-                  "linear-gradient(90deg,#6f6a5c,#efece0 38%,#c3bdac 62%,#6f6a5c)",
-                boxShadow:
-                  "0 0 0 2px #0d0d0d, 3px 0 7px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.25)",
-              }}
-            />
-          </span>
-        </button>
-      )}
-
-      {(drawerAt > 0 || dragging) && "players" in stage && (
         <CaseFileDrawer
           at={drawerAt}
           width={drawerWidth()}
           dragging={dragging}
+          grip={{
+            label: dict.drink.sheetOpen,
+            // Het toetsenbord kan niet slepen, dus Enter en spatie openen
+            // hem wel — anders is het dossier voor wie zo bedient
+            // onbereikbaar.
+            onKeyDown: (event) => {
+              if (event.key !== "Enter" && event.key !== " ") return;
+              event.preventDefault();
+              setDrawerAt(drawerWidth());
+            },
+            onPointerDown: (event) => {
+              event.currentTarget.setPointerCapture(event.pointerId);
+              dragFrom.current = event.clientX;
+              dragFrom2.current = drawerAt;
+              setDragging(true);
+            },
+            onPointerMove: (event) => {
+              if (dragFrom.current === null) return;
+              const gone =
+                dragFrom2.current + (dragFrom.current - event.clientX);
+              setDrawerAt(Math.max(0, Math.min(gone, drawerWidth())));
+            },
+            onPointerUp: () => {
+              if (dragFrom.current === null) return;
+              dragFrom.current = null;
+              setDragging(false);
+              // Over de helft betekent: hij gaat open. Daaronder glijdt hij
+              // terug, vanaf waar hij staat.
+              setDrawerAt((at) =>
+                at >= drawerWidth() / 2 ? drawerWidth() : 0
+              );
+            },
+            onPointerCancel: () => {
+              dragFrom.current = null;
+              setDragging(false);
+              setDrawerAt(0);
+            },
+          }}
           dict={dict}
           players={stage.players}
           rules={stored.rules}
