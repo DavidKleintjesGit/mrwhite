@@ -105,6 +105,20 @@ input::placeholder {
  * nadat de eerste al stilstaat — dat leest als één handeling in plaats van
  * als twee animaties achter elkaar.
  */
+/*
+ * Alleen donkerder worden, verder niets. Hier zat eerst screenIn op, die
+ * ook schaalt en verticaal beweegt: dat overstemde het schuiven volledig,
+ * en dan lijkt de lade op te poppen in plaats van open te gaan.
+ */
+@keyframes veilIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @keyframes railOut {
   0% {
     transform: translateX(100%);

@@ -72,7 +72,7 @@ export default function CaseFileDrawer({
         alignItems: "center",
         justifyContent: "flex-end",
         padding: "12px 10px",
-        animation: "screenIn .25s both",
+        animation: "veilIn .34s ease both",
       }}
     >
       {/*
@@ -101,7 +101,10 @@ export default function CaseFileDrawer({
           padding: "12px 10px 14px 12px",
           boxShadow:
             "inset -14px 0 22px rgba(0,0,0,.55), inset 0 2px 0 rgba(243,240,232,.12), -14px 0 44px rgba(0,0,0,.6)",
-          animation: "railOut .3s cubic-bezier(.22,1,.36,1) both",
+          // Lang genoeg om als uittrekken te lezen, en met een kromme die
+          // vooral aan het eind afremt — zoals een lade die op zijn rails
+          // uitloopt.
+          animation: "railOut .52s cubic-bezier(.16,.86,.3,1) both",
         }}
       >
         <div
@@ -111,7 +114,7 @@ export default function CaseFileDrawer({
             display: "flex",
             flexDirection: "column",
             paddingTop: 14,
-            animation: "fileUp .44s .13s cubic-bezier(.2,1.05,.3,1) both",
+            animation: "fileUp .46s .22s cubic-bezier(.2,1.05,.3,1) both",
           }}
         >
           {/* The folder tabs along the top edge. */}
@@ -202,22 +205,49 @@ export default function CaseFileDrawer({
                 flex: 1,
                 minHeight: 0,
                 display: "flex",
-                padding: "12px 13px 14px",
+                padding: "18px 18px 20px 16px",
               }}
             >
-              <div
-                aria-hidden="true"
-                style={{
-                  position: "absolute",
-                  top: 16,
-                  left: 18,
-                  right: 9,
-                  bottom: 10,
-                  background: "#F6F2E6",
-                  border: "2px solid rgba(13,13,13,.35)",
-                  transform: "rotate(.5deg)",
-                }}
-              />
+              {/*
+                De stapel onder het blad waar je op leest: drie vellen die
+                er aan verschillende kanten net onderuit steken, elk een
+                graadje anders. En daartussen de briefjes die iemand erin
+                heeft gestopt, met hun hoekje buiten het papier.
+              */}
+              {SLIPS.map((slip) => (
+                <span
+                  key={slip.top}
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    right: slip.right,
+                    top: slip.top,
+                    width: slip.width,
+                    height: 13,
+                    background: slip.colour,
+                    border: "2px solid rgba(13,13,13,.55)",
+                    borderRadius: "2px 0 0 2px",
+                    transform: `rotate(${slip.tilt}deg)`,
+                  }}
+                />
+              ))}
+
+              {SHEETS.map((sheet) => (
+                <span
+                  key={sheet.tilt}
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    top: sheet.top,
+                    left: sheet.left,
+                    right: sheet.right,
+                    bottom: sheet.bottom,
+                    background: sheet.tone,
+                    border: "2px solid rgba(13,13,13,.3)",
+                    transform: `rotate(${sheet.tilt}deg)`,
+                  }}
+                />
+              ))}
               <div
                 style={{
                   position: "relative",
@@ -898,3 +928,22 @@ const LABEL = {
   letterSpacing: ".14em",
   paddingTop: 2,
 } as const;
+
+/**
+ * De vellen onder het blad waar je op leest. Ze steken elk aan een andere
+ * kant uit en staan een graadje scheef; precies gestapeld papier bestaat
+ * niet en leest als een drukfout.
+ */
+const SHEETS = [
+  { top: 26, left: 26, right: 4, bottom: 6, tilt: 1.6, tone: "#EBE5D2" },
+  { top: 22, left: 22, right: 8, bottom: 11, tilt: -0.9, tone: "#F1EDDE" },
+  { top: 19, left: 19, right: 12, bottom: 15, tilt: 0.5, tone: "#F7F3E8" },
+];
+
+/** De briefjes die tussen de bladen uitsteken. */
+const SLIPS = [
+  { top: "17%", right: 2, width: 27, tilt: -2, colour: "#FFD23F" },
+  { top: "39%", right: 5, width: 20, tilt: 1.5, colour: "#FF3D3D" },
+  { top: "62%", right: 1, width: 24, tilt: -1, colour: "#3DD6FF" },
+  { top: "80%", right: 6, width: 17, tilt: 2.5, colour: "#E9DDB8" },
+];
