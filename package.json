@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"lib/**/*.test.ts\"",
     "words:check": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test lib/words.test.ts",
-    "content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/content.ts"
+    "content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/content.ts",
+    "locale:add": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/locale.ts"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.3",
