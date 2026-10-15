@@ -1,4 +1,4 @@
-import type { Dictionary } from "./nl";
+import type { Dictionary } from "../dictionary";
 
 /**
  * Not yet read through by a native speaker, so French stays out of

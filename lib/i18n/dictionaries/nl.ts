@@ -1,9 +1,16 @@
+import type { Dictionary } from "../dictionary";
+
 /**
- * Dutch is the source language here: the design was written in Dutch and every
- * string below is taken from it verbatim. English is typed against this shape,
- * so a missing or renamed key fails the build instead of showing up blank.
+ * Het Nederlands. De tekst komt woord voor woord uit het ontwerp, dat in het
+ * Nederlands geschreven is.
+ *
+ * Deze taal was ook de vorm waar alle andere zich aan moesten houden. Dat is
+ * eraf gehaald: Engels is de taal waarin dit spel verkocht wordt, en met
+ * twintig talen op komst hoort de maat niet aan een toevallige taal te
+ * hangen.
  */
-const nl = {
+
+const nl: Dictionary = {
   meta: {
     title: "Mister White",
     description:
@@ -577,5 +584,3 @@ const nl = {
 };
 
 export default nl;
-
-export type Dictionary = typeof nl;

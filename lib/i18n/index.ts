@@ -1,4 +1,5 @@
-import nl, { type Dictionary } from "./dictionaries/nl";
+import nl from "./dictionaries/nl";
+import type { Dictionary } from "./dictionary";
 import en from "./dictionaries/en";
 import de from "./dictionaries/de";
 import fr from "./dictionaries/fr";
@@ -13,5 +14,5 @@ export function getDictionary(locale: Locale): Dictionary {
   return DICTIONARIES[locale];
 }
 
-export type { Dictionary };
+export type { Dictionary } from "./dictionary";
 export * from "./config";

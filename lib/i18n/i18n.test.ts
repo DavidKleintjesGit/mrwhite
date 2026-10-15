@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { LOCALES, LOCALE_NAMES, VERIFIED_LOCALES, format } from "./config.ts";
+import {
+  LOCALES,
+  LOCALE_NAMES,
+  VERIFIED_LOCALES,
+  format,
+  isVerified,
+} from "./config.ts";
 import nl from "./dictionaries/nl.ts";
 import en from "./dictionaries/en.ts";
 import de from "./dictionaries/de.ts";
@@ -36,7 +42,7 @@ function entries(value: unknown, path = ""): Entry[] {
 /** The `{name}` slots a string expects the app to fill in. */
 const placeholders = (text: string) => (text.match(/\{(\w+)\}/g) ?? []).sort();
 
-const reference = entries(nl);
+const reference = entries(en);
 
 test("every language is accounted for", () => {
   assert.deepEqual(Object.keys(DICTIONARIES).sort(), [...LOCALES].sort());
@@ -79,7 +85,11 @@ for (const locale of LOCALES) {
   });
 
   test(`${locale}: the file was actually translated`, () => {
-    if (locale === "nl") return;
+    // Alleen voor talen die in de kiezer staan. Een taal die net is
+    // aangemaakt is nog een kopie van het Engels, en dat is zijn eerlijke
+    // toestand — de eis hoort te gelden op het moment dat hij spelers
+    // bereikt, niet op het moment dat iemand eraan begint.
+    if (locale === "en" || !isVerified(locale)) return;
 
     // Plenty of strings coincide on purpose — "Mr. White", "Undercover",
     // "Agent {n}" are the same in several languages. What this guards
@@ -94,7 +104,7 @@ for (const locale of LOCALES) {
     const share = same.length / translated.length;
     assert.ok(
       share < 0.15,
-      `${Math.round(share * 100)}% of ${locale} is still identical to Dutch`
+      `${Math.round(share * 100)}% of ${locale} is still identical to English`
     );
   });
 }

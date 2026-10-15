@@ -1,6 +1,4 @@
-import type { Dictionary } from "./nl";
-
-const en: Dictionary = {
+const en = {
   meta: {
     title: "Mister White",
     description:

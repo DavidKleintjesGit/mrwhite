@@ -65,17 +65,24 @@ export default words;
 // 2. De bediening: een kopie van het Engels, zodat alles compileert.
 const dictFile = `lib/i18n/dictionaries/${code}.ts`;
 if (!existsSync(dictFile)) {
-  const english = readFileSync("lib/i18n/dictionaries/en.ts", "utf8");
+  // Engels is het model en draagt daarom zelf geen typering. Een kopie
+  // moet die er wél bij krijgen, en onder zijn eigen naam staan.
+  const english = readFileSync("lib/i18n/dictionaries/en.ts", "utf8")
+    .replace("const en = {", `const ${code}: Dictionary = {`)
+    .replace("export default en;", `export default ${code};`);
+
   writeFileSync(
     dictFile,
-    `/*
+    `import type { Dictionary } from "../dictionary";
+
+/*
  * NOG NIET VERTAALD — dit is nog het Engels.
  *
  * Elke tekst hieronder moet nagelopen worden door iemand die ${name}
  * spreekt. Zolang dat niet gebeurd is hoort deze taal niet in
  * VERIFIED_LOCALES en komt hij dus niet in de kiezer.
  */
-${english}`,
+${english}`
   );
   console.log(`  ${dictFile} aangemaakt — nog Engels`);
 }
