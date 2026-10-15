@@ -41,6 +41,12 @@ type Props = {
   onOpenCategories: () => void;
   onOpenLanguage: () => void;
   onClear: () => void;
+  /** De woordenlijst: welke versie er speelt, en de controle met de hand. */
+  content: {
+    version: number;
+    state: "idle" | "checking" | "updated" | "current" | "failed";
+    check: () => Promise<unknown>;
+  };
 };
 
 export default function SettingsScreen({
@@ -54,6 +60,7 @@ export default function SettingsScreen({
   onOpenCategories,
   onOpenLanguage,
   onClear,
+  content,
 }: Props) {
   const t = dict.settings;
   const [draft, setDraft] = useState({ a: "", b: "" });
@@ -476,6 +483,65 @@ export default function SettingsScreen({
               </Press>
             );
           })}
+        </div>
+      </Field>
+
+      {/*
+        De woordenlijst wordt bij het opstarten vanzelf nagekeken; dit is
+        dezelfde controle met de hand, en vooral de plek waar je kunt zien
+        met welke versie je speelt.
+      */}
+      <Field>
+        <FieldLabel>{t.words}</FieldLabel>
+        <p
+          style={{
+            margin: 0,
+            fontSize: 14,
+            lineHeight: 1.5,
+            color: "var(--muted)",
+          }}
+        >
+          {format(t.wordsNote, { n: content.version })}
+        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Press
+            onClick={() => void content.check()}
+            disabled={content.state === "checking"}
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 14,
+              textTransform: "uppercase",
+              background: "var(--card)",
+              color: "#0d0d0d",
+              border: "3px solid #0d0d0d",
+              padding: "12px 16px",
+              boxShadow: "4px 4px 0 var(--fg)",
+              cursor: content.state === "checking" ? "default" : "pointer",
+              opacity: content.state === "checking" ? 0.6 : 1,
+            }}
+            press={{
+              transform: "translate(3px,3px)",
+              boxShadow: "1px 1px 0 var(--fg)",
+            }}
+          >
+            {content.state === "checking" ? t.wordsChecking : t.wordsCheck}
+          </Press>
+          {content.state !== "idle" && content.state !== "checking" && (
+            <span
+              style={{
+                fontSize: 13,
+                letterSpacing: ".06em",
+                textTransform: "uppercase",
+                color: content.state === "failed" ? "#FF3D3D" : "var(--muted)",
+              }}
+            >
+              {content.state === "updated"
+                ? t.wordsUpdated
+                : content.state === "current"
+                ? t.wordsCurrent
+                : t.wordsFailed}
+            </span>
+          )}
         </div>
       </Field>
 

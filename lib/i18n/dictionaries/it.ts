@@ -108,6 +108,14 @@ const it: Dictionary = {
     save: "Salva",
     support: "Aiuto e contatti",
     privacy: "Informativa sulla privacy",
+    words: "Elenco parole",
+    wordsNote:
+      "Versione {n}. All'avvio il gioco cerca parole nuove. Giocare non richiede mai internet.",
+    wordsCheck: "Controlla ora",
+    wordsChecking: "Cerco…",
+    wordsUpdated: "Nuove parole scaricate",
+    wordsCurrent: "Hai le più recenti",
+    wordsFailed: "Non riuscito",
     clear: "Cancella tutto",
   },
 

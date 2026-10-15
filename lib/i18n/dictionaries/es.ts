@@ -108,6 +108,14 @@ const es: Dictionary = {
     save: "Guardar",
     support: "Ayuda y contacto",
     privacy: "Política de privacidad",
+    words: "Lista de palabras",
+    wordsNote:
+      "Versión {n}. Al arrancar, el juego busca palabras nuevas. Jugar nunca necesita internet.",
+    wordsCheck: "Comprobar",
+    wordsChecking: "Buscando…",
+    wordsUpdated: "Palabras nuevas obtenidas",
+    wordsCurrent: "Tienes las últimas",
+    wordsFailed: "No se pudo",
     clear: "Borrar todo",
   },
 

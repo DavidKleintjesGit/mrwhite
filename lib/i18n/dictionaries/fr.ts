@@ -109,6 +109,14 @@ const fr: Dictionary = {
     save: "Enregistrer",
     support: "Aide et contact",
     privacy: "Politique de confidentialité",
+    words: "Liste de mots",
+    wordsNote:
+      "Version {n}. Au démarrage, le jeu cherche de nouveaux mots. Jouer ne demande jamais d'internet.",
+    wordsCheck: "Vérifier",
+    wordsChecking: "Recherche…",
+    wordsUpdated: "Nouveaux mots récupérés",
+    wordsCurrent: "Vous avez les derniers",
+    wordsFailed: "Échec",
     clear: "Tout effacer",
   },
 

@@ -138,8 +138,9 @@ Zet dit in het veld **Notes** bij de inzending:
 
 ```
 The app is a pass-and-play party word game. One device is passed around a
-table; there are no accounts, no network requests and no user-generated
-content shared between users.
+table; there are no accounts and no user-generated content shared between
+users. The only network request is a check at launch for an updated word
+list, which sends nothing about the user.
 
 The app includes an optional "Drinking Edition" game mode for adults, which
 is why alcohol references are declared in the age rating. The mode is

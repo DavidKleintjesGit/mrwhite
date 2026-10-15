@@ -108,6 +108,14 @@ const de: Dictionary = {
     save: "Speichern",
     support: "Hilfe und Kontakt",
     privacy: "Datenschutz",
+    words: "Wortliste",
+    wordsNote:
+      "Version {n}. Beim Start sucht das Spiel nach neuen Wörtern. Spielen geht immer ohne Internet.",
+    wordsCheck: "Jetzt prüfen",
+    wordsChecking: "Sucht…",
+    wordsUpdated: "Neue Wörter geholt",
+    wordsCurrent: "Du hast die neuesten",
+    wordsFailed: "Nicht geklappt",
     clear: "Alles löschen",
   },
 

@@ -8,6 +8,8 @@ import {
   useSyncExternalStore,
   type CSSProperties,
 } from "react";
+import { useContent } from "@/lib/content/live";
+import { withPack } from "@/lib/content/merge";
 import CardScreen from "@/components/screens/CardScreen";
 import CaseFileDrawer from "@/components/screens/CaseFileDrawer";
 import DealScreen from "@/components/screens/DealScreen";
@@ -74,7 +76,17 @@ type Dialog = "none" | "categories" | "language" | "confirm" | "quit" | "clear";
 /** The stored settings do not change behind our back while a page is open. */
 const subscribe = () => () => {};
 
-export default function App({ dict, lang }: Props) {
+export default function App({ dict: built, lang }: Props) {
+  /**
+   * Wat er aan woorden, regels en challenges opgehaald is. Bij het opstarten
+   * kijkt hij één keer of er iets nieuwers klaarstaat; tot dat binnen is —
+   * en als het nooit binnenkomt — speelt hij met wat in de app zit.
+   */
+  const content = useContent(lang);
+  const dict = useMemo(
+    () => withPack(built, content.pack),
+    [built, content.pack]
+  );
   // Read through useSyncExternalStore so the prerendered HTML and the first
   // client render agree, and the saved settings arrive without an effect.
   const raw = useSyncExternalStore(subscribe, readStored, () => null);
@@ -176,6 +188,7 @@ export default function App({ dict, lang }: Props) {
   function startDeal() {
     const rules = drink ? drawRules(settings.drinkCats) : [];
     const { players, pair } = deal({
+      table: content.pack?.words,
       players: stored.nPlayers,
       undercovers: stored.nUnder,
       whites: stored.nWhite,
@@ -582,6 +595,7 @@ export default function App({ dict, lang }: Props) {
             onOpenCategories={() => setDialog("categories")}
             onOpenLanguage={() => setDialog("language")}
             onClear={() => setDialog("clear")}
+            content={content}
           />
         );
 

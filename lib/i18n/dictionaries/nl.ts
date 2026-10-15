@@ -107,6 +107,14 @@ const nl = {
     save: "Opslaan",
     support: "Hulp en contact",
     privacy: "Privacybeleid",
+    words: "Woordenlijst",
+    wordsNote:
+      "Versie {n}. Het spel kijkt bij het opstarten of er nieuwe woorden klaarstaan. Spelen kan altijd zonder internet.",
+    wordsCheck: "Nu controleren",
+    wordsChecking: "Kijken…",
+    wordsUpdated: "Nieuwe woorden opgehaald",
+    wordsCurrent: "Je hebt de nieuwste",
+    wordsFailed: "Niet gelukt",
     clear: "Alles wissen",
   },
 

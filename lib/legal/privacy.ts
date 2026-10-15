@@ -22,7 +22,7 @@ export type PrivacyDoc = Doc;
 
 const nl: PrivacyDoc = {
   title: "Privacybeleid",
-  updated: "Laatst bijgewerkt: 10 oktober 2026",
+  updated: "Laatst bijgewerkt: 15 oktober 2026",
   lead:
     "Mister White verzamelt niets over je. Geen account, geen advertenties, geen " +
     "statistieken, geen trackers. Hieronder staat precies wat dat betekent.",
@@ -52,10 +52,20 @@ const nl: PrivacyDoc = {
     {
       heading: "Internetverbinding",
       body: [
-        "Het spel werkt volledig offline. Alles wat het nodig heeft — de " +
+        "Spelen kan volledig offline. Alles wat het spel nodig heeft — de " +
           "woorden, de vertalingen, de lettertypen — zit in de app zelf. " +
-          "Tijdens het spelen worden geen verzoeken naar servers gedaan, ook " +
+          "Tijdens een potje worden geen verzoeken naar servers gedaan, ook " +
           "niet naar die van ons.",
+        "Eén uitzondering: bij het opstarten kijkt de app één keer op " +
+          "misterwhite.online of er een nieuwere woordenlijst klaarstaat, en " +
+          "haalt die dan op. Je kunt er in Instellingen ook zelf om vragen. " +
+          "Lukt het niet, dan merk je er niets van en speel je met de lijst " +
+          "die in de app zit.",
+        "Bij zo'n verzoek stuurt de app niets over jou mee: geen naam, geen " +
+          "spelgegevens, geen kenmerk waaraan je te herkennen bent. Zoals bij " +
+          "elk verzoek op het internet ziet onze server wel het IP-adres " +
+          "waar het vandaan komt. Dat gebruiken we nergens voor en koppelen " +
+          "we aan niets.",
       ],
     },
     {
@@ -116,7 +126,7 @@ const nl: PrivacyDoc = {
 
 const en: PrivacyDoc = {
   title: "Privacy policy",
-  updated: "Last updated: 10 October 2026",
+  updated: "Last updated: 15 October 2026",
   lead:
     "Mister White collects nothing about you. No account, no adverts, no " +
     "analytics, no trackers. Here is exactly what that means.",
@@ -146,9 +156,18 @@ const en: PrivacyDoc = {
     {
       heading: "Internet access",
       body: [
-        "The game works entirely offline. Everything it needs — the words, " +
-          "the translations, the fonts — ships inside the app. While you " +
-          "play it makes no requests to any server, including ours.",
+        "You can play entirely offline. Everything the game needs — the " +
+          "words, the translations, the fonts — ships inside the app. During " +
+          "a round it makes no requests to any server, including ours.",
+        "One exception: when it starts, the app checks misterwhite.online " +
+          "once to see whether a newer word list is ready, and collects it " +
+          "if so. You can also ask for that yourself under Settings. If it " +
+          "fails you will not notice, and you play with the list inside the " +
+          "app.",
+        "That request carries nothing about you: no name, no game data, no " +
+          "identifier of any kind. As with any request on the internet, our " +
+          "server does see the IP address it came from. We use it for " +
+          "nothing and connect it to nothing.",
       ],
     },
     {

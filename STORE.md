@@ -39,7 +39,7 @@ hij één gok naar het burgerwoord. Raadt hij goed, dan wint hij alsnog —
 in zijn eentje.
 
 WAT HET IS
-• Pass-and-play: één toestel, geen accounts, geen internet nodig
+• Pass-and-play: één toestel, geen accounts, spelen zonder internet
 • 3 tot 20 spelers
 • Een potje duurt tien minuten, en dan nog een
 • 154 woordparen in het Nederlands, verdeeld over zeven categorieën
@@ -52,9 +52,10 @@ een geheime opdracht die niemand anders kent. Wie een burger wegstemt,
 drinkt. Alcoholvrij mag altijd.
 
 GEEN GEDOE
-Geen account, geen advertenties, geen trackers, geen statistieken. Het spel
-werkt volledig offline: alles zit in de app. Wat je invult blijft op je
-eigen toestel staan en gaat nergens heen.
+Geen account, geen advertenties, geen trackers, geen statistieken. Spelen
+kan volledig offline: alles zit in de app. Ben je online, dan kijkt hij bij
+het opstarten of er nieuwe woorden klaarstaan — verder gaat er niets heen
+en weer. Wat je invult blijft op je eigen toestel staan.
 ```
 
 ## Volledige beschrijving — Engels
@@ -72,7 +73,7 @@ Then you vote somebody out. If Mr. White is caught he gets one guess at the
 civilians' word. Guess right and he still wins — on his own.
 
 WHAT IT IS
-• Pass-and-play: one device, no accounts, no internet needed
+• Pass-and-play: one device, no accounts, plays without internet
 • 3 to 20 players
 • A round takes ten minutes, and then you play another
 • 154 word pairs in English across seven categories
@@ -85,9 +86,10 @@ nobody else knows about. Vote out a civilian and you drink. Alcohol-free is
 always fine.
 
 NO NONSENSE
-No account, no adverts, no trackers, no analytics. The game works entirely
-offline: everything ships inside the app. What you type stays on your own
-device and goes nowhere.
+No account, no adverts, no trackers, no analytics. You can play entirely
+offline: everything ships inside the app. If you are online it checks for
+new words when it starts — nothing else goes back and forth. What you type
+stays on your own device.
 ```
 
 ---
@@ -146,11 +148,13 @@ enkel netwerkverzoek.
 |---|---|
 | Verzamelt de app gegevens? | **Nee** |
 | Deelt de app gegevens met derden? | **Nee** |
-| Worden gegevens versleuteld verzonden? | Niet van toepassing — er wordt niets verzonden |
+| Worden gegevens versleuteld verzonden? | Er wordt niets over de gebruiker verzonden. Het ophalen van de woordenlijst gaat over HTTPS |
 | Kan de gebruiker verwijdering vragen? | Alles staat lokaal; Instellingen heeft een wisknop |
 | Advertentie-id | **Niet gebruikt** |
 
-Apple's "App Privacy": kies **Data Not Collected**.
+Apple's "App Privacy": kies **Data Not Collected**. De app haalt bij het
+opstarten een woordenlijst op van misterwhite.online en stuurt daarbij niets
+over de gebruiker mee; er wordt niets verzameld, opgeslagen of gekoppeld.
 
 ---
 

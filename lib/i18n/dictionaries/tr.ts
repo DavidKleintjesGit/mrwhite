@@ -108,6 +108,14 @@ const tr: Dictionary = {
     save: "Kaydet",
     support: "Yardım ve iletişim",
     privacy: "Gizlilik politikası",
+    words: "Kelime listesi",
+    wordsNote:
+      "Sürüm {n}. Oyun açılırken yeni kelime var mı diye bakar. Oynamak için internet hiç gerekmez.",
+    wordsCheck: "Şimdi bak",
+    wordsChecking: "Bakıyor…",
+    wordsUpdated: "Yeni kelimeler alındı",
+    wordsCurrent: "En yenisi sende",
+    wordsFailed: "Olmadı",
     clear: "Her şeyi sil",
   },
 

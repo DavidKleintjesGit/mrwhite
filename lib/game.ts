@@ -2,6 +2,7 @@ import {
   ALIASES,
   CATEGORY_IDS,
   WORDS,
+  type CategoryId,
   type BucketId,
   type LangId,
   type Pair,
@@ -111,13 +112,19 @@ export type DealOptions = {
   fallbackName: (index: number) => string;
   /** One challenge id per player; left out outside the Drinking Edition. */
   challenges?: readonly number[];
+  /**
+   * De woorden om uit te delen. Leeg laten pakt wat er in de app zit; een
+   * opgehaald pakket geeft ze hier mee, zodat nieuwe woorden kunnen
+   * meespelen zonder dat de app opnieuw uit hoeft.
+   */
+  table?: Partial<Record<CategoryId, Pair[]>>;
 };
 
 export function pickPair(options: DealOptions): WordPair {
-  const table = WORDS[options.lang] ?? WORDS.nl;
+  const table = options.table ?? WORDS[options.lang] ?? WORDS.nl;
   let pool: Pair[] = [];
   for (const id of CATEGORY_IDS) {
-    if (options.buckets[id]) pool = pool.concat(table[id]);
+    if (options.buckets[id]) pool = pool.concat(table[id] ?? []);
   }
 
   if (options.difficulty === "makkelijk") pool = pool.filter((p) => p[2] === 1);

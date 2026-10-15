@@ -102,6 +102,14 @@ const en: Dictionary = {
     save: "Save",
     support: "Help and contact",
     privacy: "Privacy policy",
+    words: "Word list",
+    wordsNote:
+      "Version {n}. The game checks for new words when it starts. Playing never needs the internet.",
+    wordsCheck: "Check now",
+    wordsChecking: "Looking…",
+    wordsUpdated: "New words collected",
+    wordsCurrent: "You have the latest",
+    wordsFailed: "No luck",
     clear: "Erase everything",
   },
 
