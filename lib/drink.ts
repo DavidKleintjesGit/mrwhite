@@ -9,7 +9,7 @@
  * by a 1-based id and the conflict pairs below refer to those ids, so
  * renumbering anything here silently changes which rules exclude each other.
  */
-import { shuffle } from "./game.ts";
+import { shuffle, type Role } from "./game.ts";
 
 export type RuleCategory = "A" | "B" | "C" | "D";
 
@@ -58,10 +58,28 @@ export const RULES_PER_GAME = 3;
  * kunt meegeven: de app draagt er een mee, en een opgehaald pakket kan er
  * een ander voor in de plaats zetten.
  */
+export type Challenge = {
+  id: number;
+  reward: number;
+  /**
+   * Voor wie deze opdracht bedoeld is. Weglaten betekent: voor iedereen.
+   *
+   * Dezelfde opdracht speelt per rol heel anders uit. "Zorg dat iemand jou
+   * verdedigt" is bijna gratis voor wie verdacht wordt en bijna onmogelijk
+   * voor wie dat niet is. Door erbij te zetten wie hem mag krijgen, kan een
+   * opdracht gemaakt worden voor één rol zonder dat hij voor een andere
+   * onhaalbaar of juist te makkelijk is.
+   *
+   * Het verraadt niets: tijdens het spel ziet niemand andermans opdracht, en
+   * zodra iemand eruit ligt is zijn rol toch al omgedraaid.
+   */
+  roles?: readonly Role[];
+};
+
 export type Catalogue = {
   rulesByCategory: Record<RuleCategory, readonly number[]>;
   conflicts: readonly (readonly [number, number])[];
-  challenges: readonly { id: number; reward: number }[];
+  challenges: readonly Challenge[];
 };
 
 /**
@@ -74,7 +92,7 @@ export type Catalogue = {
  * one look identical until you read it. The payout is the only hint, and the
  * player sees it alone.
  */
-export const CHALLENGES: readonly { id: number; reward: number }[] = [
+export const CHALLENGES: readonly Challenge[] = [
   { id: 1, reward: 5 }, // De Uitlokker — steer someone into a forbidden word
   { id: 2, reward: 4 }, // De Papegaai — get your hint repeated
   { id: 3, reward: 3 }, // De Beschermer — get defended, which happens anyway
@@ -181,9 +199,23 @@ export function drawRules(
  * one without knowing it — which is fine, and occasionally very funny.
  */
 export function dealChallenges(
-  players: number,
+  roles: readonly Role[],
   catalogue: Catalogue = BUILT_IN
-): number[] {
-  const order = shuffle(catalogue.challenges.map((challenge) => challenge.id));
-  return Array.from({ length: players }, (_, i) => order[i % order.length]);
+): (number | null)[] {
+  const forRole = (role: Role) =>
+    catalogue.challenges
+      .filter((challenge) => !challenge.roles || challenge.roles.includes(role))
+      .map((challenge) => challenge.id);
+
+  // Eerst wat nog niemand heeft, zodat twee spelers pas dezelfde opdracht
+  // krijgen als er voor die rol niets anders meer is.
+  const taken = new Set<number>();
+  return roles.map((role) => {
+    const mine = forRole(role);
+    if (!mine.length) return null;
+    const fresh = mine.filter((id) => !taken.has(id));
+    const pool = shuffle(fresh.length ? fresh : mine);
+    taken.add(pool[0]);
+    return pool[0];
+  });
 }

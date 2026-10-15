@@ -16,6 +16,7 @@ import {
   drawRules,
   ruleCategory,
 } from "./drink.ts";
+import type { Role } from "./game.ts";
 
 // --- The rule set ----------------------------------------------------------
 
@@ -139,16 +140,23 @@ test("no category can be painted into a corner by its own conflicts", () => {
 
 // --- Challenges ------------------------------------------------------------
 
+/** Een tafel met rollen erop, zoals het spel die uitdeelt. */
+function table(players: number): Role[] {
+  return Array.from({ length: players }, (_, i) =>
+    i === 0 ? "white" : i === 1 ? "undercover" : "burger"
+  );
+}
+
 test("every player gets a challenge", () => {
   for (const players of [4, 6, 9, 20]) {
-    const dealt = dealChallenges(players);
+    const dealt = dealChallenges(table(players));
     assert.equal(dealt.length, players);
-    for (const id of dealt) assert.ok(CHALLENGE_IDS.includes(id));
+    for (const id of dealt) assert.ok(CHALLENGE_IDS.includes(id as number));
   }
 });
 
 test("challenges are spread before any of them repeats", () => {
-  const dealt = dealChallenges(CHALLENGE_IDS.length);
+  const dealt = dealChallenges(table(CHALLENGE_IDS.length));
   assert.equal(new Set(dealt).size, CHALLENGE_IDS.length);
 });
 
@@ -172,8 +180,39 @@ test("every challenge pays out, and harder ones pay more", () => {
 });
 
 test("a reward can be looked up for every dealt challenge", () => {
-  for (const id of dealChallenges(20)) {
-    assert.ok(challengeReward(id) >= MIN_REWARD);
+  for (const id of dealChallenges(table(20))) {
+    assert.ok(challengeReward(id as number) >= MIN_REWARD);
   }
   assert.throws(() => challengeReward(999));
+});
+
+test("a challenge meant for one role never lands on another", () => {
+  const catalogue = {
+    rulesByCategory: RULES_BY_CATEGORY,
+    conflicts: CONFLICTS,
+    challenges: [
+      { id: 1, reward: 4, roles: ["white"] as const },
+      { id: 2, reward: 4, roles: ["burger", "undercover"] as const },
+      { id: 3, reward: 6 },
+    ],
+  };
+  const roles = table(12);
+  for (let run = 0; run < 100; run++) {
+    const dealt = dealChallenges(roles, catalogue);
+    for (const [index, id] of dealt.entries()) {
+      if (id === 1) assert.equal(roles[index], "white");
+      if (id === 2) assert.notEqual(roles[index], "white");
+    }
+  }
+});
+
+test("a role with nothing to do gets no challenge rather than a wrong one", () => {
+  const dealt = dealChallenges(table(4), {
+    rulesByCategory: RULES_BY_CATEGORY,
+    conflicts: CONFLICTS,
+    challenges: [{ id: 1, reward: 4, roles: ["burger"] as const }],
+  });
+  assert.equal(dealt[0], null);
+  assert.equal(dealt[1], null);
+  assert.equal(dealt[2], 1);
 });

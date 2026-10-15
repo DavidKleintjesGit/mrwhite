@@ -205,10 +205,19 @@ export default function App({ dict: built, lang }: Props) {
       difficulty: settings.diff,
       custom: settings.custom,
       fallbackName: (index) => format(dict.names.placeholder, { n: index + 1 }),
-      challenges: drink
-        ? dealChallenges(stored.nPlayers, catalogue)
-        : undefined,
     });
+
+    // De opdrachten gaan er na het delen overheen, want welke je kunt
+    // krijgen hangt af van de rol die je net hebt gekregen.
+    if (drink) {
+      const dealt = dealChallenges(
+        players.map((player) => player.role),
+        catalogue
+      );
+      for (const [index, player] of players.entries()) {
+        player.challenge = dealt[index];
+      }
+    }
     setDialog("none");
     // The Drinking Edition reads its house rules before anyone gets a role:
     // the rules change how you phrase a clue, so seeing them afterwards

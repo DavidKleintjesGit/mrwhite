@@ -16,7 +16,7 @@ import { CATEGORY_IDS, WORDS, totalPairs } from "../words.ts";
 
 function pack(lang: string) {
   return JSON.parse(
-    readFileSync(`public/content/v1/${lang}.json`, "utf8"),
+    readFileSync(`public/content/v1/${lang}.json`, "utf8")
   ) as Record<string, unknown>;
 }
 
@@ -31,14 +31,14 @@ for (const lang of VERIFIED_LOCALES) {
       assert.deepEqual(
         served.words[id],
         WORDS[lang][id],
-        `categorie ${id} loopt uit de pas`,
+        `categorie ${id} loopt uit de pas`
       );
     }
   });
 
   test(`${lang}: de index telt hetzelfde aantal paren`, () => {
     const index = JSON.parse(
-      readFileSync("public/content/v1/index.json", "utf8"),
+      readFileSync("public/content/v1/index.json", "utf8")
     ) as { version: number; languages: Record<string, { pairs: number }> };
     assert.equal(index.version, CONTENT_VERSION);
     assert.equal(index.languages[lang].pairs, totalPairs(lang));
@@ -52,14 +52,18 @@ test("een pakket zonder woorden wordt geweigerd", () => {
 test("een half binnengekomen paar wordt geweigerd", () => {
   assert.equal(
     isLanguagePack({ version: 2, lang: "nl", words: { eten: [["Pizza"]] } }),
-    false,
+    false
   );
 });
 
 test("een leeg woord wordt geweigerd", () => {
   assert.equal(
-    isLanguagePack({ version: 2, lang: "nl", words: { eten: [["Pizza", " ", 1]] } }),
-    false,
+    isLanguagePack({
+      version: 2,
+      lang: "nl",
+      words: { eten: [["Pizza", " ", 1]] },
+    }),
+    false
   );
 });
 
@@ -94,8 +98,15 @@ test("de catalogus uit een pakket is dezelfde als die in de app", async () => {
   const made = catalogueOf(pack);
   assert.deepEqual(made.rulesByCategory, BUILT_IN.rulesByCategory);
   assert.deepEqual(made.conflicts, BUILT_IN.conflicts);
-  assert.deepEqual(
-    [...made.challenges].sort((a, b) => a.id - b.id),
-    [...BUILT_IN.challenges].sort((a, b) => a.id - b.id),
-  );
+  // Rollen worden weggelaten als ze er niet zijn, dus vergelijken op wat er
+  // werkelijk in staat in plaats van op de vorm van het object.
+  const plat = (
+    list: readonly { id: number; reward: number; roles?: readonly string[] }[]
+  ) =>
+    [...list]
+      .sort((a, b) => a.id - b.id)
+      .map((c) =>
+        [c.id, c.reward, c.roles ? [...c.roles].join("+") : ""].join("/")
+      );
+  assert.deepEqual(plat(made.challenges), plat(BUILT_IN.challenges));
 });

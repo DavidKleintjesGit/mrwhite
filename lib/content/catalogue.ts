@@ -6,6 +6,7 @@
  * vallen, welke elkaar in de weg zitten en wat een opdracht oplevert.
  */
 import { BUILT_IN, type Catalogue } from "../drink.ts";
+import type { Role } from "../game.ts";
 import type { LanguagePack } from "./schema.ts";
 
 export function catalogueOf(pack: LanguagePack | null): Catalogue {
@@ -16,6 +17,7 @@ export function catalogueOf(pack: LanguagePack | null): Catalogue {
     challenges: Object.entries(pack.challenges).map(([id, challenge]) => ({
       id: Number(id),
       reward: challenge.reward,
+      roles: challenge.roles as readonly Role[] | undefined,
     })),
   };
 }

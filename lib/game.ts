@@ -110,8 +110,7 @@ export type DealOptions = {
   custom: readonly CustomPair[];
   /** Used when every name is blank and the aliases run out. */
   fallbackName: (index: number) => string;
-  /** One challenge id per player; left out outside the Drinking Edition. */
-  challenges?: readonly number[];
+
   /**
    * De woorden om uit te delen. Leeg laten pakt wat er in de app zit; een
    * opgehaald pakket geeft ze hier mee, zodat nieuwe woorden kunnen
@@ -189,7 +188,7 @@ export function deal(options: DealOptions): {
         : null,
     seen: false,
     alive: true,
-    challenge: options.challenges?.[index] ?? null,
+    challenge: null,
     challengeDone: false,
     outRound: null,
   }));

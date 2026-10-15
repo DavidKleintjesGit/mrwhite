@@ -26,8 +26,14 @@ export type LanguagePack = {
   ruleCategories: Record<RuleCategory, readonly number[]>;
   /** Paren regels die elkaar in de weg zitten en niet samen gedeeld worden. */
   conflicts: readonly (readonly [number, number])[];
-  /** De geheime opdrachten, met het aantal slokken dat ze opleveren. */
-  challenges: Record<string, Entry & { reward: number }>;
+  /**
+   * De geheime opdrachten: de tekst, wat ze opleveren, en voor wie ze
+   * bedoeld zijn. Staat er geen rol bij, dan is hij voor iedereen.
+   */
+  challenges: Record<
+    string,
+    Entry & { reward: number; roles?: readonly string[] }
+  >;
 };
 
 export type ContentIndex = {
@@ -45,6 +51,8 @@ export type ContentIndex = {
  * Een half binnengekomen bestand of een server die iets anders teruggeeft
  * mag het spel niet breken; dan valt hij terug op wat in de app zit.
  */
+const ROLES = ["burger", "undercover", "white"];
+
 function isEntry(value: unknown): boolean {
   if (!value || typeof value !== "object") return false;
   const entry = value as Partial<Entry>;
@@ -86,11 +94,23 @@ export function isLanguagePack(value: unknown): value is LanguagePack {
   const challenges = Object.values(pack.challenges);
   if (challenges.length === 0) return false;
   if (
-    !challenges.every(
-      (challenge) =>
-        isEntry(challenge) &&
-        typeof (challenge as { reward?: unknown }).reward === "number"
-    )
+    !challenges.every((challenge) => {
+      if (!isEntry(challenge)) return false;
+      const { reward, roles } = challenge as {
+        reward?: unknown;
+        roles?: unknown;
+      };
+      if (typeof reward !== "number") return false;
+      // Rollen mogen ontbreken — dan is hij voor iedereen — maar als ze er
+      // staan moeten het rollen zijn die bestaan. Een opdracht voor een rol
+      // die niemand heeft, wordt nooit uitgedeeld en is dus zoek.
+      if (roles === undefined) return true;
+      return (
+        Array.isArray(roles) &&
+        roles.length > 0 &&
+        roles.every((role) => ROLES.includes(role as string))
+      );
+    })
   ) {
     return false;
   }

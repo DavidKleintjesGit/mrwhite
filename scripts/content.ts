@@ -44,10 +44,12 @@ for (const lang of VERIFIED_LOCALES) {
   for (const id of CATEGORY_IDS) words[id] = WORDS[lang][id];
 
   const challenges: LanguagePack["challenges"] = {};
-  for (const { id, reward } of CHALLENGES) {
+  for (const { id, reward, roles } of CHALLENGES) {
     const entry =
       dict.drink.challenges[String(id) as keyof typeof dict.drink.challenges];
-    challenges[String(id)] = { ...entry, reward };
+    challenges[String(id)] = roles
+      ? { ...entry, reward, roles }
+      : { ...entry, reward };
   }
 
   const pack: LanguagePack = {
