@@ -54,3 +54,7 @@ design/
 # The store images, built from the app on an emulator. Large binaries that
 # nothing in the build reads; they go to the stores, not into the repo.
 screenshots/
+
+# De ruwe lijsten die de keuring in gaan. Wat erdoorheen komt staat in
+# lib/words/, en dat is de waarheid; deze bestanden zijn het werkblad.
+kandidaten/
