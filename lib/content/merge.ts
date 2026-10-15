@@ -5,9 +5,9 @@
  * daar te vervangen werkt elk scherm zonder dat het ervan weet. De woorden
  * gaan apart, want die komen niet uit het woordenboek maar uit de speltafel.
  *
- * Alleen de teksten worden overgenomen, niet welke regels er bestaan: hoeveel
- * regels er zijn en wat ze opleveren zit nog in de code. Een nieuwe regel
- * erbij vraagt dus nog wel een uitgave van de app.
+ * Teksten uit het pakket winnen, en teksten die er nog niet waren komen
+ * erbij: een pakket mag regels en opdrachten meebrengen die deze uitgave van
+ * de app niet kent.
  */
 import type { Dictionary } from "@/lib/i18n";
 import type { Entry, LanguagePack } from "./schema.ts";
@@ -18,8 +18,7 @@ function overwrite<T extends Record<string, Entry>>(
 ): T {
   if (!fetched) return built;
   const merged = { ...built } as Record<string, Entry>;
-  for (const key of Object.keys(built)) {
-    const entry = fetched[key];
+  for (const [key, entry] of Object.entries(fetched)) {
     if (entry && typeof entry.t === "string" && typeof entry.d === "string") {
       merged[key] = { t: entry.t, d: entry.d };
     }

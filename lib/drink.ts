@@ -51,6 +51,20 @@ export const CONFLICTS: readonly (readonly [number, number])[] = [
 export const RULES_PER_GAME = 3;
 
 /**
+ * Welke regels en challenges er bestaan, en wat ze waard zijn.
+ *
+ * Dit stond als losse constanten in dit bestand, waardoor er een uitgave van
+ * de app nodig was om er een regel bij te doen. Nu is het één ding dat je
+ * kunt meegeven: de app draagt er een mee, en een opgehaald pakket kan er
+ * een ander voor in de plaats zetten.
+ */
+export type Catalogue = {
+  rulesByCategory: Record<RuleCategory, readonly number[]>;
+  conflicts: readonly (readonly [number, number])[];
+  challenges: readonly { id: number; reward: number }[];
+};
+
+/**
  * The secret challenges, and what finishing one is worth in sips to hand
  * out. The reward is the difficulty: a challenge that only needs the table
  * to behave normally pays three, one that needs two other players to turn on
@@ -74,24 +88,41 @@ export const CHALLENGE_IDS: readonly number[] = CHALLENGES.map((c) => c.id);
 export const MIN_REWARD = 3;
 export const MAX_REWARD = 8;
 
-export function challengeReward(id: number): number {
-  const found = CHALLENGES.find((challenge) => challenge.id === id);
+/** Wat er in de app zit; het vangnet als er niets is opgehaald. */
+export const BUILT_IN: Catalogue = {
+  rulesByCategory: RULES_BY_CATEGORY,
+  conflicts: CONFLICTS,
+  challenges: CHALLENGES,
+};
+
+export function challengeReward(
+  id: number,
+  catalogue: Catalogue = BUILT_IN
+): number {
+  const found = catalogue.challenges.find((challenge) => challenge.id === id);
   if (!found) throw new Error(`unknown challenge id: ${id}`);
   return found.reward;
 }
 
 export const MIN_DRINK_PLAYERS = 4;
 
-export function ruleCategory(id: number): RuleCategory {
+export function ruleCategory(
+  id: number,
+  catalogue: Catalogue = BUILT_IN
+): RuleCategory {
   const found = RULE_CATEGORIES.find((category) =>
-    RULES_BY_CATEGORY[category].includes(id)
+    catalogue.rulesByCategory[category].includes(id)
   );
   if (!found) throw new Error(`unknown rule id: ${id}`);
   return found;
 }
 
-function conflicts(id: number, chosen: readonly number[]): boolean {
-  return CONFLICTS.some(
+function conflicts(
+  id: number,
+  chosen: readonly number[],
+  catalogue: Catalogue
+): boolean {
+  return catalogue.conflicts.some(
     ([a, b]) =>
       (a === id && chosen.includes(b)) || (b === id && chosen.includes(a))
   );
@@ -107,23 +138,34 @@ function conflicts(id: number, chosen: readonly number[]): boolean {
  * category rather than dealing fewer than three.
  */
 export function drawRules(
-  enabled: Partial<Record<RuleCategory, boolean>> = {}
+  enabled: Partial<Record<RuleCategory, boolean>> = {},
+  catalogue: Catalogue = BUILT_IN
 ): number[] {
-  let categories = shuffle(
-    RULE_CATEGORIES.filter((category) => enabled[category] !== false)
+  // Alleen categorieën waar ook werkelijk iets in zit: een catalogus uit
+  // een pakket hoeft ze niet alle vier te vullen.
+  const stocked = RULE_CATEGORIES.filter(
+    (category) => catalogue.rulesByCategory[category].length > 0
   );
-  if (!categories.length) categories = [...RULE_CATEGORIES];
+  let categories = shuffle(
+    stocked.filter((category) => enabled[category] !== false)
+  );
+  if (!categories.length) categories = [...stocked];
+  if (!categories.length) return [];
+
+  const everything = stocked.flatMap(
+    (category) => catalogue.rulesByCategory[category]
+  );
 
   const chosen: number[] = [];
   for (let k = 0; k < RULES_PER_GAME; k++) {
     const allowed = (id: number) =>
-      !chosen.includes(id) && !conflicts(id, chosen);
+      !chosen.includes(id) && !conflicts(id, chosen, catalogue);
 
     const category = categories[k % categories.length];
-    let pool = RULES_BY_CATEGORY[category].filter(allowed);
+    let pool = catalogue.rulesByCategory[category].filter(allowed);
     if (!pool.length) {
-      pool = RULE_IDS.filter(
-        (id) => categories.includes(ruleCategory(id)) && allowed(id)
+      pool = everything.filter(
+        (id) => categories.includes(ruleCategory(id, catalogue)) && allowed(id)
       );
     }
     if (!pool.length) break;
@@ -138,7 +180,10 @@ export function drawRules(
  * list simply comes round again, so two people can be working on the same
  * one without knowing it — which is fine, and occasionally very funny.
  */
-export function dealChallenges(players: number): number[] {
-  const order = shuffle(CHALLENGE_IDS);
+export function dealChallenges(
+  players: number,
+  catalogue: Catalogue = BUILT_IN
+): number[] {
+  const order = shuffle(catalogue.challenges.map((challenge) => challenge.id));
   return Array.from({ length: players }, (_, i) => order[i % order.length]);
 }

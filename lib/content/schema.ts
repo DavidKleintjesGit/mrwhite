@@ -24,6 +24,8 @@ export type LanguagePack = {
   rules: Record<string, Entry>;
   /** Welke regel in welke categorie valt; de app trekt er per categorie uit. */
   ruleCategories: Record<RuleCategory, readonly number[]>;
+  /** Paren regels die elkaar in de weg zitten en niet samen gedeeld worden. */
+  conflicts: readonly (readonly [number, number])[];
   /** De geheime opdrachten, met het aantal slokken dat ze opleveren. */
   challenges: Record<string, Entry & { reward: number }>;
 };
@@ -43,6 +45,16 @@ export type ContentIndex = {
  * Een half binnengekomen bestand of een server die iets anders teruggeeft
  * mag het spel niet breken; dan valt hij terug op wat in de app zit.
  */
+function isEntry(value: unknown): boolean {
+  if (!value || typeof value !== "object") return false;
+  const entry = value as Partial<Entry>;
+  return (
+    typeof entry.t === "string" &&
+    typeof entry.d === "string" &&
+    entry.t.trim().length > 0
+  );
+}
+
 export function isLanguagePack(value: unknown): value is LanguagePack {
   if (!value || typeof value !== "object") return false;
   const pack = value as Partial<LanguagePack>;
@@ -51,6 +63,37 @@ export function isLanguagePack(value: unknown): value is LanguagePack {
   }
   if (typeof pack.lang !== "string" || pack.lang.length === 0) return false;
   if (!pack.words || typeof pack.words !== "object") return false;
+
+  // De catalogus mag naar niets verwijzen wat geen tekst heeft: dan krijgt
+  // iemand een lege regel of een lege opdracht op zijn kaart, en dat is
+  // erger dan spelen met de lijst die al in de app zat.
+  if (!pack.ruleCategories || typeof pack.ruleCategories !== "object")
+    return false;
+  if (!Array.isArray(pack.conflicts)) return false;
+  if (!pack.rules || typeof pack.rules !== "object") return false;
+  if (!pack.challenges || typeof pack.challenges !== "object") return false;
+
+  const ruleIds = Object.values(pack.ruleCategories).flat();
+  if (ruleIds.length === 0) return false;
+  if (
+    !ruleIds.every(
+      (id) => typeof id === "number" && isEntry(pack.rules?.[String(id)])
+    )
+  ) {
+    return false;
+  }
+
+  const challenges = Object.values(pack.challenges);
+  if (challenges.length === 0) return false;
+  if (
+    !challenges.every(
+      (challenge) =>
+        isEntry(challenge) &&
+        typeof (challenge as { reward?: unknown }).reward === "number"
+    )
+  ) {
+    return false;
+  }
 
   // Minstens één categorie met minstens één bruikbaar paar erin, anders valt
   // er niets te spelen en is terugvallen beter dan doorgaan.
@@ -64,6 +107,6 @@ export function isLanguagePack(value: unknown): value is LanguagePack {
       typeof pair[1] === "string" &&
       typeof pair[2] === "number" &&
       pair[0].trim().length > 0 &&
-      pair[1].trim().length > 0,
+      pair[1].trim().length > 0
   );
 }

@@ -72,7 +72,7 @@ test("a draw never pairs two rules that contradict each other", () => {
 
 test("with every category on, the three rules come from three categories", () => {
   for (let run = 0; run < 200; run++) {
-    const categories = drawRules(allOn()).map(ruleCategory);
+    const categories = drawRules(allOn()).map((id) => ruleCategory(id));
     assert.equal(
       new Set(categories).size,
       RULES_PER_GAME,

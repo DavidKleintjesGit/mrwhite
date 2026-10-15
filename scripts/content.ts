@@ -14,7 +14,7 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { CHALLENGES, RULES_BY_CATEGORY } from "../lib/drink.ts";
+import { CHALLENGES, CONFLICTS, RULES_BY_CATEGORY } from "../lib/drink.ts";
 // De woordenboeken komen hier rechtstreeks binnen en niet via de index van
 // i18n: die gebruikt importpaden zonder extensie, wat Next oplost maar Node
 // niet. Dezelfde reden waarom de taaltest ze ook stuk voor stuk haalt.
@@ -45,7 +45,8 @@ for (const lang of VERIFIED_LOCALES) {
 
   const challenges: LanguagePack["challenges"] = {};
   for (const { id, reward } of CHALLENGES) {
-    const entry = dict.drink.challenges[String(id) as keyof typeof dict.drink.challenges];
+    const entry =
+      dict.drink.challenges[String(id) as keyof typeof dict.drink.challenges];
     challenges[String(id)] = { ...entry, reward };
   }
 
@@ -55,6 +56,7 @@ for (const lang of VERIFIED_LOCALES) {
     words,
     rules: dict.drink.rules,
     ruleCategories: RULES_BY_CATEGORY,
+    conflicts: CONFLICTS,
     challenges,
   };
 

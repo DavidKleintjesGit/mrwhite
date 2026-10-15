@@ -8,6 +8,7 @@ import {
   useSyncExternalStore,
   type CSSProperties,
 } from "react";
+import { catalogueOf } from "@/lib/content/catalogue";
 import { useContent } from "@/lib/content/live";
 import { withPack } from "@/lib/content/merge";
 import CardScreen from "@/components/screens/CardScreen";
@@ -87,6 +88,12 @@ export default function App({ dict: built, lang }: Props) {
     () => withPack(built, content.pack),
     [built, content.pack]
   );
+  /**
+   * Welke regels en opdrachten er bestaan. Komt uit het pakket zodra er een
+   * opgehaald is, zodat er een regel bij kan zonder dat de app opnieuw uit
+   * hoeft.
+   */
+  const catalogue = useMemo(() => catalogueOf(content.pack), [content.pack]);
   // Read through useSyncExternalStore so the prerendered HTML and the first
   // client render agree, and the saved settings arrive without an effect.
   const raw = useSyncExternalStore(subscribe, readStored, () => null);
@@ -186,7 +193,7 @@ export default function App({ dict: built, lang }: Props) {
   // --- Moves ---------------------------------------------------------------
 
   function startDeal() {
-    const rules = drink ? drawRules(settings.drinkCats) : [];
+    const rules = drink ? drawRules(settings.drinkCats, catalogue) : [];
     const { players, pair } = deal({
       table: content.pack?.words,
       players: stored.nPlayers,
@@ -198,7 +205,9 @@ export default function App({ dict: built, lang }: Props) {
       difficulty: settings.diff,
       custom: settings.custom,
       fallbackName: (index) => format(dict.names.placeholder, { n: index + 1 }),
-      challenges: drink ? dealChallenges(stored.nPlayers) : undefined,
+      challenges: drink
+        ? dealChallenges(stored.nPlayers, catalogue)
+        : undefined,
     });
     setDialog("none");
     // The Drinking Edition reads its house rules before anyone gets a role:
@@ -229,7 +238,7 @@ export default function App({ dict: built, lang }: Props) {
   function reroll() {
     setRolling(true);
     setTimeout(() => {
-      const rules = drawRules(settings.drinkCats);
+      const rules = drawRules(settings.drinkCats, catalogue);
       setRolling(false);
       if (stored.stage.name === "drules") {
         setStage({ ...stored.stage, rules }, { rules });

@@ -68,3 +68,34 @@ test("iets anders dan een pakket wordt geweigerd", () => {
     assert.equal(isLanguagePack(nonsense), false);
   }
 });
+
+test("een pakket dat naar een regel zonder tekst verwijst wordt geweigerd", () => {
+  const pack = JSON.parse(readFileSync("public/content/v1/nl.json", "utf8"));
+  pack.ruleCategories.A = [...pack.ruleCategories.A, 9999];
+  assert.equal(isLanguagePack(pack), false);
+});
+
+test("een pakket zonder botsingen wordt geweigerd", () => {
+  const pack = JSON.parse(readFileSync("public/content/v1/nl.json", "utf8"));
+  delete pack.conflicts;
+  assert.equal(isLanguagePack(pack), false);
+});
+
+test("een opdracht zonder beloning wordt geweigerd", () => {
+  const pack = JSON.parse(readFileSync("public/content/v1/nl.json", "utf8"));
+  delete pack.challenges["1"].reward;
+  assert.equal(isLanguagePack(pack), false);
+});
+
+test("de catalogus uit een pakket is dezelfde als die in de app", async () => {
+  const { catalogueOf } = await import("./catalogue.ts");
+  const { BUILT_IN } = await import("../drink.ts");
+  const pack = JSON.parse(readFileSync("public/content/v1/nl.json", "utf8"));
+  const made = catalogueOf(pack);
+  assert.deepEqual(made.rulesByCategory, BUILT_IN.rulesByCategory);
+  assert.deepEqual(made.conflicts, BUILT_IN.conflicts);
+  assert.deepEqual(
+    [...made.challenges].sort((a, b) => a.id - b.id),
+    [...BUILT_IN.challenges].sort((a, b) => a.id - b.id),
+  );
+});
