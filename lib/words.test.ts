@@ -6,8 +6,12 @@ import {
   MIN_VERIFIED_PAIRS,
   WORDS,
   totalPairs,
-  type Pair,
 } from "./words.ts";
+import {
+  pairKey as key,
+  problemsWith,
+  problemsWithList,
+} from "./words/rules.ts";
 
 /**
  * Mechanical checks on the word bank. They cannot judge whether a pair is
@@ -18,96 +22,26 @@ import {
  * Run on their own with `npm run words:check`.
  */
 
-/** Longest word the big type on the card can take without wrapping badly. */
-const MAX_WORD_LENGTH = 18;
-
-/** How often one word may come back inside a language before it feels stale. */
-const MAX_REPEATS = 3;
-
 const everyPair = (lang: keyof typeof WORDS) =>
   CATEGORY_IDS.flatMap((id) => WORDS[lang][id].map((pair) => ({ id, pair })));
-
-const key = (pair: Pair) =>
-  [pair[0], pair[1]]
-    .map((w) => w.toLowerCase())
-    .sort()
-    .join("|");
-
-const words = (pair: Pair) => [pair[0], pair[1]];
-
-const tokens = (word: string) =>
-  word
-    .toLowerCase()
-    .split(/[^\p{L}\p{N}]+/u)
-    .filter(Boolean);
 
 for (const lang of LOCALES) {
   const label = `${LOCALE_NAMES[lang]} (${lang})`;
 
-  test(`${label}: every word is present, trimmed and sane in length`, () => {
+  test(`${label}: every pair holds up on its own`, () => {
+    // De regels staan in lib/words/rules.ts, want de keuring van
+    // gegenereerde lijsten gebruikt ze ook. Stonden ze hier, dan had je twee
+    // bijna gelijke sets regels en glijdt de lijst stilletjes af.
     for (const { id, pair } of everyPair(lang)) {
-      for (const word of words(pair)) {
-        assert.ok(word, `${id}: a pair has an empty word`);
-        assert.equal(word, word.trim(), `${id}: "${word}" has stray spaces`);
-        assert.ok(
-          word.length <= MAX_WORD_LENGTH,
-          `${id}: "${word}" is ${word.length} characters, too long for the card`
-        );
-      }
-      assert.ok(
-        [1, 2].includes(pair[2]),
-        `${id}: ${key(pair)} has level ${pair[2]}`
-      );
+      assert.deepEqual(problemsWith(pair), [], `${id}: ${pair[0]}/${pair[1]}`);
     }
   });
 
-  test(`${label}: the two words in a pair are properly different`, () => {
-    for (const { id, pair } of everyPair(lang)) {
-      const [a, b] = words(pair).map((w) => w.toLowerCase());
-      assert.notEqual(a, b, `${id}: "${pair[0]}" is paired with itself`);
-
-      // One word containing the other means every clue fits both, so the
-      // undercover can never be caught. Golf/Minigolf fails here.
-      assert.ok(
-        !a.includes(b) && !b.includes(a),
-        `${id}: "${pair[0]}" and "${pair[1]}" contain one another`
-      );
-
-      // Sharing a whole word is the same problem one step up:
-      // "Ice skating" and "Roller skating" are not two different things.
-      const shared = tokens(a).filter((t) => tokens(b).includes(t));
-      assert.deepEqual(
-        shared,
-        [],
-        `${id}: "${pair[0]}" and "${pair[1]}" share "${shared.join(", ")}"`
-      );
-    }
-  });
-
-  test(`${label}: no pair appears twice`, () => {
-    const seen = new Map<string, string>();
-    for (const { id, pair } of everyPair(lang)) {
-      const k = key(pair);
-      const earlier = seen.get(k);
-      assert.equal(earlier, undefined, `${k} is in both ${earlier} and ${id}`);
-      seen.set(k, id);
-    }
-  });
-
-  test(`${label}: no word is leaned on too heavily`, () => {
-    const counts = new Map<string, number>();
-    for (const { pair } of everyPair(lang)) {
-      for (const word of words(pair)) {
-        const w = word.toLowerCase();
-        counts.set(w, (counts.get(w) ?? 0) + 1);
-      }
-    }
-    for (const [word, count] of counts) {
-      assert.ok(
-        count <= MAX_REPEATS,
-        `"${word}" is used ${count} times, more than ${MAX_REPEATS}`
-      );
-    }
+  test(`${label}: the list holds up as a whole`, () => {
+    assert.deepEqual(
+      problemsWithList(everyPair(lang).map((entry) => entry.pair)),
+      []
+    );
   });
 
   test(`${label}: every category has something in it`, () => {
