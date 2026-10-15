@@ -2,6 +2,7 @@
 
 import Magnifier from "@/components/ui/Magnifier";
 import Press from "@/components/ui/Press";
+import Stamp from "@/components/ui/Stamp";
 import Screen from "@/components/ui/Screen";
 import type { Dictionary } from "@/lib/i18n";
 
@@ -211,6 +212,43 @@ export default function HomeScreen({
           Vult de ruimte onder de titel, en zegt zonder woorden waar het spel
           over gaat. Rechts onderin, scheef, alsof hij daar is neergelegd.
         */}
+        {/*
+          Dat dit nog niet af is, hoort op het eerste scherm te staan en
+          niet in een berichtje dat je wegklikt. Als stempel, want dat is
+          wat dit ontwerp gebruikt om iets op een dossier te schrijven.
+        */}
+        <Stamp
+          stacked
+          fontSize={15}
+          rotate={-7}
+          delay={0.65}
+          style={{ position: "absolute", right: 0, top: -6 }}
+        >
+          <span
+            style={{
+              fontFamily: ARCHIVO,
+              fontSize: 15,
+              letterSpacing: ".12em",
+              textTransform: "uppercase",
+              lineHeight: 1,
+            }}
+          >
+            {t.beta}
+          </span>
+          <span
+            style={{
+              fontSize: 8,
+              fontWeight: 700,
+              letterSpacing: ".1em",
+              textTransform: "uppercase",
+              borderTop: "2px solid #E8202A",
+              paddingTop: 3,
+            }}
+          >
+            {t.betaNote}
+          </span>
+        </Stamp>
+
         <Magnifier
           variant="outline"
           style={{

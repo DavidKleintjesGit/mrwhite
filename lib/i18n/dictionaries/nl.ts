@@ -36,6 +36,8 @@ const nl = {
     caseNumber: "Dossier nr. 0042",
     rec: "Rec",
     recNumber: "Nr. 0042",
+    beta: "Beta",
+    betaNote: "Testversie · nog in aanbouw",
     stamp: "Strikt geheim",
     titleTop: "Mr.",
     titleBottom: "White",
@@ -184,7 +186,8 @@ const nl = {
     quitYes: "Ja, stoppen",
     resumeTag: "ONDERBROKEN",
     resumeTitle: "Je was nog bezig",
-    resumeBody: "Er staat nog een potje open op dit toestel. Verder spelen, of het laten vallen en opnieuw beginnen?",
+    resumeBody:
+      "Er staat nog een potje open op dit toestel. Verder spelen, of het laten vallen en opnieuw beginnen?",
     resumeYes: "Verder spelen",
     resumeNo: "Laten vallen",
     resumeWait: "Nog even… {n}",

@@ -37,6 +37,8 @@ const fr: Dictionary = {
     caseNumber: "Dossier nº 0042",
     rec: "Rec",
     recNumber: "N° 0042",
+    beta: "Beta",
+    betaNote: "Version d'essai · en construction",
     stamp: "Top secret",
     titleTop: "Mr.",
     titleBottom: "White",
@@ -186,7 +188,8 @@ const fr: Dictionary = {
     quitYes: "Oui, arrêter",
     resumeTag: "INTERROMPU",
     resumeTitle: "Vous étiez en pleine partie",
-    resumeBody: "Une manche est encore ouverte sur cet appareil. Continuer, ou l'abandonner et recommencer ?",
+    resumeBody:
+      "Une manche est encore ouverte sur cet appareil. Continuer, ou l'abandonner et recommencer ?",
     resumeYes: "Continuer",
     resumeNo: "Abandonner",
     resumeWait: "Un instant… {n}",

@@ -33,6 +33,8 @@ const en: Dictionary = {
     caseNumber: "Case no. 0042",
     rec: "Rec",
     recNumber: "No. 0042",
+    beta: "Beta",
+    betaNote: "Test build · still being made",
     stamp: "Top secret",
     titleTop: "Mr.",
     titleBottom: "White",
@@ -179,7 +181,8 @@ const en: Dictionary = {
     quitYes: "Yes, stop",
     resumeTag: "INTERRUPTED",
     resumeTitle: "You were mid-game",
-    resumeBody: "There is still a round open on this device. Carry on, or drop it and start fresh?",
+    resumeBody:
+      "There is still a round open on this device. Carry on, or drop it and start fresh?",
     resumeYes: "Carry on",
     resumeNo: "Drop it",
     resumeWait: "One moment… {n}",

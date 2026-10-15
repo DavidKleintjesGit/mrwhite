@@ -37,6 +37,8 @@ const es: Dictionary = {
     caseNumber: "Expediente nº 0042",
     rec: "Rec",
     recNumber: "N.º 0042",
+    beta: "Beta",
+    betaNote: "Versión de prueba · en construcción",
     stamp: "Alto secreto",
     titleTop: "Mr.",
     titleBottom: "White",
@@ -185,7 +187,8 @@ const es: Dictionary = {
     quitYes: "Sí, parar",
     resumeTag: "INTERRUMPIDO",
     resumeTitle: "Estabas a mitad de partida",
-    resumeBody: "Queda una ronda abierta en este dispositivo. ¿Continuar, o dejarla y empezar de nuevo?",
+    resumeBody:
+      "Queda una ronda abierta en este dispositivo. ¿Continuar, o dejarla y empezar de nuevo?",
     resumeYes: "Continuar",
     resumeNo: "Dejarla",
     resumeWait: "Un momento… {n}",

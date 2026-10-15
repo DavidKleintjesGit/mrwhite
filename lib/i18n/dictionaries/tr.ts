@@ -37,6 +37,8 @@ const tr: Dictionary = {
     caseNumber: "Dosya no. 0042",
     rec: "Kayıt",
     recNumber: "No. 0042",
+    beta: "Beta",
+    betaNote: "Test sürümü · hâlâ yapım aşamasında",
     stamp: "Çok gizli",
     titleTop: "Mr.",
     titleBottom: "White",
@@ -183,7 +185,8 @@ const tr: Dictionary = {
     quitYes: "Evet, durdur",
     resumeTag: "YARIM KALDI",
     resumeTitle: "Oyunun ortasındaydın",
-    resumeBody: "Bu cihazda hâlâ açık bir tur var. Devam mı, yoksa bırakıp yeniden mi başlıyoruz?",
+    resumeBody:
+      "Bu cihazda hâlâ açık bir tur var. Devam mı, yoksa bırakıp yeniden mi başlıyoruz?",
     resumeYes: "Devam et",
     resumeNo: "Bırak",
     resumeWait: "Bir saniye… {n}",

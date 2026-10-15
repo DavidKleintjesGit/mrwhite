@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "built": "2026-10-15",
+  "languages": {
+    "nl": {
+      "version": 1,
+      "file": "nl.json",
+      "pairs": 154
+    },
+    "en": {
+      "version": 1,
+      "file": "en.json",
+      "pairs": 154
+    }
+  }
+}
