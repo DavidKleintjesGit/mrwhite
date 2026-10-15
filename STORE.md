@@ -94,6 +94,33 @@ stays on your own device.
 
 ---
 
+## Promotietekst (Apple, 170 tekens)
+
+Deze mag je wijzigen zonder een nieuwe versie in te zenden, dus hij is
+bedoeld voor wat er nú speelt.
+
+```
+Eén telefoon, één geheim woord, en iemand aan tafel die het niet heeft. Tien
+minuten per potje. Geen account, geen advertenties, geen gedoe.
+```
+
+```
+One phone, one secret word, and somebody at the table who does not have it.
+Ten minutes a round. No account, no adverts, no nonsense.
+```
+
+## Wat is er nieuw (bij elke inzending)
+
+```
+De eerste versie. Het klassieke spel en de Drinking Edition, in het
+Nederlands en het Engels.
+```
+
+```
+The first release. Classic play and the Drinking Edition, in Dutch and
+English.
+```
+
 ## Trefwoorden (Apple, 100 tekens, komma's zonder spaties)
 
 ```
@@ -232,3 +259,36 @@ In deze volgorde; de eerste twee bepalen of iemand doorklikt.
 5. **Ontmaskering**, het moment van de rol die binnenslaat
 6. **Eindrapport** — het dossier met de uitslag
 7. **Drankregels** (alleen als je de Drinking Edition wilt uitlichten)
+
+---
+
+## Een taal compleet maken
+
+Een taal is pas af als hij ook in de winkel staat. Dit is de hele lijst, en
+hij geldt voor elke taal die erbij komt.
+
+| Wat | Waar | Hoe |
+|---|---|---|
+| Woordparen, minstens 150 | `lib/words/<code>.ts` | Generator |
+| Bediening, 353 teksten | `lib/i18n/dictionaries/<code>.ts` | `npm run locale:add`, daarna vertalen |
+| In de kiezer zetten | `VERIFIED_LOCALES` | Met de hand, pas na nalezen |
+| Naam, ondertitel, korte beschrijving | dit bestand | Vertalen |
+| Volledige beschrijving | dit bestand | Vertalen |
+| Trefwoorden (alleen Apple) | dit bestand | Per taal opnieuw bedenken, niet vertalen |
+| Promotietekst | dit bestand | Vertalen |
+| 9 schermafbeeldingen, twee maten | `screenshots/` | Script, zie hieronder |
+| Uitgelichte afbeelding (alleen Google) | `screenshots/play-assets/` | Script |
+
+**De schermafbeeldingen zijn geen ontwerpwerk.** De opname gaat per taal
+door de echte app heen, dus een nieuwe taal is een kwestie van het script
+draaien met die taalcode erbij. Dat is het verschil tussen een taal die een
+dag kost en een taal die een week kost.
+
+**Trefwoorden vertaal je niet.** Waar mensen op zoeken verschilt per land, en
+een letterlijke vertaling van "partyspel" is zelden wat een Spanjaard intikt.
+
+### Nederlands en Engels
+
+Beide compleet, op één ding na: de **app preview video** is 880 × 1912 en
+Apple eist 886 × 1920 of 1080 × 1920. Die moet opnieuw gerenderd worden.
+Voor Google Play is dat geen probleem, want dat is een YouTube-link.
